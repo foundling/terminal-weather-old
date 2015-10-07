@@ -1,0 +1,25 @@
+{
+  "name": "terminal-weather",
+  "version": "1.0.0",
+  "description": "A Location-based Terminal Weather utility",
+  "main": "weather.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foundling/terminal-weather.git"
+  },
+  "keywords": [
+    "terminal",
+    "command-line",
+    "weather",
+    "node"
+  ],
+  "author": "Alex Ramsdell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/foundling/terminal-weather/issues"
+  },
+  "homepage": "https://github.com/foundling/terminal-weather"
+}
