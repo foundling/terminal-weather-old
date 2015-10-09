@@ -17,7 +17,7 @@ var KtoF = function(K) {
   // kelvin to farenheit equation
   return parseInt( ((parseFloat(K)*9)/5) - 459.67);
 };
-var cachePeriod = 10;
+var cachePeriod = 100;
 
 
 
@@ -66,7 +66,7 @@ var readWeatherFromApi = function() {
         var time;
         var weatherData = JSON.parse(buffer);
         var rv = {
-          temp: KtoF(weatherData['main']['temp_min']),
+          temp: KtoF(weatherData['main']['temp']),
           low: KtoF(weatherData['main']['temp_min']),
           high: KtoF(weatherData['main']['temp_max']),
           desc: weatherData['weather'][0]['description'],
