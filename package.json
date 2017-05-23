@@ -21,5 +21,7 @@
   "bugs": {
     "url": "https://github.com/foundling/terminal-weather/issues"
   },
-  "homepage": "https://github.com/foundling/terminal-weather"
+  "homepage": "https://github.com/foundling/terminal-weather",
+  "dependencies": {
+  }
 }
