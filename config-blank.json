@@ -1,0 +1,5 @@
+{
+    "WEATHER_API_KEY": "XXXXXXXXX",  
+    "units": "farenheit", 
+    "tomorrow": "false"
+}
