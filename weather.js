@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
+const chalk = require('chalk');
 const http = require('http');
 const querystring = require('querystring');
 const config = require('./config.json');
 const WEATHER_API_KEY = require('./config').API_KEY; 
 const CACHE_INTERVAL = 1000 * 60;
-const colorLib = require('color');
 
-const weatherToColor = {
+/*
+const weatherToColorMap = {
 
     rain: 'blue',
     Drizzle: 'blue',
@@ -16,20 +17,9 @@ const weatherToColor = {
     Clouds: 'yellow'
 
 };
+*/
 
-function cacheWeatherData(weather, color) {
-    config.cache = {
-        lastRequestDate: new Date().getTime(),
-        weather: weather,
-        color: color 
-    };
-
-    require('fs').writeFile('./config.json', JSON.stringify(config), function(err) {
-        if (err) throw err; 
-    });
-}
-
-function checkCache(cb) {
+function checkCacheAndMaybeRun(cb) {
 
     // cache out of date  
     if (!config.cache || config.cache && new Date().getTime() - config.cache.lastRequestDate > CACHE_INTERVAL) {
@@ -37,15 +27,28 @@ function checkCache(cb) {
     }
 
     // cache still good
-    process.stdout.write(config.cache.weather);
+    process.stdout.write(chalk.red(config.cache.weather));
 
 }
 
-function terminalWeather() {
+function cacheWeatherData(weather, color) {
 
-    getLocation().then(data => {
+    config.cache = {
+        lastRequestDate: new Date().getTime(),
+        weather: weather
+    };
 
-        const { city, countryCode } = data;
+    require('fs').writeFile('./config.json', JSON.stringify(config), function(err) {
+        if (err) throw err; 
+    });
+
+}
+
+function main() {
+
+    getLocation().then(locationData => {
+
+        const { city, countryCode } = locationData;
 
         return getWeather({
 
@@ -56,7 +59,7 @@ function terminalWeather() {
 
 
     })
-    .then(data => {
+    .then(weatherData => {
 
         const { 
 
@@ -64,10 +67,10 @@ function terminalWeather() {
             temp_min,
             temp_max
 
-        } = data.main;
+        } = weatherData.main;
 
-        const description = data.weather[0].description;
-        const fontColor = weatherToColor[description];
+        const description = weatherData.weather[0].description;
+        const fontColor = weatherToColorMap[description];
 
         cachedWeather = `min: ${ temp_min }  max: ${ temp_max } | ${ description }`;
         cacheWeatherData(cachedWeather, fontColor);
@@ -138,4 +141,4 @@ function getWeather({ city, countryCode }) {
 
 }
 
-checkCache(terminalWeather);
+checkCacheAndMaybeRun(main);
