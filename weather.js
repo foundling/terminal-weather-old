@@ -2,7 +2,69 @@
 
 const http = require('http');
 const querystring = require('querystring');
+const config = require('./config.json');
 const WEATHER_API_KEY = require('./config').API_KEY; 
+const CACHE_INTERVAL = 1000 * 60;
+
+function cacheWeatherData(weather) {
+    config.cache = {
+        lastRequestDate: new Date().getTime(),
+        weather: weather
+    };
+
+    require('fs').writeFile('./config.json', JSON.stringify(config), function(err) {
+        if (err) throw err; 
+    });
+}
+
+function checkCache(cb) {
+
+    // cache out of date  
+    if (!config.cache || config.cache && new Date().getTime() - config.cache.lastRequestDate > CACHE_INTERVAL) {
+        return cb()
+    }
+
+    // cache still good
+    process.stdout.write(config.cache.weather);
+
+}
+
+function terminalWeather() {
+
+    getLocation().then(data => {
+
+        const { city, countryCode } = data;
+
+        return getWeather({
+
+            city,
+            countryCode
+
+        });
+
+
+    })
+    .then(data => {
+
+        const { 
+
+            temp, 
+            temp_min,
+            temp_max
+
+        } = data.main;
+
+        const description = data.weather[0].description;
+
+        cachedWeather = `min: ${ temp_min }  max: ${ temp_max } | ${ description }`;
+        cacheWeatherData(cachedWeather);
+        process.stdout.write(cachedWeather);
+
+    })
+    .catch(e => {
+        throw e;
+    });
+}
 
 function getLocation() {
 
@@ -63,35 +125,4 @@ function getWeather({ city, countryCode }) {
 
 }
 
-getLocation().then(data => {
-
-    const { city, countryCode } = data;
-
-    return getWeather({
-
-        city,
-        countryCode
-
-    });
-
-
-})
-.then(data => {
-
-    const { 
-
-        temp, 
-        temp_min,
-        temp_max
-
-    } = data.main;
-
-    const description = data.weather[0].description;
-
-    console.log(`description: ${ description }`);
-    console.log(`[ ${ temp } ] ${ temp_min} / ${ temp_max }`);
-
-})
-.catch(e => {
-    throw e;
-});
+checkCache(terminalWeather);
