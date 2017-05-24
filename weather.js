@@ -5,11 +5,23 @@ const querystring = require('querystring');
 const config = require('./config.json');
 const WEATHER_API_KEY = require('./config').API_KEY; 
 const CACHE_INTERVAL = 1000 * 60;
+const colorLib = require('color');
 
-function cacheWeatherData(weather) {
+const weatherToColor = {
+
+    rain: 'blue',
+    Drizzle: 'blue',
+    Snow: 'white',
+    Clear: 'yellow',
+    Clouds: 'yellow'
+
+};
+
+function cacheWeatherData(weather, color) {
     config.cache = {
         lastRequestDate: new Date().getTime(),
-        weather: weather
+        weather: weather,
+        color: color 
     };
 
     require('fs').writeFile('./config.json', JSON.stringify(config), function(err) {
@@ -55,9 +67,10 @@ function terminalWeather() {
         } = data.main;
 
         const description = data.weather[0].description;
+        const fontColor = weatherToColor[description];
 
         cachedWeather = `min: ${ temp_min }  max: ${ temp_max } | ${ description }`;
-        cacheWeatherData(cachedWeather);
+        cacheWeatherData(cachedWeather, fontColor);
         process.stdout.write(cachedWeather);
 
     })
