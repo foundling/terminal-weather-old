@@ -1,13 +1,1 @@
-{
-
-    "API_KEY":  "61beaf11b206ba345f116d0ebe6205c2",
-    "units":    "farenheight",
-    "tomorrow": false,
-    "cache":    {
-
-        "lastRequestDate":1495610096722,
-        "weather": "min: 282.15  max: 286.15 | overcast clouds"
-
-    }
-
-}
+{"API_KEY":"61beaf11b206ba345f116d0ebe6205c2","units":"farenheight","tomorrow":false,"cache":{"lastRequestDate":1495615853985,"weather":"min: 48  max: 53 | broken clouds"}}

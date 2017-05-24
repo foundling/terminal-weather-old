@@ -7,7 +7,6 @@ const config = require('./config.json');
 const WEATHER_API_KEY = require('./config').API_KEY; 
 const CACHE_INTERVAL = 1000 * 60;
 
-/*
 const weatherToColorMap = {
 
     rain: 'blue',
@@ -17,7 +16,10 @@ const weatherToColorMap = {
     Clouds: 'yellow'
 
 };
-*/
+
+function KToF(K) {
+    return parseInt( ((parseFloat(K)*9)/5) - 459.67);
+};
 
 function checkCacheAndMaybeRun(cb) {
 
@@ -72,7 +74,7 @@ function main() {
         const description = weatherData.weather[0].description;
         const fontColor = weatherToColorMap[description];
 
-        cachedWeather = `min: ${ temp_min }  max: ${ temp_max } | ${ description }`;
+        cachedWeather = `min: ${ KToF( temp_min ) }  max: ${ KToF( temp_max ) } | ${ description }`;
         cacheWeatherData(cachedWeather, fontColor);
         process.stdout.write(cachedWeather);
 
