@@ -3,30 +3,20 @@
 const http = require('http');
 const querystring = require('querystring');
 const WEATHER_API_KEY = require('./config').API_KEY; 
-const weatherHost = 'api.openweathermap.org';
-const weatherPath = '/data/2.5/weather';
-const geolocationHost = 'ip-api.com';
-const geolocationPath = '/json';
 
 function getLocation() {
 
     return new Promise((resolve, reject) => {
 
-        let result = '';
-
-        const options = {
-            host: geolocationHost,
-            path: geolocationPath
-        };
-
-        http.request(options, (response) => {
+        let rawData = '';
+        http.get('http://ip-api.com/json', (response) => {
 
             response.on('data', function(data) {
-                result += data;
+                rawData += data;
             });
 
             response.on('end', function() {
-                resolve(result);
+                resolve(JSON.parse(rawData));
             });
 
             response.on('error', function(data) {
@@ -39,34 +29,28 @@ function getLocation() {
 
 }
 
-function getWeather({ city, countryCode}) {
+function getWeather({ city, countryCode }) {
 
-    console.log(city);
     return new Promise((resolve, reject) => {
 
-        let result = '';
+        let rawData = '';
 
         let qs = querystring.stringify({ 
 
-            city: city, 
-            countryCode: countryCode, 
+            city, 
+            countryCode, 
             APPID: WEATHER_API_KEY
 
         }); 
 
-        const options = {
-            host: weatherHost,
-            path: `${weatherPath}?q=${qs}`
-        };
-
-        http.request(options, (response) => {
+        http.get(`http://api.openweathermap.org/data/2.5/weather?q=${qs}`, (response) => {
 
             response.on('data', function(data) {
-                result += 'data';
+                rawData += data;
             });
 
-            response.on('end', function(data) {
-                resolve(data);
+            response.on('end', function() {
+                resolve( JSON.parse(rawData) );
             });
 
             response.on('error', function(data) {
@@ -74,12 +58,14 @@ function getWeather({ city, countryCode}) {
             });
 
         }).end();
+
     });
+
 }
 
 getLocation().then(data => {
 
-    let { city, countryCode } = data;
+    const { city, countryCode } = data;
 
     return getWeather({
 
@@ -88,11 +74,15 @@ getLocation().then(data => {
 
     });
 
+
 })
 .then(data => {
 
-    console.log(data);
+    const { temp_min, temp_max, temp } = data.main;
+    console.log(`temp: ${ temp }`);
+    console.log(`min: ${ temp_min}\nmax: ${ temp_max }`);
 
-}).catch(e => {
+})
+.catch(e => {
     throw e;
 });
