@@ -78,9 +78,18 @@ getLocation().then(data => {
 })
 .then(data => {
 
-    const { temp_min, temp_max, temp } = data.main;
-    console.log(`temp: ${ temp }`);
-    console.log(`min: ${ temp_min}\nmax: ${ temp_max }`);
+    const { 
+
+        temp, 
+        temp_min,
+        temp_max
+
+    } = data.main;
+
+    const description = data.weather[0].description;
+
+    console.log(`description: ${ description }`);
+    console.log(`[ ${ temp } ] ${ temp_min} / ${ temp_max }`);
 
 })
 .catch(e => {
