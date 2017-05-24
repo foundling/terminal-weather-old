@@ -55,7 +55,7 @@ function cacheWeatherData(weather, color) {
         weatherColor: color
     };
 
-    require('fs').writeFile('./config.json', JSON.stringify(config), function(err) {
+    require('fs').writeFile('./config.json', JSON.stringify(config, null, 4), function(err) {
         if (err) throw err; 
     });
 
