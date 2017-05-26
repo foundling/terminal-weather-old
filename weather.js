@@ -77,6 +77,7 @@ function main() {
         cachedWeather = `min: ${ KToF( temp_min ) }  max: ${ KToF( temp_max ) } | ${ description }`;
         cacheWeatherData(cachedWeather, fontColor);
         process.stdout.write(cachedWeather);
+        process.stdout.write('⛈');
 
     })
     .catch(e => {

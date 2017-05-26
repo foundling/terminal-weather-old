@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/foundling/terminal-weather",
   "dependencies": {
-    "color": "^1.0.3"
+    "chalk": "^1.1.3"
   }
 }
