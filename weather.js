@@ -1,63 +1,29 @@
 #!/usr/bin/env node
 
-const http = require('http');
+var http; 
 const querystring = require('querystring');
+const path = require('path');
+const symbols = require('./symbols');
 const config = require('./config.json');
+
 const WEATHER_API_KEY = require('./config').API_KEY; 
-const CACHE_INTERVAL = 1000 * 60;
+const CACHE_INTERVAL = config.cacheInterval; // 1000;// * 60 * 10;// cache for 10 min according to openweathermap policy.
 
-const weatherToColorMap = {
-
-    'clear sky': 'yellow',
-    'few clouds': 'yellow',
-    'scattered clouds': 'gray',
-    'broken clouds': 'gray',
-    'shower rain': 'gray',
-    'rain': 'blue',
-    'thunderstorm': 'gray',
-    'snow': 'white',
-    'default': 'green',
-
+module.exports = exports = function() {
+    checkCacheAndMaybeRun(config.cache, main);
 };
 
-//checkCacheAndMaybeRun(config.cache, main);
-function KToF(K) {
-    return parseInt( ((parseFloat(K)*9)/5) - 459.67);
-};
+function checkCacheAndMaybeRun(cache,fn) {
 
-function checkCacheAndMaybeRun(cache,cb) {
+    let now = new Date();
 
     // no cache or cache out of date  
-    if (!cache || cache && new Date().getTime() - cache.lastRequestDate > CACHE_INTERVAL) {
-        return cb()
+    if (!cache || cache && (now.getTime() - cache.lastRequestDate > CACHE_INTERVAL)) {
+        return fn()
     }
 
-    // cache still valid
-    let currentTime = new Date();
-    let weatherColor = weatherToColorMap[ config.cache.weatherColor ];
-    process.stdout.write(
-
-        `${ currentTime.getHours() }:${ currentTime.getMinutes() }:${ currentTime.getSeconds() } | ${ require('chalk')[ weatherColor ](config.cache.weather) }`
-
-    );
-
-}
-
-function colorize(lib, s, dict) {
-    return lib[ dict[s] ] ? lib[ dict[s] ](s) : lib[ dict[ s ]['default'];
-}
-
-function cacheWeatherData(weather, color) {
-
-    config.cache = {
-        lastRequestDate: new Date().getTime(),
-        weather: weather,
-        weatherColor: color
-    };
-
-    require('fs').writeFile('./config.json', JSON.stringify(config, null, 4), function(err) {
-        if (err) throw err; 
-    });
+    // cache exists and is still valid
+    process.stdout.write(cache.weather);
 
 }
 
@@ -86,12 +52,9 @@ function main() {
 
         } = weatherData.main;
 
-        const description = weatherData.weather[0].description;
-        const fontColor = weatherToColorMap[description];
-
-        cachedWeather = `${ colorize(description) } | min: ${ KToF( temp_min ) }  max: ${ KToF( temp_max ) }`;
-        cacheWeatherData(cachedWeather, fontColor);
-        process.stdout.write(cachedWeather);
+        const weatherString = buildWeatherString(weatherData, symbols);
+        cacheWeatherData(weatherString);
+        process.stdout.write(weatherString);
 
     })
     .catch(e => {
@@ -104,6 +67,7 @@ function getLocation() {
     return new Promise((resolve, reject) => {
 
         let rawData = '';
+        http = http || require('http');
         http.get('http://ip-api.com/json', (response) => {
 
             response.on('data', function(data) {
@@ -129,7 +93,6 @@ function getWeather({ city, countryCode }) {
     return new Promise((resolve, reject) => {
 
         let rawData = '';
-
         let qs = querystring.stringify({ 
 
             city, 
@@ -157,4 +120,37 @@ function getWeather({ city, countryCode }) {
     });
 
 }
+
+function KToF(K) {
+    return parseInt( ((parseFloat(K)*9)/5) - 459.67);
+};
+
+function buildWeatherString(weatherData, symbols) {
+
+    let { temp, temp_min, temp_max } = weatherData.main;
+    //let { description } = weatherData.weather[0];
+    let description = 'clouds';
+
+    let matchingDescriptions = Object.keys(symbols.icons).filter(key => description.includes(key));
+    let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : description;
+    
+    let formattedString = `${ KToF(temp) }° ${ symbol }. - (${ KToF(temp_min) }°) / + (${ KToF(temp_max) }°)`;
+    return formattedString;
+}
+
+function cacheWeatherData(weather) {
+
+    let lastRequestDate = new Date().getTime();
+
+    config.cache = {
+        weather,
+        lastRequestDate
+    };
+
+    require('fs').writeFile(path.join(__dirname,'config.json'), JSON.stringify(config, null, 4), function(err) {
+        if (err) throw err; 
+    });
+
+}
+
 
