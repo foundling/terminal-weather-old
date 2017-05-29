@@ -134,7 +134,7 @@ function buildWeatherString(weatherData, symbols) {
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => description.includes(key));
     let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : description;
     
-    let formattedString = `${ KToF(temp) }° ${ symbol }. - (${ KToF(temp_min) }°) / + (${ KToF(temp_max) }°)`;
+    let formattedString = `l:${ KToF(temp_min) }° h:${ KToF(temp_max) }° | ${ KToF(temp) }° ${ symbol }. `;
     return formattedString;
 }
 
