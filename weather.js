@@ -18,10 +18,13 @@ function checkCacheAndMaybeRun(cache,fn) {
     let now = new Date();
 
     // no cache or cache out of date  
-    if (!cache || cache && (now.getTime() - cache.lastRequestDate > CACHE_INTERVAL)) {
+    if (!cache || (now.getTime() - cache.lastRequestDate) > CACHE_INTERVAL) {
         return fn()
     }
 
+    let timeLeft = (CACHE_INTERVAL - (now.getTime() - cache.lastRequestDate)) / 1000.0 / 60.0 / 10.0;
+    //console.log(`${ timeLeft } minutes until refresh of cache`);
+    //console.log(CACHE_INTERVAL);
     // cache exists and is still valid
     process.stdout.write(cache.weather);
 
@@ -134,7 +137,9 @@ function buildWeatherString(weatherData, symbols) {
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => description.includes(key));
     let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : description;
     
-    let formattedString = `l:${ KToF(temp_min) }° h:${ KToF(temp_max) }° | ${ KToF(temp) }° ${ symbol }. `;
+    //let formattedString = `l:${ KToF(temp_min) }° h:${ KToF(temp_max) }° | ${ KToF(temp) }° ${ symbol }. `;
+    let formattedString = `${ KToF(temp) }° ${ symbol }. `;
+
     return formattedString;
 }
 

@@ -1,13 +1,7 @@
 {
-
-    "API_KEY":  ":] :] :] :] :] :] :] :] :] :] :] :]",
-    "units":    "farenheit",
+    "API_KEY": "XXXXXXXXXXXXXX",
+    "units": "farenheight",
     "tomorrow": false,
-    "cache":    {
-
-        "lastRequestDate":1495610096722,
-        "weather": "min: 282.15  max: 286.15 | overcast clouds"
-
-    }
-
+    "cacheInterval": 600000, 
+    "cache": null
 }
