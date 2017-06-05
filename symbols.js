@@ -6,7 +6,9 @@ module.exports = exports = weatherToColorMap = {
     icons: {
         clear:  '🌞',
         clouds: '⛅',
-        rain:   '☂',
+        rain:   '🌦 ',
+        rain2: '🌧 ',
+        snow: '🌨 ', 
     },
     coloredText: {
         clear:  'yellow', 
@@ -16,3 +18,12 @@ module.exports = exports = weatherToColorMap = {
     }
 
 };
+
+// 🌩
+// ⛈
+// 🌫
+// ⛷ 
+// j
+//
+// ❆
+// 🏂 
