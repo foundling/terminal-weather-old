@@ -1,19 +1,27 @@
 #!/usr/bin/env node
 
-var http; 
-const querystring = require('querystring');
 const path = require('path');
 const symbols = require('./symbols');
 const config = require('./config.json');
+const WEATHER_API_KEY = config.API_KEY; 
+const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
+const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
+const CACHE_INTERVAL = config.cacheInterval; // 10 min interval, according to openweathermap policy.
 
-const WEATHER_API_KEY = require('./config').API_KEY; 
-const CACHE_INTERVAL = config.cacheInterval; // 1000;// * 60 * 10;// cache for 10 min according to openweathermap policy.
+// http and querystring are used at a minimum once every 10 min
+var http; 
+var querystring;
 
+// export entry point
 module.exports = exports = function() {
     checkCacheAndMaybeRun(config.cache, main);
 };
 
-function checkCacheAndMaybeRun(cache,fn) {
+/*
+ * Just functions after this ...
+ */
+
+function checkCacheAndMaybeRun(cache, fn) {
 
     let now = new Date();
 
@@ -21,10 +29,7 @@ function checkCacheAndMaybeRun(cache,fn) {
     if (!cache || (now.getTime() - cache.lastRequestDate) > CACHE_INTERVAL) {
         return fn()
     }
-
-    let timeLeft = (CACHE_INTERVAL - (now.getTime() - cache.lastRequestDate)) / 1000.0 / 60.0 / 10.0;
-    //console.log(`${ timeLeft } minutes until refresh of cache`);
-    //console.log(CACHE_INTERVAL);
+ 
     // cache exists and is still valid
     process.stdout.write(cache.weather);
 
@@ -32,38 +37,23 @@ function checkCacheAndMaybeRun(cache,fn) {
 
 function main() {
 
-    getLocation().then(locationData => {
+    getLocation()
+    .then(locationToWeather)
+    .then(weatherToString)
+    .then(process.stdout.write.bind(process.stdout))
+    .catch(e => { throw e });
 
-        const { city, countryCode } = locationData;
-
-        return getWeather({
-
-            city,
-            countryCode
-
-        });
-
-
-    })
-    .then(weatherData => {
-
-        const { 
-
-            temp, 
-            temp_min,
-            temp_max
-
-        } = weatherData.main;
-
-        const weatherString = buildWeatherString(weatherData, symbols);
-        cacheWeatherData(weatherString);
-        process.stdout.write(weatherString);
-
-    })
-    .catch(e => {
-        throw e;
-    });
 }
+
+let locationToWeather = ({ city, countryCode }) => getWeather({ city, countryCode }); 
+let weatherToString = (weatherData) => {
+
+    const weatherString = buildWeatherString(weatherData, symbols);
+    cacheWeatherData(weatherString);
+
+    return Promise.resolve(weatherString);
+
+};
 
 function getLocation() {
 
@@ -71,7 +61,7 @@ function getLocation() {
 
         let rawData = '';
         http = http || require('http');
-        http.get('http://ip-api.com/json', (response) => {
+        http.get(GEOLOCATION_ENDPOINT, response => {
 
             response.on('data', function(data) {
                 rawData += data;
@@ -96,15 +86,16 @@ function getWeather({ city, countryCode }) {
     return new Promise((resolve, reject) => {
 
         let rawData = '';
-        let qs = querystring.stringify({ 
+        let qs = (querystring || require('querystring')).stringify({ 
 
             city, 
             countryCode, 
+            units: config.units,
             APPID: WEATHER_API_KEY
 
         }); 
 
-        http.get(`http://api.openweathermap.org/data/2.5/weather?q=${qs}`, (response) => {
+        http.get(`${ OPENWEATHERMAP_ENDPOINT }?q=${qs}`, (response) => {
 
             response.on('data', function(data) {
                 rawData += data;
@@ -124,9 +115,6 @@ function getWeather({ city, countryCode }) {
 
 }
 
-function KToF(K) {
-    return parseInt( ((parseFloat(K)*9)/5) - 459.67);
-};
 
 function buildWeatherString(weatherData, symbols) {
 
@@ -137,8 +125,7 @@ function buildWeatherString(weatherData, symbols) {
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => description.includes(key));
     let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : description;
     
-    //let formattedString = `l:${ KToF(temp_min) }° h:${ KToF(temp_max) }° | ${ KToF(temp) }° ${ symbol }. `;
-    let formattedString = `${ KToF(temp) }° ${ symbol }. `;
+    let formattedString = `${ parseInt(temp) }°F ${ symbol }. `;
 
     return formattedString;
 }
@@ -157,5 +144,3 @@ function cacheWeatherData(weather) {
     });
 
 }
-
-
