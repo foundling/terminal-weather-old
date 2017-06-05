@@ -1,22 +1,18 @@
-module.exports = exports = {
+module.exports = exports = weatherToColorMap = {
 
-    sun: {
-        symbol: '☀',
-        color: 'yellow',
+    timeOfDay: {
+        night:  '🌛',
     },
-    snow: {
-        symbol: '\*',
-        color: 'white'
+    icons: {
+        clear:  '🌞',
+        clouds: '⛅',
+        rain:   '☂',
     },
-    clouds: {
-        symbol: '☁',
-        color: 'blue',
-    },
-    rain: {
-        symbol: ':::',
-        color: 'blue'
+    coloredText: {
+        clear:  'yellow', 
+        rain:   'blue',
+        clouds: 'gray',
+        snow:   'white',
     }
 
 };
-//⛅
-// ⛈

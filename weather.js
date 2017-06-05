@@ -1,96 +1,66 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk');
-const http = require('http');
-const querystring = require('querystring');
+const path = require('path');
+const symbols = require('./symbols');
 const config = require('./config.json');
-const WEATHER_API_KEY = require('./config').API_KEY; 
-const CACHE_INTERVAL = 1000 * 60;
+const WEATHER_API_KEY = config.API_KEY; 
+const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
+const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
+const CACHE_INTERVAL = config.cacheInterval; // 10 min interval, according to openweathermap policy.
 
-const weatherToColorMap = {
+// http and querystring are used at a minimum once every 10 min
+var http; 
+var querystring;
 
-    rain: 'blue',
-    Drizzle: 'blue',
-    Snow: 'white',
-    Clear: 'yellow',
-    Clouds: 'yellow'
-
+// export entry point
+module.exports = exports = function() {
+    checkCacheAndMaybeRun(config.cache, main);
 };
 
-function KToF(K) {
-    return parseInt( ((parseFloat(K)*9)/5) - 459.67);
-};
+/*
+ * Just functions after this ...
+ */
 
-function checkCacheAndMaybeRun(cb) {
+function checkCacheAndMaybeRun(cache, fn) {
 
-    // cache out of date  
-    if (!config.cache || config.cache && new Date().getTime() - config.cache.lastRequestDate > CACHE_INTERVAL) {
-        return cb()
+    let now = new Date();
+
+    // no cache or cache out of date  
+    if (!cache || (now.getTime() - cache.lastRequestDate) > CACHE_INTERVAL) {
+        return fn()
     }
-
-    // cache still good
-    process.stdout.write(chalk.red(config.cache.weather));
-
-}
-
-function cacheWeatherData(weather, color) {
-
-    config.cache = {
-        lastRequestDate: new Date().getTime(),
-        weather: weather
-    };
-
-    require('fs').writeFile('./config.json', JSON.stringify(config), function(err) {
-        if (err) throw err; 
-    });
+ 
+    // cache exists and is still valid
+    process.stdout.write(cache.weather);
 
 }
 
 function main() {
 
-    getLocation().then(locationData => {
+    getLocation()
+    .then(locationToWeather)
+    .then(weatherToString)
+    .then(process.stdout.write.bind(process.stdout))
+    .catch(e => { throw e });
 
-        const { city, countryCode } = locationData;
-
-        return getWeather({
-
-            city,
-            countryCode
-
-        });
-
-
-    })
-    .then(weatherData => {
-
-        const { 
-
-            temp, 
-            temp_min,
-            temp_max
-
-        } = weatherData.main;
-
-        const description = weatherData.weather[0].description;
-        const fontColor = weatherToColorMap[description];
-
-        cachedWeather = `min: ${ KToF( temp_min ) }  max: ${ KToF( temp_max ) } | ${ description }`;
-        cacheWeatherData(cachedWeather, fontColor);
-        process.stdout.write(cachedWeather);
-        process.stdout.write('⛈');
-
-    })
-    .catch(e => {
-        throw e;
-    });
 }
+
+let locationToWeather = ({ city, countryCode }) => getWeather({ city, countryCode }); 
+let weatherToString = (weatherData) => {
+
+    const weatherString = buildWeatherString(weatherData, symbols);
+    cacheWeatherData(weatherString);
+    return Promise.resolve(weatherString);
+
+};
 
 function getLocation() {
 
     return new Promise((resolve, reject) => {
 
         let rawData = '';
-        http.get('http://ip-api.com/json', (response) => {
+        http = http || require('http');
+        http.get(GEOLOCATION_ENDPOINT, response => {
 
             response.on('data', function(data) {
                 rawData += data;
@@ -115,16 +85,16 @@ function getWeather({ city, countryCode }) {
     return new Promise((resolve, reject) => {
 
         let rawData = '';
-
-        let qs = querystring.stringify({ 
+        let qs = (querystring || require('querystring')).stringify({ 
 
             city, 
             countryCode, 
+            units: config.units,
             APPID: WEATHER_API_KEY
 
         }); 
 
-        http.get(`http://api.openweathermap.org/data/2.5/weather?q=${qs}`, (response) => {
+        http.get(`${ OPENWEATHERMAP_ENDPOINT }?q=${qs}`, (response) => {
 
             response.on('data', function(data) {
                 rawData += data;
@@ -144,4 +114,32 @@ function getWeather({ city, countryCode }) {
 
 }
 
-checkCacheAndMaybeRun(main);
+
+function buildWeatherString(weatherData, symbols) {
+
+    let { temp, temp_min, temp_max } = weatherData.main;
+    //let { description } = weatherData.weather[0];
+    let description = 'clouds';
+
+    let matchingDescriptions = Object.keys(symbols.icons).filter(key => description.includes(key));
+    let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : description;
+    
+    let formattedString = `${ parseInt(temp) }°F ${ symbol }. `;
+
+    return formattedString;
+}
+
+function cacheWeatherData(weather) {
+
+    let lastRequestDate = new Date().getTime();
+
+    config.cache = {
+        weather,
+        lastRequestDate
+    };
+
+    require('fs').writeFile(path.join(__dirname,'config.json'), JSON.stringify(config, null, 4), function(err) {
+        if (err) throw err; 
+    });
+
+}

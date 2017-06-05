@@ -1,4 +1,4 @@
 node_modules
 *.swp
 *.swo
-config.js
+config.json
