@@ -7,10 +7,10 @@ Terminal weather is a command-line utility to output a minimal description of th
 
 + Obtain an API key from [openweathermap.org](http://openweathermap.org)
 + Install Node and Npm
-+ run `npm install terminal-weather`
++ run `npm install -g terminal-weather`
 
 ## Configuration 
-edit CONFIG FILE and update the following settings:
++ edit CONFIG FILE and update the following settings:
 
 ### Units 
 
