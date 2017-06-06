@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+const os = require('os');
 const path = require('path');
 const symbols = require('./symbols');
-const config = require('./config.json');
+const configPath = path.join(os.homedir(),'.terminal-weather.json');
+const config = require(configPath);
 const WEATHER_API_KEY = config.API_KEY; 
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
@@ -27,7 +29,7 @@ function checkCacheAndMaybeRun(cache, fn) {
 
     // no cache or cache out of date  
     if (!cache || (now.getTime() - cache.lastRequestDate) > CACHE_INTERVAL) {
-        return fn()
+        return fn();
     }
  
     // cache exists and is still valid
@@ -41,7 +43,7 @@ function main() {
     .then(locationToWeather)
     .then(weatherToString)
     .then(process.stdout.write.bind(process.stdout))
-    .catch(e => { throw e });
+    .catch(e => { throw e; });
 
 }
 
@@ -138,7 +140,7 @@ function cacheWeatherData(weather) {
         lastRequestDate
     };
 
-    require('fs').writeFile(path.join(__dirname,'config.json'), JSON.stringify(config, null, 4), function(err) {
+    require('fs').writeFile(configPath, JSON.stringify(config, null, 4), function(err) {
         if (err) throw err; 
     });
 
