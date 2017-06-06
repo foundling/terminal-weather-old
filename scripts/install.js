@@ -5,32 +5,47 @@ const HOMEDIR = os.homedir();
 const configPath = path.join(HOMEDIR, '.terminal-weather.json');
 const getConfigData = require('./getConfigData');
 
-fs.stat(configPath, function(err, stats) {
+module.exports = exports = main;
 
+function main() {
+    fs.stat(configPath, writeConfigOrErr);
+}
+
+function mergeConfigData(configData) {
+
+    console.log(`writing configuration file to ${ configPath } ...`);
+    fs.readFile(path.join(__dirname,'../config-blank.json'), function(err, data) {
+
+        if (err) throw err;
+
+        let finalConfig = Object.assign(data.toString(), configData);
+        console.log('FINAL CONFIG');
+        console.log(finalConfig);
+        fs.writeFile(configPath, finalConfig, function(err) {
+            if (err) throw err;
+        }); 
+
+    });
+
+}
+
+function writeConfigOrErr(err, stats) {
+
+    // file exists: warn user and exit
     if (stats) {
 
-        console.log(stats);
         console.log(`*terminal-weather install failure* configuration file already exists ( ${configPath} ) `);
+        process.exit(1);
 
-    } else if (err && err.code === 'ENOENT') {
+    } 
 
-        getConfigData(function(configData) {
+    // file doesn't exist: write config
+    else if (err && err.code === 'ENOENT') {
 
-            // merge config data with config-blank.json
-            //
-            console.log(`writing configuration file to ${ configPath } ...`);
-            fs.readFile(path.join(__dirname,'../config-blank.json'), function(err, data) {
-
-                if (err) throw err;
-
-                fs.writeFile(configPath, data.toString(), function(err) {
-                    if (err) throw err;
-                }); 
-
-            });
-
-        });
+        getConfigData(mergeConfigData);
 
     }
 
-});
+}
+
+main();
