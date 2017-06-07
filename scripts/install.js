@@ -44,5 +44,3 @@ function mergeConfigData(configData) {
     });
 
 }
-
-main();

@@ -10,11 +10,18 @@ const symbols = require('./symbols');
 const configPath = path.join(os.homedir(),'.terminal-weather.json');
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
-const installScript = require(path.join(__dirname, 'scripts/install')); 
+const install = require(path.join(__dirname, 'scripts/install')); 
 
 // export entry point
 module.exports = exports = function() {
 
+    try {
+        require('fs').statSync(configPath);
+    } catch(e) {
+        if (e.code === 'ENOENT') {
+            install();
+        }
+    }
     require('fs').readFile(configPath, 'utf8', function(err, data) {
 
         if (err && err.code === 'ENOENT') {
