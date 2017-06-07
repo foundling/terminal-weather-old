@@ -11,24 +11,6 @@ function main() {
     fs.stat(configPath, writeConfigOrErr);
 }
 
-function mergeConfigData(configData) {
-
-    console.log(`writing configuration file to ${ configPath } ...`);
-    fs.readFile(path.join(__dirname,'../config-blank.json'), function(err, data) {
-
-        if (err) throw err;
-
-        let finalConfig = Object.assign(data.toString(), configData);
-        console.log('FINAL CONFIG');
-        console.log(finalConfig);
-        fs.writeFile(configPath, finalConfig, function(err) {
-            if (err) throw err;
-        }); 
-
-    });
-
-}
-
 function writeConfigOrErr(err, stats) {
 
     // file exists: warn user and exit
@@ -45,6 +27,21 @@ function writeConfigOrErr(err, stats) {
         getConfigData(mergeConfigData);
 
     }
+
+}
+
+function mergeConfigData(configData) {
+
+    fs.readFile(path.join(__dirname,'../config-blank.json'), 'utf8', function(err, data) {
+
+        if (err) throw err;
+
+        const finalConfig = Object.assign(JSON.parse(data), configData);
+        fs.writeFile(configPath, JSON.stringify(finalConfig, null, 4), function(err) {
+            if (err) throw err;
+        }); 
+
+    });
 
 }
 
