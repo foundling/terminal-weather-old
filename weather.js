@@ -1,34 +1,43 @@
 #!/usr/bin/env node
 
+// http and querystring are used at a minimum once every 10 min
+let http; 
+let querystring;
+
 const os = require('os');
 const path = require('path');
 const symbols = require('./symbols');
 const configPath = path.join(os.homedir(),'.terminal-weather.json');
-const config = require(configPath);
-const WEATHER_API_KEY = config.API_KEY; 
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
-const CACHE_INTERVAL = config.cacheInterval; // 10 min interval, according to openweathermap policy.
-
-// http and querystring are used at a minimum once every 10 min
-var http; 
-var querystring;
+const installScript = require(path.join(__dirname, 'scripts/install')); 
 
 // export entry point
 module.exports = exports = function() {
-    checkCacheAndMaybeRun(config.cache, main);
-};
 
-/*
- * Just functions after this ...
- */
+    require('fs').readFile(configPath, 'utf8', function(err, data) {
+
+        if (err && err.code === 'ENOENT') {
+            install(function() {
+                checkCacheAndMaybeRun(config.cache, main);
+            });
+        }
+        else {
+            config = JSON.parse(data);
+            checkCacheAndMaybeRun(config.cache, main);
+        }
+
+    });
+
+
+};
 
 function checkCacheAndMaybeRun(cache, fn) {
 
     let now = new Date();
 
     // no cache or cache out of date  
-    if (!cache || (now.getTime() - cache.lastRequestDate) > CACHE_INTERVAL) {
+    if (!cache || (now.getTime() - cache.lastRequestDate) > config.cacheInterval) {
         return fn();
     }
  
@@ -92,7 +101,7 @@ function getWeather({ city, countryCode }) {
             city, 
             countryCode, 
             units: config.units,
-            APPID: WEATHER_API_KEY
+            APPID: config.API_KEY
 
         }); 
 
