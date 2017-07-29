@@ -22,10 +22,8 @@ let config;
 
 function terminalWeather() {
 
-    config = checkConfigAndMaybeRun(configPath, install);
-    if (!config) 
-        return;
-
+    // no cache, cache expired or not installed
+    checkConfigAndMaybeRun(configPath, install);
     checkCacheAndMaybeRun(config.cache, main);
 
 }
@@ -94,15 +92,16 @@ function writeConfig(userConfig, defaultConfig) {
     const finalConfig = Object.assign(defaultConfig, userConfig);
     fs.writeFile(configPath, JSON.stringify(finalConfig, null, 4), function(err) {
         if (err) throw err;
+        console.log('installation complete. exiting ... ');
+        process.exit(0);
     }); 
 
 }
 
 function checkCacheAndMaybeRun(cache, fn) {
 
-    let now = new Date();
-
-    if (!cache || (now.getTime() - cache.lastRequestDate) > config.cacheInterval)
+    let msElapsed = (new Date()).getTime() - cache.lastRequestDate;
+    if (msElapsed > config.cacheInterval)
         return fn();
 
     process.stdout.write(cache.weather);
