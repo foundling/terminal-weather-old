@@ -1,28 +1,103 @@
-#!/usr/bin/env node
-
-const http = require('http');
 const fs = require('fs');
+const http = require('http');
 const os = require('os');
 const path = require('path');
 const querystring = require('querystring');
+const readline = require('readline');
 
 const symbols = require('./symbols');
+const prompts = require('./prompts');
 const configPath = path.join(os.homedir(),'.terminal-weather.json');
-const installConfig = require(path.join(__dirname, 'scripts/installConfig')); 
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
+const defaultConfig = {
+    API_KEY: '',
+    units: 'imperial',
+    cacheInterval: 600000, 
+    cache: null
+};
 
 let config;
 
-module.exports = exports = function terminalWeather() {
+function terminalWeather() {
 
-    if (!fs.existsSync(configPath))
-        return installConfig();
+    config = checkConfigAndMaybeRun(configPath, install);
+    if (!config) 
+        return;
 
-    config = require(configPath);
     checkCacheAndMaybeRun(config.cache, main);
 
 };
+
+function checkConfigAndMaybeRun(path, cb) {
+
+    try {
+
+        return require(path)
+
+    } catch(err) {
+
+        if (err.code === 'MODULE_NOT_FOUND')
+            return cb();
+
+    }
+
+};
+
+function install() {
+    takeUserConfigData(writeConfig);
+}
+
+function takeUserConfigData(cb) { 
+
+    function* makePrompt(prompts) {
+        while (prompts.length)
+            yield prompts.shift();
+    }
+
+    function repeat(prompt) {
+        process.stdout.write(`invalid: ${prompt.invalidMsg}\n${prompt.text}`);
+    }
+
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const prompter = makePrompt(prompts); 
+
+    let answers = [];
+    let userConfigData = {};
+    let currentPrompt = prompter.next().value;
+
+    process.stdout.write(currentPrompt.text);
+
+    rl.on('line', function(response) {
+
+        const answer = response.trim() || ' ';
+
+        // check response validity and store value if valid, or repeat question until valid
+        if (currentPrompt.isValid(answer)) {
+            userConfigData[currentPrompt.key] = answer;
+            currentPrompt = prompter.next().value; 
+        } else{
+            return repeat(currentPrompt);
+        }
+
+        // check for end of prompts  
+        if (currentPrompt) {
+            process.stdout.write(currentPrompt.text);
+        } else {
+            rl.close();
+            cb(userConfigData, defaultConfig);
+        }
+    });
+}
+
+function writeConfig(userConfig, defaultConfig) {
+
+    const finalConfig = Object.assign(defaultConfig, userConfig);
+    fs.writeFile(configPath, JSON.stringify(finalConfig, null, 4), function(err) {
+        if (err) throw err;
+    }); 
+
+}
 
 function checkCacheAndMaybeRun(cache, fn) {
 
@@ -46,16 +121,6 @@ function main() {
         });
 
 }
-
-let locationToWeather = ({ city, countryCode }) => getWeather({ city, countryCode }); 
-
-let weatherToString = (weatherData) => {
-
-    const weatherString = buildWeatherString(weatherData, symbols);
-    cacheWeatherData(weatherString);
-    return Promise.resolve(weatherString);
-
-};
 
 function getLocation() {
 
@@ -81,6 +146,20 @@ function getLocation() {
     });
 
 }
+
+function locationToWeather ({ city, countryCode }) {
+    return getWeather({ city, countryCode }); 
+}
+
+function weatherToString(weatherData) {
+
+    const weatherString = buildWeatherString(weatherData, symbols);
+    cacheWeatherData(weatherString);
+    return Promise.resolve(weatherString);
+
+};
+
+
 
 function getWeather({ city, countryCode }) {
 
@@ -147,3 +226,5 @@ function cacheWeatherData(weather) {
     });
 
 }
+
+module.exports = exports = terminalWeather;
