@@ -41,11 +41,14 @@ function main() {
         .then(locationToWeather)
         .then(weatherToString)
         .then(process.stdout.write.bind(process.stdout))
-        .catch(e => { throw e; });
+        .catch(e => { 
+            throw e; 
+        });
 
 }
 
 let locationToWeather = ({ city, countryCode }) => getWeather({ city, countryCode }); 
+
 let weatherToString = (weatherData) => {
 
     const weatherString = buildWeatherString(weatherData, symbols);
@@ -112,10 +115,16 @@ function getWeather({ city, countryCode }) {
 
 }
 
-
 function buildWeatherString(weatherData, symbols) {
 
-    let { temp, temp_min, temp_max } = weatherData.main;
+    let { 
+
+        temp, 
+        temp_min, 
+        temp_max 
+
+    } = weatherData.main;
+
     let description = 'clouds';
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => description.includes(key));
     let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : description;
