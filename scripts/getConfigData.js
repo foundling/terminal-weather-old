@@ -1,40 +1,56 @@
 const readline = require('readline');
+const prompts = [{
+    text: 'Api Key: ',
+    key: 'API_KEY',
+    test: input => (input.length === 32),
+    invalidMsg: 'is not a valid api key',
+    answer: null
+},
+{
+    text: 'Temperature units [ (c) for Celcius, (f) for Fahrenheit, (k) for Kelvin ]: ',
+    key: 'unit',
+    test: input => ['f', 'fahrenheit', 'c', 'celcius', 'k', 'kelvin'].some(validInput => validInput.match(input.toLowerCase())),
+    invalidMsg: 'is not a valid temperature unit',
+    answer: null
+}];
 
-module.exports = function(cb) { 
+function* promptUser() {
+    while (prompts.length)
+        yield prompts.shift();
+}
+
+function getConfigData(cb) { 
 
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    const answers = [];
-    const prompts = [
-        {
-            user: 'Api Key: ',
-            key: 'API_KEY',
-        },
-        {
-            user: 'temperature units [c for celcius, f for fahrenheit, k for Kelvin ]: ',
-            key: 'units'
-        }
-    ];
+    const prompter = promptUser(); 
 
-    let promptIndex = 0;
+    let currentPrompt = prompter.next().value;
+    process.stdout.write(currentPrompt.text);
 
-    process.stdout.write(prompts[promptIndex++].user);
-    rl.on('line', function(data) {
-        answers.push(data.trim());
+    rl.on('line', function(answer) {
 
-        if (promptIndex >= prompts.length) {
+        const data = answer || '';
 
-            let results = prompts.reduce(function(obj, prompt, index) {
-                obj[prompt.key] = answers[index]; 
-                console.log(obj);
+        if (!currentPrompt.test(data))
+            return process.stdout.write(`${answer} ${currentPrompt.invalidMsg}.`);
+
+        currentPrompt.answer = data;
+        currentPrompt = prompter.next().value; 
+
+        if (!currentPrompt) {
+            const results = prompts.reduce(function(obj, prompt, index) {
+                obj[prompt.key] = prompt.answer;
                 return obj;
             }, {}); 
 
             rl.close();
+            console.log(results);
             return cb(results);
-        }
-
-        process.stdout.write(prompts[promptIndex++].user);
+        } 
+        process.stdout.write(currentPrompt.text);
 
     });
 
-};
+}
+
+module.exports = exoprts = getConfigData;
