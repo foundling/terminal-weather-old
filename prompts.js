@@ -1,14 +1,22 @@
+const unitMap = {
+    f: 'fahrenheit',
+    c: 'celcius',
+    k: 'kelvin'
+};
+
 module.exports = exports = [
     {
         text: 'Api Key: ',
-        key: 'API_KEY',
+        configKey: 'API_KEY',
         isValid: input => (input.length === 32),
+        process: (input) => input,
         invalidMsg: 'not a valid api key'
     },
     {
         text: 'Temperature units [ (c) for Celcius, (f) for Fahrenheit, (k) for Kelvin ]: ',
-        key: 'unit',
-        isValid: input => ['f', 'fahrenheit', 'c', 'celcius', 'k', 'kelvin'].some(validInput => validInput.match(input.toLowerCase())),
+        configKey: 'units',
+        isValid: input => ['f', 'c', 'k'].includes((input.toLowerCase())),
+        process: (input) => unitMap[input],
         invalidMsg: 'not a valid temperature unit'
     }
 ];

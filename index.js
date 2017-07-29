@@ -10,10 +10,11 @@ const prompts = require('./prompts');
 const configPath = path.join(os.homedir(),'.terminal-weather.json');
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
+const TEN_MINUTES = 1000 * 60;
 const defaultConfig = {
     API_KEY: '',
-    units: 'imperial',
-    cacheInterval: 600000, 
+    units: null, 
+    cacheInterval: TEN_MINUTES, 
     cache: null
 };
 
@@ -73,14 +74,13 @@ function takeUserConfigData(cb) {
         const answer = response.trim() || ' ';
 
         // check response validity and store value if valid, or repeat question until valid
-        if (currentPrompt.isValid(answer)) {
-            userConfigData[currentPrompt.key] = answer;
-            currentPrompt = prompter.next().value; 
-        } else{
+        if (currentPrompt.isValid(answer))
+            userConfigData[currentPrompt.configKey] = currentPrompt.process(answer);
+        else
             return repeat(currentPrompt);
-        }
 
         // check for end of prompts  
+        currentPrompt = prompter.next().value; 
         if (currentPrompt) {
             process.stdout.write(currentPrompt.text);
         } else {
@@ -159,8 +159,6 @@ function weatherToString(weatherData) {
 
 };
 
-
-
 function getWeather({ city, countryCode }) {
 
     return new Promise((resolve, reject) => {
@@ -171,9 +169,12 @@ function getWeather({ city, countryCode }) {
             countryCode, 
             units: config.units,
             APPID: config.API_KEY
-        }; 
-        let qs = querystring.stringify(data); 
+        };
 
+        if (data.units === 'k')
+            delete data.units; // kelvin is openweathermap's default unit, no query param needed.
+
+        let qs = queryString.stringify(data);
         http.get(`${ OPENWEATHERMAP_ENDPOINT }?q=${qs}`, (response) => {
 
             response.on('data', function(data) {
@@ -210,6 +211,7 @@ function buildWeatherString(weatherData, symbols) {
     let formattedString = `${ parseInt(temp) }°${config.units} ${ symbol }. `;
 
     return formattedString;
+
 }
 
 function cacheWeatherData(weather) {
