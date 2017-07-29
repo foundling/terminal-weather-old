@@ -28,13 +28,13 @@ function terminalWeather() {
 
     checkCacheAndMaybeRun(config.cache, main);
 
-};
+}
 
 function checkConfigAndMaybeRun(path, cb) {
 
     try {
 
-        return require(path)
+        return require(path);
 
     } catch(err) {
 
@@ -43,7 +43,7 @@ function checkConfigAndMaybeRun(path, cb) {
 
     }
 
-};
+}
 
 function install() {
     takeUserConfigData(writeConfig);
@@ -63,7 +63,6 @@ function takeUserConfigData(cb) {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
     const prompter = makePrompt(prompts); 
 
-    let answers = [];
     let userConfigData = {};
     let currentPrompt = prompter.next().value;
 
@@ -110,12 +109,18 @@ function checkCacheAndMaybeRun(cache, fn) {
 
 }
 
+function makeReject(fnName) {
+    return function(e) {
+        console.log(`error in function ${fnName}!`);
+        throw e;
+    };
+}
 function main() {
 
     getLocation()
-        .then(locationToWeather)
-        .then(weatherToString)
-        .then(process.stdout.write.bind(process.stdout))
+        .then(locationToWeather, makeReject('locationToWeather'))
+        .then(weatherToString, makeReject('weatherToString'))
+        .then(process.stdout.write.bind(process.stdout), makeReject('process.stdout.write'))
         .catch(e => { 
             throw e; 
         });
@@ -157,7 +162,7 @@ function weatherToString(weatherData) {
     cacheWeatherData(weatherString);
     return Promise.resolve(weatherString);
 
-};
+}
 
 function getWeather({ city, countryCode }) {
 
@@ -171,10 +176,10 @@ function getWeather({ city, countryCode }) {
             APPID: config.API_KEY
         };
 
-        if (data.units === 'k')
+        if (data.units === 'standard')
             delete data.units; // kelvin is openweathermap's default unit, no query param needed.
 
-        let qs = queryString.stringify(data);
+        let qs = querystring.stringify(data);
         http.get(`${ OPENWEATHERMAP_ENDPOINT }?q=${qs}`, (response) => {
 
             response.on('data', function(data) {
@@ -205,10 +210,16 @@ function buildWeatherString(weatherData, symbols) {
 
     } = weatherData.main;
 
+    const configTempToLabel = {
+        'imperial': 'F',
+        'metric': 'C',
+        'standard': 'K'
+    };
+
     let defaultDescription = 'clouds';
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => defaultDescription.includes(key));
     let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : defaultDescription;
-    let formattedString = `${ parseInt(temp) }°${config.units} ${ symbol }. `;
+    let formattedString = `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol }. `;
 
     return formattedString;
 
