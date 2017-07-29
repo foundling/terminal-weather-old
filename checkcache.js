@@ -15,10 +15,12 @@ try {
 
 } catch(err) {
 
+    let configPath;
     /* Handle config install. */
-    if (err.code === 'MODULE_NOT_FOUND')
-        let configPath = `${homedir}/.terminal-weather.json`;
+    if (err.code === 'MODULE_NOT_FOUND') {
+        configPath = `${homedir}/.terminal-weather.json`;
         require('./install')(configPath);
+    }
     else
         throw err;
 
