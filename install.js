@@ -1,5 +1,17 @@
+const fs = require('fs');
 const readline = require('readline');
-const promtps = require('./prompts');
+const prompts = require('./prompts');
+const path = require('path');
+const os = require('os');
+const TEN_MINUTES = 1000 * 60 * 10;
+const defaultConfig = {
+    API_KEY: '',
+    units: null,
+    cacheInterval: TEN_MINUTES,
+    cache: null
+};
+const configPath = path.join(os.homedir(),'.terminal-weather.json');
+
 
 function install() {
     takeUserConfigData(writeConfig);

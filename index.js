@@ -8,21 +8,15 @@ const symbols = require('./symbols');
 
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
-const TEN_MINUTES = 1000 * 60;
 const configPath = path.join(os.homedir(),'.terminal-weather.json');
-const defaultConfig = {
-    API_KEY: '',
-    units: null, 
-    cacheInterval: TEN_MINUTES, 
-    cache: null
-};
 
 let config;
 
-function terminalWeather() {
+function terminalWeather(conf) {
+    config = conf;
 
     getLocation()
-        .then(locationToWeather, makeReject('locationToWeather'))
+        .then(getWeather, makeReject('getWeather'))
         .then(weatherToString, makeReject('weatherToString'))
         .then(process.stdout.write.bind(process.stdout), makeReject('process.stdout.write'))
         .catch(e => { 
@@ -61,10 +55,6 @@ function getLocation() {
 
     });
 
-}
-
-function locationToWeather ({ city, countryCode }) {
-    return getWeather({ city, countryCode }); 
 }
 
 function weatherToString(weatherData) {
