@@ -22,26 +22,34 @@ Terminal weather is an embeddable cli command that outputs a minimal description
 
 ## Configuration 
 
-+ terminal-weather writes a JSON configuration file called '.terminal-weather.json' to your home directory.
++ On the first run, terminal-weather prompts you for the values it needs to continually query the api.
++ Then it writes a JSON configuration file called '.terminal-weather.json' to your $HOME directory.
 
-### Units 
+    {
+        "API_KEY": "SECRET",
+        "units": "imperial",
+        "cacheInterval": 600000,
+        "cache": null
+    }
+
+If you want to edit the .json file directly, temperature units should be indicated according to the following:
 
 + **default** for Kelvin
 + **imperial** for fahrenheit
 + **metric** celcius and fahrenheit)
 
-### Getting `terminal-weather` into your Bash Prompt
+### Getting `terminal-weather` into your terminal prompt
 
-If you want to put the weather in your bash prompt, there are a few things you need to do:
-    
+If you want to put the weather in your bash prompt, there are a couple things you need to do:
+
+1. Make sure that /usr/local/bin is in your $PATH
+2. Add the following lines to your ~/.bashrc file
+
     # to prevent caching
     set_bash_prompt() {
-        PS1="`terminal-weather` \u@[\h] ${FG_CYAN} \w${FG_WHITE}\n$ $(history -n)"
+        PS1="`terminal-weather` \u@[\h]$ $(history -n)"
     }
 
     # augment the prompt command sequence
     PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
-
-
-
 
