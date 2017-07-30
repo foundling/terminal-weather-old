@@ -15,7 +15,7 @@ Terminal weather is an embeddable cli command that outputs a minimal description
 ## Caching and Module loading
 
 + terminal-weather adheres to openweathermap.org's limit of 1 http call every ten minutes. The rest of time it outputs a cached value. 
-+ Because the most frequent case is retrieving cached data, only the bare minimum is loaded to support that.  In case of a cache expiration, the full module set is loaded to retreive the new value. This results in a seamless terminal experience when embedding terminal-weather in your terminal prompt (see below). 
++ Because the most frequent case is retrieving cached data, only the bare minimum is loaded to support that.  In case of a cache expiration, the modules required to retreive new weather data are then loaded. This maintains a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
 
 ## Command-line options
 + These are coming soon.
@@ -35,21 +35,21 @@ Terminal weather is an embeddable cli command that outputs a minimal description
 If you want to edit the .json file directly, temperature units should be indicated according to the following:
 
 + **default** for Kelvin
-+ **imperial** for fahrenheit
-+ **metric** celcius and fahrenheit)
++ **imperial** for Fahrenheit
++ **metric** for Celcius
 
 ### Getting `terminal-weather` into your terminal prompt
 
 If you want to include terminal-weather in your bash prompt, there are a couple things you need to do:
 
-1. Make sure that /usr/local/bin is in your $PATH. If you can't run 'terminal-weather' in your terminal, you may have not installed it globally. 
-2. Add the following lines to your ~/.bashrc file
+1. Make sure that /usr/local/bin is in your $PATH so that your shell can find locate it. If after installing terminal weather, you can't run `terminal-weather` from your terminal, you may have not installed it globally (using the `-g` flag). 
+2. Add the following lines to your ~/.bashrc file:
 
         # a function to insert the terminal-weather bash fn inside the PS1 variable
         set_bash_prompt() {
             PS1="`terminal-weather` \u@[\h]$ $(history -n)"
         }
 
-        # include above fn in prompt command to set the prompt each time it is rendered
+        # include above fn in prompt command variable so the prompt is reset each time it is rendered
         PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
 
