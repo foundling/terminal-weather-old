@@ -50,6 +50,6 @@ If you want to include terminal-weather in your bash prompt, there are a couple 
             PS1="`terminal-weather` \u@[\h]$ $(history -n)"
         }
 
-        # expand  prompt command sequence to include the set_bash_prompt fn
+        # include above fn in prompt command to set the prompt each time it is rendered
         PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
 
