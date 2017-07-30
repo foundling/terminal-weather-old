@@ -30,7 +30,7 @@ Terminal weather is an embeddable cli command that outputs a minimal description
 + **imperial** for fahrenheit
 + **metric** celcius and fahrenheit)
 
-### Putting `terminal-weather` in your Bash Prompt
+### Getting `terminal-weather` into your Bash Prompt
 
 If you want to put the weather in your bash prompt, there are a few things you need to do:
     
@@ -38,6 +38,8 @@ If you want to put the weather in your bash prompt, there are a few things you n
     set_bash_prompt() {
         PS1="`terminal-weather` \u@[\h] ${FG_CYAN} \w${FG_WHITE}\n$ $(history -n)"
     }
+
+    # augment the prompt command sequence
     PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
 
 
