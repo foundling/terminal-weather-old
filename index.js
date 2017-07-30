@@ -113,7 +113,7 @@ function buildWeatherString(weatherData, symbols) {
     let defaultDescription = 'clouds';
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => defaultDescription.includes(key));
     let symbol = matchingDescriptions ? symbols.icons[ matchingDescriptions[0] ] : defaultDescription;
-    let formattedString = `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol }. `;
+    let formattedString = `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol } `;
 
     return formattedString;
 

@@ -40,16 +40,16 @@ If you want to edit the .json file directly, temperature units should be indicat
 
 ### Getting `terminal-weather` into your terminal prompt
 
-If you want to put the weather in your bash prompt, there are a couple things you need to do:
+If you want to include terminal-weather in your bash prompt, there are a couple things you need to do:
 
-1. Make sure that /usr/local/bin is in your $PATH
+1. Make sure that /usr/local/bin is in your $PATH. If you can't run 'terminal-weather' in your terminal, you may have not installed it globally. 
 2. Add the following lines to your ~/.bashrc file
 
-    # to prevent caching
-    set_bash_prompt() {
-        PS1="`terminal-weather` \u@[\h]$ $(history -n)"
-    }
+        # a function to insert the terminal-weather bash fn inside the PS1 variable
+        set_bash_prompt() {
+            PS1="`terminal-weather` \u@[\h]$ $(history -n)"
+        }
 
-    # augment the prompt command sequence
-    PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
+        # expand  prompt command sequence to include the set_bash_prompt fn
+        PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
 
