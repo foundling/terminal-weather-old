@@ -1,6 +1,6 @@
 # terminal-weather
 
-Terminal weather is a cli tool that outputs a minimal description of the weather. You can embed it in your terminal prompt or use it by itself. It is optimized to be embedded in your terminal prompt, so you won't get bogged down by recurrent loading of modules and http calls to the weather api every time your prompt is re-rendered.
+Terminal weather is an embeddable cli command that outputs a minimal description of the weather. It is optimized for the prompt and cached every ten minutes by default.
 
 ## Requirements
 
@@ -14,7 +14,7 @@ Terminal weather is a cli tool that outputs a minimal description of the weather
 
 ## Caching and Module loading
 
-+ terminal-weather follows the advice of openweathermap.org to make a maximum of 1 http call per 10 minute interval. The rest of time it is outputting a cached value. 
++ terminal-weather adheres to openweathermap.org's limit of 1 http call every ten minutes. The rest of time it outputs a cached value. 
 + Because the most frequent case is retrieving cached data, only the bare minimum is loaded to support that.  In case of a cache expiration, the full module set is loaded to retreive the new value. This results in a seamless terminal experience when embedding terminal-weather in your terminal prompt (see below). 
 
 ## Command-line options
