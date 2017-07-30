@@ -42,7 +42,7 @@ If you want to edit the .json file directly, temperature units should be indicat
 
 If you want to include terminal-weather in your bash prompt, there are a couple things you need to do:
 
-1. Make sure that /usr/local/bin is in your $PATH so that your shell can find locate it. If after installing terminal weather, you can't run `terminal-weather` from your terminal, you may have not installed it globally (using the `-g` flag). 
+1. Make sure that /usr/local/bin is in your $PATH so that your shell can locate it. If after installing terminal weather, you can't run `terminal-weather` from your terminal, you may have not installed it globally (using the `-g` flag). 
 2. Add the following lines to your ~/.bashrc file:
 
         # a function to insert the terminal-weather bash fn inside the PS1 variable
