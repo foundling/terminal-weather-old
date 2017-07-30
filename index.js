@@ -1,35 +1,30 @@
 const fs = require('fs');
 const http = require('http');
-const os = require('os');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
 const symbols = require('./symbols');
 
+const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
+const configPath = path.join(homedir,'.terminal-weather.json');
+const config = require(configPath);
 const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
 const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
-const configPath = path.join(os.homedir(),'.terminal-weather.json');
+const writeToConsole = (s) => {
+    process.stdout.write(s);
+}; 
 
-let config;
-
-function terminalWeather(conf) {
-    config = conf;
+function terminalWeather() {
 
     getLocation()
-        .then(getWeather, makeReject('getWeather'))
-        .then(weatherToString, makeReject('weatherToString'))
-        .then(process.stdout.write.bind(process.stdout), makeReject('process.stdout.write'))
+        .then(getWeather)
+        .then(weatherToString)
+        .then(cacheWeatherData)
+        .then(writeToConsole)
         .catch(e => { 
             throw e; 
         });
 
-}
-
-function makeReject(fnName) {
-    return function(e) {
-        console.log(`error in function ${fnName}!`);
-        throw e;
-    };
 }
 
 function getLocation() {
@@ -59,9 +54,7 @@ function getLocation() {
 
 function weatherToString(weatherData) {
 
-    const weatherString = buildWeatherString(weatherData, symbols);
-    cacheWeatherData(weatherString);
-    return Promise.resolve(weatherString);
+    return buildWeatherString(weatherData, symbols);
 
 }
 
@@ -126,18 +119,18 @@ function buildWeatherString(weatherData, symbols) {
 
 }
 
-function cacheWeatherData(weather) {
-
-    let lastRequestDate = new Date().getTime();
+function cacheWeatherData(weatherString) {
 
     config.cache = {
-        weather,
-        lastRequestDate
+        weather: weatherString,
+        lastRequestDate: new Date().getTime()
     };
 
     fs.writeFile(configPath, JSON.stringify(config, null, 4), function(err) {
         if (err) throw err; 
     });
+
+    return weatherString;
 
 }
 
