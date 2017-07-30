@@ -1,8 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
 const prompts = require('./prompts');
-const path = require('path');
-const os = require('os');
 const TEN_MINUTES = 1000 * 60 * 10;
 const defaultConfig = {
     API_KEY: '',
@@ -10,11 +8,9 @@ const defaultConfig = {
     cacheInterval: TEN_MINUTES,
     cache: null
 };
-const configPath = path.join(os.homedir(),'.terminal-weather.json');
 
-
-function install() {
-    takeUserConfigData(writeConfig);
+function install(configPath) {
+    takeUserConfigData( configWriter(configPath) );
 }
 
 function takeUserConfigData(cb) { 
@@ -39,6 +35,7 @@ function takeUserConfigData(cb) {
     rl.on('line', function(response) {
 
         const answer = response.trim() || ' ';
+        let config;
 
         // check response validity and store value if valid, or repeat question until valid
         if (currentPrompt.isValid(answer))
@@ -52,19 +49,22 @@ function takeUserConfigData(cb) {
             process.stdout.write(currentPrompt.text);
         } else {
             rl.close();
-            cb(userConfigData, defaultConfig);
+            cb(Object.assign(defaultConfig, userConfigData));
         }
     });
 }
 
-function writeConfig(userConfig, defaultConfig) {
+function configWriter(path) {
 
-    const finalConfig = Object.assign(defaultConfig, userConfig);
-    fs.writeFile(configPath, JSON.stringify(finalConfig, null, 4), function(err) {
-        if (err) throw err;
-        console.log('installation complete. exiting ... ');
-        process.exit(0);
-    }); 
+    return function(config) {
+
+        fs.writeFile(path, JSON.stringify(config, null, 4), function(err) {
+            if (err) throw err;
+            console.log('installation complete. exiting ... ');
+            process.exit(0);
+        }); 
+
+    };
 
 }
 
