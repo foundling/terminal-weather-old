@@ -110,7 +110,7 @@ function buildWeatherString(weatherData, symbols) {
         'standard': 'K'
     };
 
-    let defaultDescription = 'clouds';
+    let defaultDescription = 'clear';
     
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => defaultDescription.includes(key));
     let symbol = matchingDescriptions.length ? symbols.icons[ matchingDescriptions[0] ] : defaultDescription;
