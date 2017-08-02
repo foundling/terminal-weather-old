@@ -1,0 +1,18 @@
+terminal-weather
+    output help text
+
+terminal-weather --install, -i
+
+terminal-weather --prompt, -p 
+    write weather using stdout 
+
+terminal-weather --no-cache, -n
+    skip cache check
+
+terminal-weather --format < text | emoji >
+    set default to either text or emoji
+
+    formats:
+        text
+        emoji
+        

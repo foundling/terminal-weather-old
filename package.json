@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A Location-based Terminal Weather utility using OpenWeatherMap's API",
   "main": "weather.js",
-  "bin": {"terminal-weather": "./bin/terminal-weather"},
+  "bin": {
+    "terminal-weather": "./bin/terminal-weather"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,6 +26,7 @@
   },
   "homepage": "https://github.com/foundling/terminal-weather",
   "dependencies": {
-    "chalk": "^1.1.3"
+    "chalk": "^1.1.3",
+    "commander": "^2.11.0"
   }
 }

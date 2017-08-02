@@ -17,6 +17,8 @@ module.exports = exports = weatherToColorMap = {
         snow:   'white',
     }
 
+
+
 };
 
 // 🌩
