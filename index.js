@@ -54,7 +54,6 @@ function getLocation() {
 
 function weatherToString(weatherData) {
 
-    console.log(weatherData);
     return buildWeatherString(weatherData, symbols);
 
 }
