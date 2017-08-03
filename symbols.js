@@ -4,7 +4,7 @@ module.exports = exports = weatherToColorMap = {
         night:  '🌛',
     },
     icons: {
-        clear:  '🌞',
+        clear:  '☀️',
         clouds: '⛅',
         rain:   '🌦 ',
         rain2: '🌧 ',
