@@ -8,8 +8,6 @@ const symbols = require('./symbols');
 const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
 const configPath = path.join(homedir,'.terminal-weather.json');
 const config = require(configPath);
-const GEOLOCATION_ENDPOINT = 'http://ip-api.com/json';
-const OPENWEATHERMAP_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather';
 const writeToConsole = (s) => {
     process.stdout.write(s);
 }; 
@@ -32,7 +30,12 @@ function getLocation() {
     return new Promise((resolve, reject) => {
 
         let rawData = '';
-        http.get(GEOLOCATION_ENDPOINT, response => {
+        http.get({
+            hostname: 'http://ip-api.com',
+            port: 80,
+            path: '/json',
+            timeout: 4000
+        }, response => {
 
             response.on('data', function(data) {
                 rawData += data;
@@ -74,7 +77,12 @@ function getWeather({ city, countryCode }) {
             delete data.units; // kelvin is openweathermap's default unit, no query param needed.
 
         let qs = querystring.stringify(data);
-        http.get(`${ OPENWEATHERMAP_ENDPOINT }?q=${qs}`, (response) => {
+        http.get({
+            hostname: 'http://api.openweathermap.org',
+            path: `data/2.5/weather?q=${qs}`,
+            port: 80,
+            timeout: 4000 
+        }, (response) => {
 
             response.on('data', function(data) {
                 rawData += data;
