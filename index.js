@@ -12,6 +12,10 @@ const writeToConsole = (s) => {
     process.stdout.write(s);
 }; 
 
+const timeoutNotification = () => {
+    process.stdout.write('.');
+}
+
 function terminalWeather() {
 
     getLocation()
@@ -30,11 +34,10 @@ function getLocation() {
     return new Promise((resolve, reject) => {
 
         let rawData = '';
-        http.get({
+        const req = http.get({
             hostname: 'ip-api.com',
-            port: 80,
             path: '/json',
-            timeout: config.TIMEOUT
+            port: 80,
         }, response => {
 
             response.on('data', function(data) {
@@ -43,13 +46,29 @@ function getLocation() {
 
             response.on('end', function() {
                 resolve(JSON.parse(rawData));
+                req.end();
             });
 
             response.on('error', function(data) {
                 reject(data);
+                req.end();
             });
 
-        }).end();
+        });
+
+        req.on('socket', (socket) => {
+            socket.setTimeout(config.TIMEOUT);
+            socket.on('timeout', () => {
+                timeoutNotification();
+                req.abort();
+            });
+        }); 
+
+        req.on('error', (err) => {
+            if (err.code === 'ECONNRESET') {
+                process.exit(1);
+            }
+        });
 
     });
 
@@ -72,31 +91,45 @@ function getWeather({ city, countryCode }) {
             units: config.units,
             APPID: config.API_KEY
         };
-
-        if (data.units === 'standard')
-            delete data.units; // kelvin is openweathermap's default unit, no query param needed.
-
         let qs = querystring.stringify(data);
-        http.get({
-            hostname: 'api.openweathermap.org',
-            path: `/data/2.5/weather?q=${qs}`,
-            port: 80,
-            timeout: config.TIMEOUT
-        }, (response) => {
 
-            response.on('data', function(data) {
+        const req = http.get({
+
+            hostname: 'api.openweathermap.org',
+            path: `/data/2.5/weather?q=${qs}`
+
+        }, (res) => {
+
+            res.on('data', function(data) {
                 rawData += data;
             });
 
-            response.on('end', function() {
-                resolve( JSON.parse(rawData) );
+            res.on('end', function() {
+                resolve(JSON.parse(rawData));
+                req.end();
             });
 
-            response.on('error', function(data) {
+            res.on('error', function(data) {
                 reject(data);
+                req.end();
             });
 
-        }).end();
+        });
+
+        req.on('socket', (socket) => {
+            socket.setTimeout(config.TIMEOUT);
+            socket.on('timeout', () => {
+                timeoutNotification();
+                req.abort();
+            });
+        }); 
+
+        req.on('error', (err) => {
+            if (err.code === 'ECONNRESET') {
+                process.exit(1);
+                req.end();
+            }
+        });
 
     });
 
