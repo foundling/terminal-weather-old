@@ -17,6 +17,10 @@ Terminal weather is an embeddable cli command that outputs a minimal description
 + terminal-weather adheres to openweathermap.org's limit of 1 http call every ten minutes. The rest of time it outputs a cached value. 
 + Because the most frequent case is retrieving cached data, only the bare minimum is loaded to support that.  In case of a cache expiration, the modules required to retreive new weather data are then loaded. This maintains a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
 
+## Which Services It Uses
+
+`Terminal-weather` uses `ip-api.com` to map your ip to  
+
 ## Command-line options
 + These are coming soon.
 
