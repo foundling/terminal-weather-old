@@ -27,8 +27,9 @@ Terminal weather is an embeddable cli command that outputs a minimal description
 
     {
         "API_KEY": "SECRET",
+        "CACHE_INTERVAL_MS": 600000,
+        "TIMEOUT": 4000,
         "units": "imperial",
-        "cacheInterval": 600000,
         "cache": null
     }
 

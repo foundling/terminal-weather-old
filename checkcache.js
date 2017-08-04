@@ -6,9 +6,9 @@ try {
 
     /* Handle writing out cached data. Usual case. */
     let config = require(configPath);
-    let currentTime = (new Date()).getTime();
+    let currentTimeMS = (new Date()).getTime();
 
-    if (!config.cache || currentTime - config.cache.lastRequestDate > config.cacheInterval)
+    if (!config.cache || currentTimeMS - config.cache.lastRequestDate > config.CACHE_INTERVAL_MS)
        require('./index')();
     else 
         process.stdout.write(config.cache.weather);
