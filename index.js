@@ -34,7 +34,7 @@ function getLocation() {
             hostname: 'http://ip-api.com',
             port: 80,
             path: '/json',
-            timeout: 4000
+            timeout: config.TIMEOUT
         }, response => {
 
             response.on('data', function(data) {
@@ -81,7 +81,7 @@ function getWeather({ city, countryCode }) {
             hostname: 'http://api.openweathermap.org',
             path: `data/2.5/weather?q=${qs}`,
             port: 80,
-            timeout: 4000 
+            timeout: config.TIMEOUT
         }, (response) => {
 
             response.on('data', function(data) {

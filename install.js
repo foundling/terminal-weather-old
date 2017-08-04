@@ -4,6 +4,7 @@ const prompts = require('./prompts');
 const TEN_MINUTES = 1000 * 60 * 10;
 const defaultConfig = {
     API_KEY: '',
+    TIMEOUT: 4000,
     units: null,
     cacheInterval: TEN_MINUTES,
     cache: null
