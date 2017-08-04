@@ -1,31 +1,28 @@
 module.exports = exports = weatherToColorMap = {
-
-    timeOfDay: {
-        night:  '🌛',
-    },
     icons: {
-        clear:  '☀️',
-        clouds: '⛅',
-        rain:   '🌦 ',
-        rain2: '🌧 ',
-        snow: '🌨 ', 
-    },
-    coloredText: {
-        clear:  'yellow', 
-        rain:   'blue',
-        clouds: 'gray',
-        snow:   'white',
+        clear: {
+            day:  '☀️  ',
+            night: '🌛 ',
+        },
+        clouds: {
+            day: '⛅ ',
+            night: '☁️ ',
+        },
+        rain: {
+            day: '🌧 ',
+            night: '🌧 ',
+        },
+        thunder: {
+            day: '⚡️ ',
+            night: '⚡️ '
+        },
+        snow: {
+            day: '⛄️ ',
+            night: '⛄️ ',
+        },
+        fog: {
+            day: '🌁 ',
+            night: '🌁 ',
+        }
     }
-
-
-
 };
-
-// 🌩
-// ⛈
-// 🌫
-// ⛷ 
-// j
-//
-// ❆
-// 🏂 
