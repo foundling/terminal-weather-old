@@ -6,10 +6,12 @@ try {
 
     /* Handle writing out cached data. Usual case. */
     let config = require(configPath);
-    if (!config.cache || (new Date()).getTime() - config.cache.lastRequestDate > config.cacheInterval)
-       return require('./index')();
+    let currentTime = (new Date()).getTime();
 
-    process.stdout.write(config.cache.weather);
+    if (!config.cache || currentTime - config.cache.lastRequestDate > config.cacheInterval)
+       require('./index')();
+    else 
+        process.stdout.write(config.cache.weather);
 
 } catch(err) {
 

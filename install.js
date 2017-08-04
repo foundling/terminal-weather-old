@@ -59,9 +59,9 @@ function configWriter(path) {
 
     return function(config) {
 
-        fs.writeFile(path, JSON.stringify(config, null, 4), function(err) {
+        fs.writeFile(path, JSON.stringify(config, null, 4), 'utf8', function(err) {
             if (err) throw err;
-            console.log('installation complete. exiting ... ');
+            console.log('installation complete 😎 ');
             process.exit(0);
         }); 
 
