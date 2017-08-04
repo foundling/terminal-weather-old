@@ -20,7 +20,8 @@ Terminal weather is a cli that conveys weather information so concise you can em
 
 ## Which Services It Uses
 
-`Terminal-weather` uses `ip-api.com` to map your ip to  
+
+`Terminal-weather` uses `ip-api.com` to map your ip to a city name. You aren't restricted to this and can pass in a city name with a cli flag, but that's the default. 
 
 ## Command-line options
 + These are coming soon.
