@@ -1,6 +1,6 @@
 # terminal-weather
 
-Terminal weather is an embeddable cli command that outputs a minimal description of the weather. It is optimized for the prompt and cached every ten minutes by default.
+Terminal weather is a cli you can embed in your prompt that outputs weather information in a nugget so concise you can embed it in your terminal prompt. Withit, you can output text, emojis and a combination of both to inform you of the weather.
 
 ## Requirements
 
