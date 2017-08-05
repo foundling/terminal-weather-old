@@ -98,7 +98,7 @@ function getWeather(results) {
             hostname: 'api.openweathermap.org',
             path: `/data/2.5/weather?q=${qs}`
 
-        }, (res) => {
+        }, function responseHandler(res) {
 
             res.on('data', function(chunk) {
                 body += chunk;
@@ -142,10 +142,13 @@ function getSunriseSunset(results) {
 
     return new Promise((resolve, reject) => {
 
+        const ONE_DAY_MS = 1000 * 60 * 60 * 24;
+        const today = new Date();
+        const yesterday = new Date(today - ONE_DAY_MS);
         const data = {
             lat,
             lng: lon,
-            date: 'today',
+            date: yesterday.toJSON().split('T')[0],
             formatted: 0
         };
         const qs = querystring.stringify(data);
@@ -165,6 +168,7 @@ function getSunriseSunset(results) {
 
             response.on('end', function() {
                 results.sunriseSunset = JSON.parse(body);
+                console.log(results.sunriseSunset);
                 resolve(results);
                 req.end();
             });
@@ -199,22 +203,16 @@ function getSunriseSunset(results) {
 
 function toWeatherString(results) {
 
-    let { 
-
-        temp, 
-        temp_min, 
-        temp_max 
-
-    } = results.weather.main;
-
+    const { sunrise, sunset } = results.sunriseSunset.results;
+    const { temp, temp_min, temp_max } = results.weather.main;
+    console.log(sunrise, sunset);
     const configTempToLabel = {
-        'imperial': 'F',
-        'metric': 'C',
+        imperial: 'F',
+        metric: 'C',
     };
 
-    let defaultDescription = 'clear';
     let matchingDescriptions = Object.keys(symbols.icons).filter(key => defaultDescription.includes(key));
-    let symbol = matchingDescriptions.length ? symbols.icons[ matchingDescriptions[0] ].day : defaultDescription;
+    let symbol = symbols.icons[ matchingDescriptions[0] ].day;
 
     return `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol } `;
 
