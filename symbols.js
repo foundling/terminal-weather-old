@@ -16,6 +16,10 @@ module.exports = exports = weatherToColorMap = {
             day: '⚡️ ',
             night: '⚡️ '
         },
+        smoke: {
+            day: 'smoke',
+            night: 'smoke'
+        },
         snow: {
             day: '⛄️ ',
             night: '⛄️ ',

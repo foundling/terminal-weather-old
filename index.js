@@ -168,7 +168,6 @@ function getSunriseSunset(results) {
 
             response.on('end', function() {
                 results.sunriseSunset = JSON.parse(body);
-                console.log(results.sunriseSunset);
                 resolve(results);
                 req.end();
             });
@@ -205,14 +204,18 @@ function toWeatherString(results) {
 
     const { sunrise, sunset } = results.sunriseSunset.results;
     const { temp, temp_min, temp_max } = results.weather.main;
-    console.log(sunrise, sunset);
+    const descriptionKey = results.weather.weather[0].main.toLowerCase();
+    const sunriseLocal = new Date((new Date(sunrise)).toString());
+    const sunsetLocal = new Date((new Date(sunset)).toString());
+    const sunHasSet = new Date() > sunsetLocal;
+    const dayOrNight = sunHasSet ? 'night' : 'day';
     const configTempToLabel = {
         imperial: 'F',
         metric: 'C',
     };
 
-    let matchingDescriptions = Object.keys(symbols.icons).filter(key => defaultDescription.includes(key));
-    let symbol = symbols.icons[ matchingDescriptions[0] ].day;
+    let matchingDescriptions = Object.keys(symbols.icons).filter(key => descriptionKey.includes(key.trim()));
+    let symbol = symbols.icons[ matchingDescriptions[0] ][dayOrNight];
 
     return `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol } `;
 

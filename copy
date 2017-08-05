@@ -1,0 +1,7 @@
+{
+    "API_KEY": "61beaf11b206ba345f116d0ebe6205c2",
+    "TIMEOUT": 4000,
+    "CACHE_INTERVAL_MS": 600000,
+    "units": "imperial",
+    "cache": null
+}
