@@ -3,7 +3,7 @@ const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-const symbols = require('./symbols');
+const display = require('./display');
 const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
 const configPath = path.join(homedir,'.terminal-weather.json');
 const config = require(configPath);
@@ -14,16 +14,12 @@ const writeToConsole = (s) => {
 function terminalWeather() {
 
     const results = {
-
         location: null,
         weather: null,
-        sunriseSunset: null
-
     };
 
     getLocation(results)
         .then(getWeather)
-        .then(getSunriseSunset)
         .then(toWeatherString)
         .then(cacheWeatherData)
         .then(writeToConsole)
@@ -136,86 +132,26 @@ function getWeather(results) {
 
 }
 
-function getSunriseSunset(results) {
-
-    const { lat, lon } = results.location;
-
-    return new Promise((resolve, reject) => {
-
-        const ONE_DAY_MS = 1000 * 60 * 60 * 24;
-        const today = new Date();
-        const yesterday = new Date(today - ONE_DAY_MS);
-        const data = {
-            lat,
-            lng: lon,
-            date: yesterday.toJSON().split('T')[0],
-            formatted: 0
-        };
-        const qs = querystring.stringify(data);
-
-        let body = '';
-        const req = http.get({
-
-            hostname: 'api.sunrise-sunset.org',
-            path: `/json?${qs}`,
-            port: 80,
-
-        }, response => {
-
-            response.on('data', function(chunk) {
-                body += chunk;
-            });
-
-            response.on('end', function() {
-                results.sunriseSunset = JSON.parse(body);
-                resolve(results);
-                req.end();
-            });
-
-            response.on('error', function(data) {
-                reject(data);
-                req.end();
-            });
-
-        });
-
-        req.on('socket', (socket) => {
-            socket.setTimeout(config.TIMEOUT);
-            socket.on('timeout', () => {
-                writeToConsole('timeout :{');
-                req.abort();
-                req.end();
-            });
-        }); 
-
-        req.on('error', (err) => {
-            if (err.code === 'ECONNRESET') {
-                process.exit(1);
-            }
-        });
-
-    });
-
-}
-
-
-
 function toWeatherString(results) {
 
-    const { sunrise, sunset } = results.sunriseSunset.results;
+    const now = new Date();
+    const sunset = results.weather.sys.sunset * 1000;
+    const dayOrNight = now > sunset ? 'night' : 'day';
     const { temp, temp_min, temp_max } = results.weather.main;
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
-    const sunriseLocal = new Date((new Date(sunrise)).toString());
-    const sunsetLocal = new Date((new Date(sunset)).toString());
-    const sunHasSet = new Date() > sunsetLocal;
-    const dayOrNight = sunHasSet ? 'night' : 'day';
     const configTempToLabel = {
         imperial: 'F',
         metric: 'C',
     };
 
-    let matchingDescriptions = Object.keys(symbols.icons).filter(key => descriptionKey.includes(key.trim()));
-    let symbol = symbols.icons[ matchingDescriptions[0] ][dayOrNight];
+    let matchingDescriptions = Object.keys(display[config.displayType]).filter(key => descriptionKey.includes(key));
+    let symbol;
+
+    if (config.displayType === 'text') 
+        symbol = display[config.displayType][ matchingDescriptions[0] ];
+    else 
+        symbol = display[config.displayType][ matchingDescriptions[0] ][dayOrNight];
+    
 
     return `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol } `;
 

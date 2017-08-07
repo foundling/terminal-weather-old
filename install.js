@@ -6,7 +6,8 @@ const defaultConfig = {
     TIMEOUT: 4000,
     CACHE_INTERVAL_MS: 1000 * 60 * 10,
     units: null,
-    cache: null
+    cache: null,
+    displayType: "text"
 };
 
 function install(configPath) {
