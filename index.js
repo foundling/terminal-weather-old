@@ -1,9 +1,10 @@
+const display = require('./display');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-const display = require('./display');
+
 const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
 const configPath = path.join(homedir,'.terminal-weather.json');
 const config = require(configPath);
