@@ -6,9 +6,9 @@ const defaultConfig = {
     API_KEY: '',
     TIMEOUT: 4000,
     CACHE_INTERVAL_MS: 1000 * 60 * 10,
+    displayType: "text",
     units: null,
-    cache: null,
-    displayType: "text"
+    cache: null
 };
 
 // put config path back

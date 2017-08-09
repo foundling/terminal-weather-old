@@ -31,6 +31,5 @@ cli
 
 module.exports = function(args) {
     cli.parse(args);
-    if (args.length === 2 || cli.nocache ) 
-        getWeather({ outputInterface: console.log}); 
+    if (args.length === 2 || cli.nocache ) getWeather({ outputInterface: console.log, city: cli.city }); 
 };

@@ -1,7 +1,10 @@
 const unitMap = {
-    f: 'imperial',
-    c: 'metric',
-    k: 'standard'
+    c: 'celcius',
+    f: 'fahrenheit',
+    k: 'kelvin',
+    fahrenheit: 'fahrenheit',
+    celcius: 'celcius',
+    kelvin: 'kelvin'
 };
 
 module.exports = exports = [
@@ -15,7 +18,7 @@ module.exports = exports = [
     {
         text: 'Temperature units [ (c) for Celcius, (f) for Fahrenheit, (k) for Kelvin ]: ',
         configKey: 'units',
-        isValid: input => ['f', 'c', 'k'].includes(input.toLowerCase()),
+        isValid: input => Object.keys(unitMap).includes(input.toLowerCase().trim()),
         process: (input) => unitMap[input],
         invalidMsg: 'not a valid temperature unit'
     }
