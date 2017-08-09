@@ -7,32 +7,30 @@ const setUnits = require('./cli/setUnits');
 const setDisplay = require('./cli/setDisplay');
 
 cli
-    .option('-c, --city <city name>','get weather output for specific city.')
-    .option('-n, --nocache','Invalidate cache for terminal weather.');
+    .option('-n, --nocache','Invalidate cached weather string, make a new request for the weather.');
 
 cli
     .command('install').alias('i')
-    .description(`install (or re-install) terminal-weather configuration file to ${global.configPath}.`)
+    .description(`Install (or re-install) terminal-weather configuration file to ${global.configPath}.`)
     .action(installConfig);
 
 cli
     .command('list').alias('l')
-    .description('print the weather codes for icon and text')
+    .description('Print the weather codes for icon and text.')
     .action(listWeatherCodes);
 
 cli
     .command('display <display-type>').alias('d')
-    .description('set display type to "icon" or "text"')
+    .description('Set display type to "icon" or "text".')
     .action(setDisplay);
 
 cli
     .command('units <unit-type>').alias('u')
-    .description('set unit type in your config file. Fahrenheit, Celcius and Kelvin supported. Shorthand is allowed, e.g. "f" for fahrenheit.')
+    .description('Set unit type in config to <fahrenheit | celcius | kelvin>. Shorthand is supported, e.g. "f" for fahrenheit.')
     .action(setUnits);
 
 module.exports = function(args) {
     cli.parse(args);
-    if (args.length === 2 || cli.nocache) 
-        getWeather(console.log);
-
+    if (args.length === 2 || cli.nocache ) 
+        getWeather({ outputInterface: console.log}); 
 };

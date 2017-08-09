@@ -9,7 +9,7 @@ const makePrinter = (printer) => (s) => {
     printer(s);
 }; 
 
-function terminalWeather(outputInterface) {
+function terminalWeather({outputInterface}) {
 
     const results = {
         location: null,
@@ -149,7 +149,7 @@ function toWeatherString(results) {
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
     const configTempToLabel = {
         fahrenheit: 'F',
-        metric: 'C',
+        celcius: 'C',
         kelvin: 'K'
     };
 
