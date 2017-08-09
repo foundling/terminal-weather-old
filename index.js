@@ -3,6 +3,8 @@ const configFilename = '.terminal-weather.json';
 const configPath = `${homedir}/${configFilename}`;
 const args = process.argv;
 
+global.configPath = configPath;
+
 module.exports = function() {
 
     let config;
@@ -23,13 +25,11 @@ module.exports = function() {
     /* cache needs to be populated */
     if (!config.cache || currentTimeMS - config.cache.lastRequestDate > config.CACHE_INTERVAL_MS)
         require('./cli')(args);
-
     else if (promptFlagThrown) 
         process.stdout.write(config.cache.weather);
     else if (!argsPassed && config.cache)
         console.log(config.cache.weather);
     else 
         require('./cli')(args);
-
 
 };

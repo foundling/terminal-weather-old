@@ -1,7 +1,4 @@
-const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
-const configFilename = '.terminal-weather.json';
-const configPath = `${homedir}/${configFilename}`;
-
+const configPath = global.configPath;
 const fs = require('fs');
 const readline = require('readline');
 const prompts = require('../data/prompts');

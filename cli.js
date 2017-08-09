@@ -3,12 +3,12 @@ const installConfig = require('./cli/install');
 const listWeatherCodes = require('./cli/list')
 const getWeather = require('./cli/weather');
 const updateConfig = require('./cli/update');
+const setUnits = require('./cli/setUnits');
+const setDisplay = require('./cli/setDisplay');
 
 cli
     .option('-c,--city <city name>','get weather output for specific city.')
-    .option('-d,--display-type <display type>','set display type to "icon" or "text"')
     .option('-n,--no-cache','Invalidate cache for terminal weather.')
-    .option('-u,--units <units>','set unit type to (f) fahrenheit, (c) celcius or (k) kelvin')
 
 cli
     .command('install').alias('i')
@@ -19,6 +19,16 @@ cli
     .command('list').alias('l')
     .description('print the weather codes for icon and text')
     .action(listWeatherCodes);
+
+cli
+    .command('display <display-type>').alias('d')
+    .description('set display type to "icon" or "text"')
+    .action(setDisplay);
+
+cli
+    .command('units <unit-type>').alias('u')
+    .description('set unit type in your config file to (f) fahrenheit, (c) celcius or (k) kelvin')
+    .action(setUnits);
 
 module.exports = function(args) {
     cli.parse(args);
