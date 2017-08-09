@@ -3,8 +3,8 @@ const installConfig = require('./cli/install');
 const listWeatherCodes = require('./cli/list')
 const getWeather = require('./cli/weather');
 const updateConfig = require('./cli/update');
-const setUnits = require('./cli/setUnits');
-const setDisplay = require('./cli/setDisplay');
+const setUnits = require('./cli/units');
+const setDisplay = require('./cli/display');
 
 cli
     .option('-n, --nocache','Invalidate cached weather string, make a new request for the weather.');
