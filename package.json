@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/foundling/terminal-weather",
   "dependencies": {
+    "ansi-styles": "^3.2.0",
     "commander": "^2.11.0"
   },
   "devDependencies": {
