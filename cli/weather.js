@@ -4,10 +4,7 @@ const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-
-const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
-const configPath = path.join(homedir,'.terminal-weather.json');
-const config = require(configPath);
+const config = require(global.configPath);
 const makePrinter = (printer) => (s) => {
     printer(s);
 }; 
@@ -79,14 +76,24 @@ function getWeather(results) {
 
     const { city, countryCode } = results.location;
 
+    const toAPIUnits = {
+        fahrenheit: 'imperial',
+        celcius: 'metric',
+        kelvin: ''
+    };
+
     return new Promise((resolve, reject) => {
 
         const data = {
             city, 
             countryCode, 
-            units: config.units,
+            units: toAPIUnits[config.units],
             APPID: config.API_KEY
         };
+
+        if (!config.units)
+            delete(data.units);
+
         const qs = querystring.stringify(data);
 
         let body = '';
@@ -141,8 +148,9 @@ function toWeatherString(results) {
     const { temp, temp_min, temp_max } = results.weather.main;
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
     const configTempToLabel = {
-        imperial: 'F',
+        fahrenheit: 'F',
         metric: 'C',
+        kelvin: 'K'
     };
 
     let matchingDescriptions = Object.keys(display[config.displayType]).filter(key => descriptionKey.includes(key));

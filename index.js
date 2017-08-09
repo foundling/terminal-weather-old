@@ -7,9 +7,6 @@ const args = process.argv;
 module.exports = function() {
 
     let config;
-    const argsPassed = args.length > 2;
-    const promptFlagThrown = (args[2] === '--prompt' || args[2] === '-p');
-    const currentTimeMS = (new Date()).getTime();
 
     try {
         config = require(configPath);
@@ -20,14 +17,19 @@ module.exports = function() {
             throw err;
     }
 
-    /* cache needs to be populated */
-    if (!config.cache || (currentTimeMS - config.cache.lastRequestDate) > config.CACHE_INTERVAL_MS)
+    const argsPassed = args.length > 2;
+    const promptFlagThrown = (args[2] === '--prompt' || args[2] === '-p');
+    const updateCache = (args[2] === '--nocache' || args[2] === '-n');
+    const cacheExists = Boolean(config && config.cache);
+    const currentTimeMS = (new Date()).getTime();
+
+    if (updateCache || !cacheExists || (currentTimeMS - config.cache.lastRequestDate) > config.CACHE_INTERVAL_MS)
         require('./cli')(args);
     else if (promptFlagThrown) 
         process.stdout.write(config.cache.weather);
-    else if (!argsPassed && config.cache)
+    else if (!argsPassed && cacheExists)
         console.log(config.cache.weather);
-    else 
+    else
         require('./cli')(args);
 
 };

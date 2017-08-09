@@ -8,7 +8,7 @@ const setDisplay = require('./cli/setDisplay');
 
 cli
     .option('-c, --city <city name>','get weather output for specific city.')
-    .option('-n, --no-cache','Invalidate cache for terminal weather.')
+    .option('-n, --nocache','Invalidate cache for terminal weather.');
 
 cli
     .command('install').alias('i')
@@ -32,6 +32,7 @@ cli
 
 module.exports = function(args) {
     cli.parse(args);
-    if (args.length == 2) 
+    if (args.length === 2 || cli.nocache) 
         getWeather(console.log);
+
 };
