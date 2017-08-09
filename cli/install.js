@@ -1,6 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
-const prompts = require('./prompts');
+const prompts = require('../data/prompts');
 const defaultConfig = {
     API_KEY: '',
     TIMEOUT: 4000,
@@ -10,7 +10,9 @@ const defaultConfig = {
     displayType: "text"
 };
 
-function install(configPath) {
+// put config path back
+function install() {
+    console.log(arguments);
     takeUserConfigData( configWriter(configPath) );
 }
 

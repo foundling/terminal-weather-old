@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../checkcache.js');
+require('../index.js')();
