@@ -1,0 +1,5 @@
+1. timeout
+2. prompt vs console.log output
+3. caching
+4. built query string 
+5. config values after install, unit update and display type
