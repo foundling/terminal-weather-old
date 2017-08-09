@@ -7,7 +7,7 @@
     "terminal-weather": "./bin/terminal-weather"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Tests are forthcoming.\" && exit 0",
     "postuninstall": "rm ~/.terminal-weather.json"
   },
   "repository": {
