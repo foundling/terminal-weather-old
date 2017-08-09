@@ -7,12 +7,12 @@ const setUnits = require('./cli/setUnits');
 const setDisplay = require('./cli/setDisplay');
 
 cli
-    .option('-c,--city <city name>','get weather output for specific city.')
-    .option('-n,--no-cache','Invalidate cache for terminal weather.')
+    .option('-c, --city <city name>','get weather output for specific city.')
+    .option('-n, --no-cache','Invalidate cache for terminal weather.')
 
 cli
     .command('install').alias('i')
-    .description('install (or re-install) terminal-weather configuration file to $HOME/.terminal-weather.json')
+    .description(`install (or re-install) terminal-weather configuration file to ${global.configPath}.`)
     .action(installConfig);
 
 cli
@@ -27,7 +27,7 @@ cli
 
 cli
     .command('units <unit-type>').alias('u')
-    .description('set unit type in your config file to (f) fahrenheit, (c) celcius or (k) kelvin')
+    .description('set unit type in your config file. Fahrenheit, Celcius and Kelvin supported. Shorthand is allowed, e.g. "f" for fahrenheit.')
     .action(setUnits);
 
 module.exports = function(args) {

@@ -1,9 +1,8 @@
 const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
 const configFilename = '.terminal-weather.json';
 const configPath = `${homedir}/${configFilename}`;
-const args = process.argv;
-
 global.configPath = configPath;
+const args = process.argv;
 
 module.exports = function() {
 
