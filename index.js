@@ -8,9 +8,9 @@ global.configPath = configPath;
 module.exports = function() {
 
     let config;
-    const currentTimeMS = (new Date()).getTime();
-    const promptFlagThrown = (args[2] === '--prompt' || args[2] === '-p');
     const argsPassed = args.length > 2;
+    const promptFlagThrown = (args[2] === '--prompt' || args[2] === '-p');
+    const currentTimeMS = (new Date()).getTime();
 
     try {
         config = require(configPath);
@@ -19,11 +19,10 @@ module.exports = function() {
             require('./cli/install')(configPath);
         else
             throw err;
-            return;
     }
 
     /* cache needs to be populated */
-    if (!config.cache || currentTimeMS - config.cache.lastRequestDate > config.CACHE_INTERVAL_MS)
+    if (!config.cache || (currentTimeMS - config.cache.lastRequestDate) > config.CACHE_INTERVAL_MS)
         require('./cli')(args);
     else if (promptFlagThrown) 
         process.stdout.write(config.cache.weather);
