@@ -7,7 +7,8 @@ module.exports = function() {
 
     let config;
     const currentTimeMS = (new Date()).getTime();
-    const promptFlagThrown = args.length > 2 && (args[2] === '--prompt' || args[2] === '-p');
+    const promptFlagThrown = (args[2] === '--prompt' || args[2] === '-p');
+    const argsPassed = args.length > 2;
 
     try {
         config = require(configPath);
@@ -16,18 +17,19 @@ module.exports = function() {
             require('./cli/install')(configPath);
         else
             throw err;
+            return;
     }
 
-    if (!config.cache ||
-        currentTimeMS - config.cache.lastRequestDate > config.CACHE_INTERVAL_MS ) {
+    /* cache needs to be populated */
+    if (!config.cache || currentTimeMS - config.cache.lastRequestDate > config.CACHE_INTERVAL_MS)
         require('./cli')(args);
-    }
-    else {
-        if (promptFlagThrown) 
-            process.stdout.write(config.cache.weather);
-        else 
-            console.log(config.cache.weather);
-    }
+
+    else if (promptFlagThrown) 
+        process.stdout.write(config.cache.weather);
+    else if (!argsPassed && config.cache)
+        console.log(config.cache.weather);
+    else 
+        require('./cli')(args);
 
 
 };

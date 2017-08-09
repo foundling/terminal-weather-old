@@ -1,3 +1,7 @@
+const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
+const configFilename = '.terminal-weather.json';
+const configPath = `${homedir}/${configFilename}`;
+
 const fs = require('fs');
 const readline = require('readline');
 const prompts = require('../data/prompts');
@@ -12,7 +16,6 @@ const defaultConfig = {
 
 // put config path back
 function install() {
-    console.log(arguments);
     takeUserConfigData( configWriter(configPath) );
 }
 

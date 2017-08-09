@@ -11,8 +11,8 @@ cli
     .option('-u,--units <units>','set unit type to (f) fahrenheit, (c) celcius or (k) kelvin')
 
 cli
-    .command('init').alias('i')
-    .description('initialize terminal-weather config file')
+    .command('install').alias('i')
+    .description('install (or re-install) terminal-weather configuration file to $HOME/.terminal-weather.json')
     .action(installConfig);
 
 cli
