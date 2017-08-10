@@ -1,7 +1,10 @@
+0. network connectivity
 1. timeout
 2. prompt vs console.log output
 3. caching
-4. built query string 
-5. config values after install, unit update and display type
-6. day/evening modulation
+4. assembled query strings 
+5. config values after install
+6. config values after unit update
+7. config values after display update
+6. day / evening modulation
 7. text / symbol mapping
