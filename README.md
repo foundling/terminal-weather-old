@@ -51,6 +51,7 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 + On the first run, terminal-weather prompts you for the values it needs to continually query the api.
 + Then it writes a JSON configuration file called '.terminal-weather.json' to your $HOME directory.
 
+````
     {
         "API_KEY": "API_KEY_GOES_HERE",
         "TIMEOUT_MS": 4000,
@@ -59,6 +60,7 @@ Terminal weather is a cli that conveys succinct weather information in text or e
         "units": "kelvin",
         "cache": null
     }
+````
 
 ### Getting `terminal-weather` into your terminal prompt
 
