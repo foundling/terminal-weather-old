@@ -21,8 +21,8 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 
 `Terminal-weather` uses the following APIs:
 
-    + [ip-api.com](http://ip-api.com) to map your ip to a location.
-    + [openweathermap.org](http://openweathermap.org) to retrieve the current weather for your location.
++ [ip-api.com](http://ip-api.com) to map your ip to a location.
++ [openweathermap.org](http://openweathermap.org) to retrieve the current weather for your location.
 
 ## Command-line options
 
