@@ -77,3 +77,8 @@ If you want to include terminal-weather in your bash prompt, there are a couple 
         # include above fn in prompt command variable so the prompt is reset each time it is rendered
         PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
 
+
+### Removing `terminal-weather` 
+
++ Remove terminal weather call from the bash prompt in your `~/.bashrc` file 
++ npm `uninstall -g terminal-weather`
