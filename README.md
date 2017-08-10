@@ -1,30 +1,50 @@
 # terminal-weather
 
-Terminal weather is a cli that conveys weather information so concise you can embed it in your terminal prompt. With it you can output text, emojis and a combination of both to make your terminal experience nicer and you yourself more familiar with the weather patterns that your office environment may keep from you.
-
+Terminal weather is a cli that conveys succinct weather information in text or emoji form, optimized for your terminal prompt.
 
 ## Requirements
 
-+ An API key from [openweathermap.org](http://openweathermap.org)
-+ NodeJS and npm
++ An [openweathermap.org](http://openweathermap.org) API key
++ NodeJS v7.0 and npm
 
 ## Installation
 
-+ run `npm install -g terminal-weather`
-+ when you run terminal-weather for the first time, you will be prompted for your open weathermap.org API key as well the default temperature unit.
++ Run `npm install -g terminal-weather`
++ When you run `terminal-weather` for the first time, you will be prompted for your open weathermap.org API key as well the default temperature unit.
 
 ## Caching and Module loading
 
-+ terminal-weather adheres to openweathermap.org's limit of 1 http call every ten minutes. The rest of time it outputs a cached value. 
-+ Because the most frequent case is retrieving cached data, only the bare minimum is loaded to support that.  In case of a cache expiration, the modules required to retreive new weather data are then loaded. This maintains a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
++ `terminal-weather` adheres to [openweathermap.org](http://openweathermap.org)'s limit of 1 http call per ten-minute interval. The rest of the time it prints a cached value. 
++ `terminal-weather` loads in a progressive way. Because the most frequent case is retrieving cached data, the only the modules required for that are loaded.  In case of a cache expiration, the additional modules required to retreive new weather data are loaded. The point is to maintain a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
 
 ## Which Services It Uses
 
+`Terminal-weather` uses the following APIs:
 
-`Terminal-weather` uses `ip-api.com` to map your ip to a city name. You aren't restricted to this and can pass in a city name with a cli flag, but that's the default. 
+    + [ip-api.com](http://ip-api.com) to map your ip to a location.
+    + [openweathermap.org](http://openweathermap.org) to map retrieve the current weather for your location.
 
 ## Command-line options
-+ These are coming soon.
+
+````bash
+  Usage: terminal-weather [options] [command]
+
+
+  Options:
+
+    -p, --prompt   Print output without a newline.
+    -n, --nocache  Invalidate cached weather string, make a new request for the weather.
+    -h, --help     Output usage information.
+
+  Commands:
+
+    install|i                 Install (or re-install) terminal-weather configuration file to your configuration file.
+    list|l                    Print the weather codes for icon and text.
+    display|d <display-mode>  Set display mode to "icon" or "text".
+    units|u <unit-type>       Set unit type in config to <fahrenheit | celcius | kelvin>. Shorthand is supported, e.g. "f" for fahrenheit.
+    show|s                    Show the contents of your configuration file in a more readable format.
+
+````
 
 ## Configuration 
 
@@ -32,18 +52,13 @@ Terminal weather is a cli that conveys weather information so concise you can em
 + Then it writes a JSON configuration file called '.terminal-weather.json' to your $HOME directory.
 
     {
-        "API_KEY": "SECRET",
-        "CACHE_INTERVAL_MS": 600000,
+        "API_KEY": "API_KEY_GOES_HERE",
         "TIMEOUT_MS": 4000,
-        "units": "imperial",
+        "CACHE_INTERVAL_MS": 600000,
+        "displayMode": "icon",
+        "units": "kelvin",
         "cache": null
     }
-
-If you want to edit the .json file directly, temperature units should be indicated according to the following:
-
-+ **default** for Kelvin
-+ **imperial** for Fahrenheit
-+ **metric** for Celcius
 
 ### Getting `terminal-weather` into your terminal prompt
 
