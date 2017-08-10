@@ -8,7 +8,6 @@
   },
   "scripts": {
     "test": "echo \"Tests are forthcoming.\" && exit 0",
-    "postinstall": "echo 'Obtain an API key from openweathermap.org and run terminal-weather install to get started.'", 
     "postuninstall": "rm ~/.terminal-weather.json"
   },
   "repository": {

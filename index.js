@@ -6,6 +6,7 @@ const args = process.argv;
 global.configPath = configPath;
 
 module.exports = function() {
+
     let config;
     try {
         config = require(configPath);
@@ -28,4 +29,5 @@ module.exports = function() {
         console.log(config.cache.weather);
     else
         require('./cli')(args);
+
 };
