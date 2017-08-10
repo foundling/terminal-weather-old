@@ -1,5 +1,6 @@
 # TODO
 
++ explicitly for and check for lack of internet connection. Currently, no output is printed, but behavior might vary on different machines / os.
 + extract any code that deals with a particular api into its own api file, e.g. owmAPI.js so different APIs can be used.
 + make a list of potential contributions that would be obviously useful to terminal-weather
 + Launch an invocation on initialization once you have the api key and the temp unit.
@@ -11,3 +12,4 @@
 
 + bugs:
     + combined flags don't work
+    + post uninstall hook hangs the terminal. 
