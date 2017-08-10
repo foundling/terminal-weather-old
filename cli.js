@@ -8,6 +8,7 @@ const setDisplay = require('./cli/display');
 const showConfig = require('./cli/show');
 
 cli
+    .option('-p, --prompt','Print output without a newline')
     .option('-n, --nocache','Invalidate cached weather string, make a new request for the weather.');
 
 cli

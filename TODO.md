@@ -8,3 +8,6 @@
 + test
     + icons/text are accurate
     + modulate the icons with phase of day
+
++ bugs:
+    + combined flags don't work
