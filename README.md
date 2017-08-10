@@ -15,14 +15,14 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 ## Caching and Module loading
 
 + `terminal-weather` adheres to [openweathermap.org](http://openweathermap.org)'s limit of 1 http call per ten-minute interval. The rest of the time it prints a cached value. 
-+ `terminal-weather` loads in a progressive way. Because the most frequent case is retrieving cached data, the only the modules required for that are loaded.  In case of a cache expiration, the additional modules required to retreive new weather data are loaded. The point is to maintain a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
++ `terminal-weather` loads in a progressive way. Because the most frequent case is retrieving cached data, only the modules required for that are loaded.  In case of a cache expiration, the additional modules required to retreive new weather data are loaded. The point is to maintain a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
 
 ## Which Services It Uses
 
 `Terminal-weather` uses the following APIs:
 
-    + [ip-api.com](http://ip-api.com) to map your ip to a location.
-    + [openweathermap.org](http://openweathermap.org) to map retrieve the current weather for your location.
+    + [ip-api.com] (http://ip-api.com) to map your ip to a location.
+    + [openweathermap.org] (http://openweathermap.org) to retrieve the current weather for your location.
 
 ## Command-line options
 
