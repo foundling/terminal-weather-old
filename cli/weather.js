@@ -2,9 +2,9 @@ const display = require('../data/display');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
+const config = require(global.configPath);
 const querystring = require('querystring');
 const readline = require('readline');
-const config = require(global.configPath);
 const makePrinter = (printer) => (s) => {
     printer(s);
 }; 
@@ -55,7 +55,7 @@ function getLocation(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(config.TIMEOUT);
+            socket.setTimeout(config.TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -122,7 +122,7 @@ function getWeather(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(config.TIMEOUT);
+            socket.setTimeout(config.TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -153,13 +153,13 @@ function toWeatherString(results) {
         kelvin: 'K'
     };
 
-    let matchingDescriptions = Object.keys(display[config.displayType]).filter(key => descriptionKey.includes(key));
+    let matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
     let symbol;
 
-    if (config.displayType === 'text') 
-        symbol = display[config.displayType][ matchingDescriptions[0] ];
+    if (config.displayMode === 'text') 
+        symbol = display[config.displayMode][ matchingDescriptions[0] ];
     else 
-        symbol = display[config.displayType][ matchingDescriptions[0] ][dayOrNight];
+        symbol = display[config.displayMode][ matchingDescriptions[0] ][dayOrNight];
     
 
     return `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol } `;
@@ -170,7 +170,7 @@ function cacheWeatherData(weatherString) {
 
     config.cache = {
         weather: weatherString,
-        lastRequestDate: new Date().getTime()
+        lastCached: new Date().getTime()
     };
 
     fs.writeFile(configPath, JSON.stringify(config, null, 4), function(err) {

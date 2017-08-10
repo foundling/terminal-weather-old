@@ -1,19 +1,18 @@
-const configPath = global.configPath;
 const fs = require('fs');
 const readline = require('readline');
 const prompts = require('../data/prompts');
 const defaultConfig = {
     API_KEY: '',
-    TIMEOUT: 4000,
+    TIMEOUT_MS: 4000,
     CACHE_INTERVAL_MS: 1000 * 60 * 10,
-    displayType: "text",
+    displayMode: "text",
     units: null,
     cache: null
 };
 
 // put config path back
 function install() {
-    takeUserConfigData( configWriter(configPath) );
+    takeUserConfigData( configWriter(global.configPath) );
 }
 
 function takeUserConfigData(cb) { 

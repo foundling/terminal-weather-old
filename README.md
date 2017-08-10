@@ -34,7 +34,7 @@ Terminal weather is a cli that conveys weather information so concise you can em
     {
         "API_KEY": "SECRET",
         "CACHE_INTERVAL_MS": 600000,
-        "TIMEOUT": 4000,
+        "TIMEOUT_MS": 4000,
         "units": "imperial",
         "cache": null
     }

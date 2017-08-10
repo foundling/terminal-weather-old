@@ -5,31 +5,26 @@ global.configPath = configPath;
 const args = process.argv;
 
 module.exports = function() {
-
     let config;
-
     try {
         config = require(configPath);
     } catch(err) {
         if (err.code === 'MODULE_NOT_FOUND')
-            require('./cli/install')(configPath);
+            return require('./cli/install')(configPath);
         else
             throw err;
     }
 
     const argsPassed = args.length > 2;
-    const promptFlagThrown = (args[2] === '--prompt' || args[2] === '-p');
-    const updateCache = (args[2] === '--nocache' || args[2] === '-n');
+    const promptFlagThrown = (args[2] === '-p' || args[2] === '--prompt');
+    const updateCache = (args[2] === '-n' || args[2] === '--nocache');
     const cacheExists = Boolean(config && config.cache);
     const currentTimeMS = (new Date()).getTime();
 
-    if (updateCache || !cacheExists || (currentTimeMS - config.cache.lastRequestDate) > config.CACHE_INTERVAL_MS)
-        require('./cli')(args);
-    else if (promptFlagThrown) 
+    if (cacheExists && promptFlagThrown) 
         process.stdout.write(config.cache.weather);
-    else if (!argsPassed && cacheExists)
+    else if (cacheExists && !argsPassed) 
         console.log(config.cache.weather);
     else
         require('./cli')(args);
-
 };

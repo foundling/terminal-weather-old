@@ -5,6 +5,7 @@ const getWeather = require('./cli/weather');
 const updateConfig = require('./cli/update');
 const setUnits = require('./cli/units');
 const setDisplay = require('./cli/display');
+const showConfig = require('./cli/show');
 
 cli
     .option('-n, --nocache','Invalidate cached weather string, make a new request for the weather.');
@@ -20,14 +21,19 @@ cli
     .action(listWeatherCodes);
 
 cli
-    .command('display <display-type>').alias('d')
-    .description('Set display type to "icon" or "text".')
+    .command('display <display-mode>').alias('d')
+    .description('Set display mode to "icon" or "text".')
     .action(setDisplay);
 
 cli
     .command('units <unit-type>').alias('u')
     .description('Set unit type in config to <fahrenheit | celcius | kelvin>. Shorthand is supported, e.g. "f" for fahrenheit.')
     .action(setUnits);
+
+cli
+    .command('show').alias('s')
+    .description('Show your configuration file')
+    .action(showConfig);
 
 module.exports = function(args) {
     cli.parse(args);
