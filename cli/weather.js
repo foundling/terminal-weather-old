@@ -146,6 +146,7 @@ function toWeatherString(results) {
     const sunset = results.weather.sys.sunset * 1000;
     const dayOrNight = now > sunset ? 'night' : 'day';
     const { temp, temp_min, temp_max } = results.weather.main;
+    const tempInt = parseInt(temp); 
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
     const configTempToLabel = {
         fahrenheit: 'F',
@@ -160,9 +161,47 @@ function toWeatherString(results) {
         symbol = display[config.displayMode][ matchingDescriptions[0] ];
     else 
         symbol = display[config.displayMode][ matchingDescriptions[0] ][dayOrNight];
-    
 
-    return `${ parseInt(temp) }° ${configTempToLabel[config.units]} ${ symbol } `;
+    let tempColor = getTempColor(tempInt, config.units); 
+    return `${ tempColor } ${ tempInt }° ${configTempToLabel[config.units]} ${ display.ansiColors.reset } ${ symbol } `;
+
+}
+
+function getTempColor(temp, units) {
+
+    let ranges = {
+        fahrenheit: {
+            freezing: 32,
+            cold: 45,
+            cool: 60,
+            hot: 80,
+            reallyHot: 95 
+        },
+        celcius: {
+            freezing: 0,
+            cold: 7,
+            cool: 15,
+            hot: 27,
+            reallyHot: 35 
+        },
+        kelvin: {
+            freezing: 273,
+            cold: 280,
+            cool: 288,
+            hot: 294,
+            reallyHot: 308
+        }
+    };
+
+    const { freezing, cold, cool, hot, reallyHot } = ranges[units];
+    const { fgWhite, fgLightGray, fgBlue, fgLightBlue, fgRed, fgLightRed, reset } = display.ansiColors;
+
+    if (temp >= reallyHot) return fgRed;
+    if (temp >= hot && temp < reallyHot) return fgLightRed;
+    if (temp < hot && temp >= cool) return fgLightBlue;
+    if (temp < cool && temp >= cold) return fgBlue;
+    if (temp < cold && temp >= freezing) return fgLightGray;
+    if (temp < freezing) return fgWhite;
 
 }
 

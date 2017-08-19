@@ -36,6 +36,7 @@ const ansiColors = {
 };
 
 module.exports = exports = weatherToColorMap = {
+    ansiColors,
     text: {
         clear: `${ansiColors.bgLightBlue}${ansiColors.fgYellow} clear ${ansiColors.reset}`,
         clouds: `${ansiColors.bgLightGray}${ansiColors.fgWhite} clouds ${ansiColors.reset}`,
@@ -46,7 +47,7 @@ module.exports = exports = weatherToColorMap = {
         snow: `${ansiColors.bgLightGray} snow ${ansiColors.reset}`,
         fog: `${ansiColors.bgLightWhite}${ansiColors.dim}${ansiColors.fgLightGray} fog ${ansiColors.reset}`,
         wind: `${ansiColors.fgLightBlue}${ansiColors.bgLightGray} wind ${ansiColors.reset}`,
-        tornado: `${ansiColors.blink}${ansiColors.fgWhite} tornado! ${ansiColors.reset} ` 
+        tornado: `${ansiColors.underscore}${ansiColors.fgWhite} tornado! ${ansiColors.reset} ` 
     },
     icon: {
         clear: {
@@ -89,5 +90,6 @@ module.exports = exports = weatherToColorMap = {
             day: '🌪 ',
             night: '🌪 ',
         }
-    }
+    },
+
 };
