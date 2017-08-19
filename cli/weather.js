@@ -8,6 +8,12 @@ const readline = require('readline');
 const makePrinter = (printer) => (s) => {
     printer(s);
 }; 
+const configTempToLabel = {
+    fahrenheit: 'F',
+    celcius: 'C',
+    kelvin: 'K'
+};
+
 
 function terminalWeather({outputInterface}) {
 
@@ -148,22 +154,66 @@ function toWeatherString(results) {
     const { temp, temp_min, temp_max } = results.weather.main;
     const tempInt = parseInt(temp); 
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
-    const configTempToLabel = {
-        fahrenheit: 'F',
-        celcius: 'C',
-        kelvin: 'K'
-    };
-
     let matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
     let symbol;
+    let formatData;
+    let outputString;
 
     if (config.displayMode === 'text') 
         symbol = display[config.displayMode][ matchingDescriptions[0] ];
     else 
         symbol = display[config.displayMode][ matchingDescriptions[0] ][dayOrNight];
 
-    let tempColor = getTempColor(tempInt, config.units); 
-    return `${ tempColor } ${ tempInt }° ${configTempToLabel[config.units]} ${ display.ansiColors.reset } ${ symbol } `;
+    formatData = {
+        units: config.units,
+        temp: tempInt,
+        symbol
+    };
+
+    return buildDisplayFromFormatString(config.format, formatData);
+
+}
+
+function buildDisplayFromFormatString(formatString, weatherData) {
+
+    // 'T D'
+    const formatFuncs = {
+
+        // temperature text, e.g. 43° F 
+        T: function buildTempString({ temp, units }) {
+            let tempColor = getTempColor(temp, units);
+            return `${ tempColor }${ temp }° ${ configTempToLabel[ units ] }${ display.ansiColors.reset }`;
+        },
+  
+        // display text/icon, e.g.  'clear' or ☀️  
+        D: function buildDisplayString({ symbol }) {
+            return `${ symbol } `;
+        }, 
+
+        // range, eg, hi: 76, lo: 72
+        R: function buildRangeString() {
+            return '';
+        }, 
+
+        // humidity, e.g 89%
+        H: function buildHumidityString() {
+            return '';
+        }, 
+
+        // atmopsheric presure, e.g. 1020 hPa
+        P: function buildPressureString() {
+            return '';
+        },
+    };
+    const tokens = Object.keys(formatFuncs);
+    const parseOrKeep = c => (typeof formatFuncs[c] === 'function') ? formatFuncs[c](weatherData) : c;
+
+    return Array.prototype.map.call(formatString, parseOrKeep).join('');
+
+}
+
+function parseWeatherString(c) {
+
 
 }
 
