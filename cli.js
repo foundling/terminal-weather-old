@@ -6,6 +6,7 @@ const updateConfig = require('./cli/update');
 const setUnits = require('./cli/units');
 const setDisplay = require('./cli/display');
 const showConfig = require('./cli/show');
+const setFormatString = require('./cli/format');
 
 cli
     .option('-p, --prompt','Print output without a newline.')
@@ -35,6 +36,12 @@ cli
     .command('show').alias('s')
     .description('Show your configuration file')
     .action(showConfig);
+
+cli
+    .command('format <format-string>').alias('f')
+    .description('Set the format string used to configure the display of the terminal-weather output.')
+    .action(setFormatString);
+
 
 module.exports = function(args) {
     cli.parse(args);
