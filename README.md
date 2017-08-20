@@ -54,6 +54,7 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 To configure the order of terminal-weather's information, pass a string of characters from the list below to the `format` command. 
 
 **T**: Temperature
+
 **D**: Display
 
 The default format string is `'T D '`, which renders something like '73° F clouds', assuming that your display setting is text. The format string is space-sensitive, so you can control the spacing how you want.
@@ -62,9 +63,11 @@ Example: `$ terminal-weather format 'D T '`.
 
 The following are forthcoming:
 
-H: Humidity
-P: Atmospheric Pressure
-R: Range (hi/lo)
+**H**: Humidity
+
+**P**: Atmospheric Pressure
+
+**R**: Range (hi/lo)
 
 ## Configuration File
 
