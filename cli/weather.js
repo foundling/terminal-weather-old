@@ -61,7 +61,7 @@ function getLocation(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(config.TIMEOUT_MS);
+            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -128,7 +128,7 @@ function getWeather(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(config.TIMEOUT_MS);
+            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();

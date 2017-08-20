@@ -4,7 +4,7 @@ module.exports = function() {
     console.log('CONFIG LOCATION:', global.configPath); 
     console.log('API KEY:', config.API_KEY);
     console.log('UNITS:', config.units);
-    console.log('NETWORK TIMEOUT THRESHOLD:', `${config.TIMEOUT_MS/1000.0} seconds` ); 
+    console.log('NETWORK TIMEOUT THRESHOLD:', `${config.NETWORK_TIMEOUT_MS/1000.0} seconds` ); 
     console.log('DISPLAY MODE:', config.displayMode);
     if (!config.cache) return;
 

@@ -3,7 +3,7 @@ const readline = require('readline');
 const prompts = require('../data/prompts');
 const defaultConfig = {
     API_KEY: '',
-    TIMEOUT_MS: 4000,
+    NETWORK_TIMEOUT_MS: 4000,
     CACHE_INTERVAL_MS: 1000 * 60 * 10,
     displayMode: "text",
     units: null,

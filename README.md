@@ -12,11 +12,6 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 + Run `npm install -g terminal-weather`
 + When you run `terminal-weather` for the first time, you will be prompted for your open weathermap.org API key as well the default temperature unit.
 
-## Caching and Module loading
-
-+ `terminal-weather` adheres to [openweathermap.org](http://openweathermap.org)'s limit of 1 http call per ten-minute interval. The rest of the time it prints a cached value. 
-+ `terminal-weather` loads in a progressive way. Because the most frequent case is retrieving cached data, only the modules required for that are loaded.  In case of a cache expiration, the additional modules required to retreive new weather data are loaded. The point is to maintain a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
-
 ## Which Services It Uses
 
 `Terminal-weather` uses the following APIs:
@@ -24,11 +19,15 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 + [ip-api.com](http://ip-api.com) to map your ip to a location.
 + [openweathermap.org](http://openweathermap.org) to retrieve the current weather for your location.
 
+## Caching and Module loading
+
++ `terminal-weather` adheres to [openweathermap.org](http://openweathermap.org)'s limit of 1 http call per ten-minute interval. The rest of the time it prints a cached value. 
++ `terminal-weather` loads in a progressive way. Because the most frequent case is retrieving cached data, only the modules required for that are loaded.  In case of a cache expiration, the additional modules required to retreive new weather data are loaded. The point is to maintain a seamless terminal experience when embedding terminal-weather in your prompt (see below). 
+
 ## Command-line options
 
 ````bash
   Usage: terminal-weather [options] [command]
-
 
   Options:
 
@@ -54,9 +53,10 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 ````
     {
         "API_KEY": "API_KEY_GOES_HERE",
-        "TIMEOUT_MS": 4000,
+        "NETWORK_TIMEOUT_MS": 4000,
         "CACHE_INTERVAL_MS": 600000,
         "displayMode": "icon",
+        "format": "D T",
         "units": "kelvin",
         "cache": null
     }
