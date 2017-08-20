@@ -19,12 +19,12 @@ function setUnits(config, unitType) {
 
 function setUnitsHandler(unitType) {   
     
-    const unitTypes = Object.keys(normalizedUnits);
-    if (!unitTypes.includes(unitType.toLowerCase())) {
+    const normalizedUnitType = unitType.toLowerCase();
+    if (!normalizedUnits[normalizedUnitType]) {
         console.log('Invalid unit type:', unitType);
         process.exit(1);
     }
-    setUnits(config, normalizedUnits[unitType]);
+    setUnits(config, normalizedUnits[normalizedUnitType]);
 }
 
 module.exports = setUnitsHandler;
