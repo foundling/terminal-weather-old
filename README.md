@@ -57,7 +57,7 @@ To configure the order of terminal-weather's information, pass a string of chara
 
 **D**: Display
 
-The default format string is `'T D '`, which renders something like '73° F clouds', assuming that your display setting is text. The format string is space-sensitive, so you can control the spacing how you want.
+The default format string is `'T D '`, which renders something like '73° F clouds ', assuming that your display setting is text. The format string is space-sensitive, so you can control the spacing how you want.
 
 Example: `$ terminal-weather format 'D T '`.
 
