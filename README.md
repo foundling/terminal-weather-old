@@ -27,25 +27,44 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 ## Command-line options
 
 ````bash
+
   Usage: terminal-weather [options] [command]
+
 
   Options:
 
     -p, --prompt   Print output without a newline.
     -n, --nocache  Invalidate cached weather string, make a new request for the weather.
-    -h, --help     Output usage information.
+    -h, --help     output usage information
+
 
   Commands:
 
-    install|i                 Install (or re-install) terminal-weather configuration file to your configuration file.
-    list|l                    Print the weather codes for icon and text.
-    display|d <display-mode>  Set display mode to "icon" or "text".
-    units|u <unit-type>       Set unit type in config to <fahrenheit | celcius | kelvin>. Shorthand is supported, e.g. "f" for fahrenheit.
-    show|s                    Show the contents of your configuration file in a more readable format.
+    install                 Install (or re-install) terminal-weather configuration file to /Users/alexr/.terminal-weather.json.
+    list                    Print the weather codes for icon and text.
+    display <display-mode>  Set display mode to "icon" or "text".
+    units <unit-type>       Set unit type in config to <fahrenheit | celcius | kelvin>. Shorthand is supported, e.g. "f" for fahrenheit.
+    show                    Show your configuration file
+    format <format-string>  Set the format string used to configure the display of the terminal-weather output.
 
 ````
 
-## Configuration 
+## Controlling the output
+
+To configure the order of terminal-weather's information, pass a string of characters from the list below to the `format` command. 
+
+**T**: Temperature
+**D**: Display
+
+The default format string is `'T D '`, which renders something like '73° F clouds', assuming that your display setting is text. The format string is space-sensitive, so you can control the spacing how you want.
+
+The following are forthcoming:
+
+H: Humidity
+P: Atmospheric Pressure
+R: Range (hi/lo)
+
+## Configuration File
 
 + On the first run, terminal-weather prompts you for the values it needs to continually query the api.
 + Then it writes a JSON configuration file called '.terminal-weather.json' to your $HOME directory.
