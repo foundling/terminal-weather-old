@@ -34,17 +34,16 @@ module.exports = function() {
         if (!argsPassed)
             return console.log(config.cache.weather);
 
-        require('./cli')(args);
+        return require('./cli')(args);
 
-    } else {
+    } 
 
-        // let these commands through regardless of whether terminal-weather config is installed or not.
-        if (args.includes('i') || args.includes('install') || args.includes('l') || args.includes('list'))
-            return require('./cli')(args);
+    // let these commands through regardless of whether terminal-weather config is installed or not.
+    if (args.includes('i') || args.includes('install') || args.includes('l') || args.includes('list'))
+        return require('./cli')(args);
 
-        // request installation first.
-        else 
-            return console.log('No configuration file exists. Run "terminal-weather install" to set one up.'); 
+    // request installation first.
+    else 
+        return console.log('No configuration file exists. Run "terminal-weather install" to set one up.'); 
 
-    }
 };
