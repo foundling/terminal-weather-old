@@ -9,8 +9,10 @@ function setFormatString(config, formatString) {
     })
 }
 
-function formatHandler(formatString) {   
+function main(formatString) {   
     setFormatString(config, formatString);
 }
 
-module.exports = formatHandler;
+module.exports = {
+    main
+};

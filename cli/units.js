@@ -17,7 +17,7 @@ function setUnits(config, unitType) {
     })
 }
 
-function setUnitsHandler(unitType) {   
+function main(unitType) {   
     
     const normalizedUnitType = unitType.toLowerCase();
     if (!normalizedUnits[normalizedUnitType]) {
@@ -27,4 +27,6 @@ function setUnitsHandler(unitType) {
     setUnits(config, normalizedUnits[normalizedUnitType]);
 }
 
-module.exports = setUnitsHandler;
+module.exports = { 
+    main
+};

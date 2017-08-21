@@ -1,5 +1,5 @@
 const cli = require('commander');
-const delayedRequire = path => (...args) => require(path)(...args);
+const delayedRequire = path => (...args) => require(path).main(...args);
 
 const uninstall = delayedRequire('./uninstall');
 const installConfig = delayedRequire('./install');

@@ -3,14 +3,17 @@ const config = require(global.configPath);
 
 function setDisplay(config, displayMode) {
     config.displayMode = displayMode;
-    const outputConfig = JSON.stringify(config, null, 2);
+    return JSON.stringify(config, null, 2);
+}
+
+function main(displayMode) {   
+    const outputConfig = setDisplay(config, displayMode);
     fs.writeFile(global.configPath, outputConfig, err => {
         if (err) throw err;
-    })
+    });
 }
 
-function cliHandler(displayMode) {   
-    setDisplay(config, displayMode);
-}
-
-module.exports = cliHandler;
+module.exports = {
+    main,
+    setDisplay
+};

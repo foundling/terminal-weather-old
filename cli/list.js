@@ -1,6 +1,10 @@
 const { text, icon } = require('../data/display');
 
-module.exports = function() {
+module.exports = {
+    main
+};
+
+function main() {
 
     Object.keys(text).forEach(key => {
         console.log(`${ key }\t| ${text[key]}`);

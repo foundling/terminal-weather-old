@@ -12,7 +12,7 @@ const defaultConfig = {
 };
 
 // put config path back
-function install() {
+function main() {
     takeUserConfigData( configWriter(global.configPath) );
 }
 
@@ -71,4 +71,6 @@ function configWriter(path) {
 
 }
 
-module.exports = exports = install;
+module.exports = exports = {
+    main
+};

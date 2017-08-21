@@ -15,7 +15,7 @@ const configTempToLabel = {
 };
 
 
-function terminalWeather({outputInterface}) {
+function main({outputInterface}) {
 
     const results = {
         location: null,
@@ -270,4 +270,6 @@ function cacheWeatherData(weatherString) {
 
 }
 
-module.exports = exports = terminalWeather;
+module.exports = exports = {
+    main
+};
