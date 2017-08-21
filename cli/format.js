@@ -1,18 +1,19 @@
 const fs = require('fs');
-const config = require(global.configPath);
 
 function setFormatString(config, formatString) {
     config.format = formatString;
-    const outputConfig = JSON.stringify(config, null, 2);
+    return config;
+}
+
+function main(formatString) {   
+    const config = require(global.configPath);
+    const outputConfig = JSON.stringify(setFormatString(config, formatString), null, 2);
     fs.writeFile(global.configPath, outputConfig, err => {
         if (err) throw err;
     })
 }
 
-function main(formatString) {   
-    setFormatString(config, formatString);
-}
-
 module.exports = {
-    main
+    main,
+    setFormatString
 };
