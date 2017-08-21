@@ -1,5 +1,4 @@
 const fs = require('fs');
-const config = require(global.configPath);
 
 function setDisplay(config, displayMode) {
     config.displayMode = displayMode;
@@ -7,6 +6,7 @@ function setDisplay(config, displayMode) {
 }
 
 function main(displayMode) {   
+    const config = require(global.configPath);
     const outputConfig = setDisplay(config, displayMode);
     fs.writeFile(global.configPath, outputConfig, err => {
         if (err) throw err;
