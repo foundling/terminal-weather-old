@@ -51,44 +51,44 @@ module.exports = exports = weatherToColorMap = {
     },
     icon: {
         clear: {
-            day:  '☀️  ',
-            night: '✨ '
+            day:  '☀️',
+            night: '✨'
         },
         clouds: {
-            day: '⛅ ',
-            night: '☁️ ',
+            day: '⛅',
+            night: '☁️',
         },
         rain: {
-            day: '🌧 ',
-            night: '🌧 ',
+            day: '🌧',
+            night: '🌧',
         },
         thunder: {
-            day: '⚡️ ',
-            night: '⚡️ '
+            day: '⚡️',
+            night: '⚡️'
         },
         smoke: {
-            day: '🌫 ',
-            night: '🌫 '
+            day: '🌫',
+            night: '🌫'
         },
         haze: {
-            day: '🌫 ',
-            night: '🌫 '
+            day: '🌫',
+            night: '🌫'
         },
         snow: {
-            day: '☃️ ',
-            night: '☃️ ',
+            day: '☃️',
+            night: '☃️',
         },
         fog: {
-            day: '🌁 ',
-            night: '🌁 ',
+            day: '🌁',
+            night: '🌁',
         },
         wind: {
-            day: '💨 ',
-            night: '💨 ',
+            day: '💨',
+            night: '💨',
         },
         tornado: {
-            day: '🌪 ',
-            night: '🌪 ',
+            day: '🌪',
+            night: '🌪',
         }
     },
 
