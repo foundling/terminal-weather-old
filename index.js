@@ -39,18 +39,10 @@ module.exports = function() {
     } 
 
     // let these commands through regardless of whether terminal-weather config is installed or not.
-    if (
-            args.includes('-h') || 
-            args.includes('--help') || 
-            args.includes('i') || 
-            args.includes('install') || 
-            args.includes('l') || 
-            args.includes('list')
-       )
+    if ( ['-h','--help','install','list'].some(arg => args.includes(arg)) )
        return require('./cli')(args);
 
     // request installation first.
-    else 
-        return console.log('No configuration file exists. Run "terminal-weather configure" to set one up.'); 
+    return console.log('No configuration file exists. Run "terminal-weather configure" to set one up.'); 
 
 };
