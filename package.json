@@ -7,7 +7,7 @@
     "terminal-weather": "./bin/terminal-weather"
   },
   "scripts": {
-    "test": "echo \"Tests are forthcoming.\" && exit 0",
+    "test": "tape */**/*.spec.js | tap-dot",
     "postuninstall": "rm ~/.terminal-weather.json"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "commander": "^2.11.0"
   },
   "devDependencies": {
+    "tap-dot": "^1.0.5",
     "tape": "^4.8.0"
   }
 }
