@@ -39,7 +39,7 @@ module.exports = function() {
     } 
 
     // let these commands through regardless of whether terminal-weather config is installed or not.
-    if ( ['-h','--help','install','list'].some(arg => args.includes(arg)) )
+    if ( ['-h','--help','configure','list'].some(arg => args.includes(arg)) ) 
        return require('./cli')(args);
 
     // request installation first.
