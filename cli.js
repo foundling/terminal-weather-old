@@ -1,6 +1,7 @@
 const cli = require('commander');
 const delayedRequire = path => (...args) => require(path)(...args);
 
+const uninstall = delayedRequire('./cli/uninstall');
 const installConfig = delayedRequire('./cli/install');
 const listWeatherCodes = delayedRequire('./cli/list');
 const getWeather = delayedRequire('./cli/weather');
@@ -16,9 +17,14 @@ cli
     .option('-n, --nocache','Invalidate cached weather string, make a new request for the weather.');
 
 cli
-    .command('install')
-    .description(`Install (or re-install) terminal-weather configuration file to ${global.configPath}.`)
+    .command('configure')
+    .description(`Create a configuration file at ${global.configPath}. Required to use terminal-weather.`)
     .action(installConfig);
+
+cli
+    .command('uninstall')
+    .description('Uninstall terminal weather. Equivalent to "npm uninstall -g terminal-weather".')
+    .action(uninstall);
 
 cli
     .command('list')
@@ -45,6 +51,7 @@ cli
     .description('Set the format string used to configure the display of the terminal-weather output.')
     .action(setFormatString);
 
+// add extra space after help output
 cli.on('--help', console.log);
 
 module.exports = function(args) {

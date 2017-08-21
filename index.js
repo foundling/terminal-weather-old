@@ -20,7 +20,7 @@ module.exports = function() {
 
         const currentTimeMS = (new Date()).getTime();
         const promptFlagThrown = (args.includes('-p') || args.includes('--prompt'));
-        const argsPassed = Boolean(args.length);
+        const helpFlagThrown = (args.includes('-h') || args.includes('--help'));
 
         // cache not initialized yet or cache out of date 
         if (!config.cache || currentTimeMS - config.cache.lastCached > config.CACHE_INTERVAL_MS)
@@ -31,7 +31,7 @@ module.exports = function() {
             return process.stdout.write(config.cache.weather);
 
         // basic usage, prompt string with newline
-        if (!argsPassed)
+        if (!args.length)
             return console.log(config.cache.weather);
 
         return require('./cli')(args);
@@ -39,11 +39,18 @@ module.exports = function() {
     } 
 
     // let these commands through regardless of whether terminal-weather config is installed or not.
-    if (args.includes('i') || args.includes('install') || args.includes('l') || args.includes('list'))
-        return require('./cli')(args);
+    if (
+            args.includes('-h') || 
+            args.includes('--help') || 
+            args.includes('i') || 
+            args.includes('install') || 
+            args.includes('l') || 
+            args.includes('list')
+       )
+       return require('./cli')(args);
 
     // request installation first.
     else 
-        return console.log('No configuration file exists. Run "terminal-weather install" to set one up.'); 
+        return console.log('No configuration file exists. Run "terminal-weather configure" to set one up.'); 
 
 };
