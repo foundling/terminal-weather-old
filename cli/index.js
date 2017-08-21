@@ -1,16 +1,16 @@
 const cli = require('commander');
 const delayedRequire = path => (...args) => require(path)(...args);
 
-const uninstall = delayedRequire('./cli/uninstall');
-const installConfig = delayedRequire('./cli/install');
-const listWeatherCodes = delayedRequire('./cli/list');
-const getWeather = delayedRequire('./cli/weather');
-const updateConfig = delayedRequire('./cli/update');
-const setUnits = delayedRequire('./cli/units');
-const setDisplay = delayedRequire('./cli/display');
-const showConfig = delayedRequire('./cli/show');
-const setFormatString = delayedRequire('./cli/format');
-const showHelp = delayedRequire('./cli/help');
+const uninstall = delayedRequire('./uninstall');
+const installConfig = delayedRequire('./install');
+const listWeatherCodes = delayedRequire('./list');
+const getWeather = delayedRequire('./weather');
+const updateConfig = delayedRequire('./update');
+const setUnits = delayedRequire('./units');
+const setDisplay = delayedRequire('./display');
+const showConfig = delayedRequire('./show');
+const setFormatString = delayedRequire('./format');
+const showHelp = delayedRequire('./help');
 
 cli
     .option('-p, --prompt','Print output without a newline.')
@@ -63,4 +63,5 @@ module.exports = function(args) {
 
     if (!args.length || cli.nocache ) 
         return getWeather({ outputInterface: console.log, city: cli.city }); 
+
 };
