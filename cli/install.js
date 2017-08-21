@@ -1,15 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const prompts = require('../data/prompts');
-const defaultConfig = {
-    API_KEY: '',
-    NETWORK_TIMEOUT_MS: 4000,
-    CACHE_INTERVAL_MS: 1000 * 60 * 10,
-    displayMode: "text",
-    units: null,
-    format: 'T D',
-    cache: null
-};
+const defaultConfig = require('../data/config');
 
 // put config path back
 function main() {

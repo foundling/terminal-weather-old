@@ -1,16 +1,15 @@
 const test = require('tape');
 const { setFormatString } = require('./format');
+const config = require('../data/config');
 
 test('changing format string', (t) => {
 
-    let formatStringA = 'T D ';
-    let formatStringB = 'D T ';
+    t.plan(2);
 
-    const config = {};
-    setFormatString(config, formatStringA);
-    t.equal(config.format, formatStringA);
-    setFormatString(config, formatStringB);
-    t.equal(config.format, formatStringB);
+    t.equal(config.format, 'T D ');
+
+    setFormatString(config, 'D T ');
+    t.equal(config.format, 'D T ');
 
     t.end();
 });
