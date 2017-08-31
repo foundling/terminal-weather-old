@@ -43,6 +43,7 @@ module.exports = exports = weatherToColorMap = {
         rain: `${ansiColors.bgBlue}${ansiColors.fgBlack} rain ${ansiColors.reset}`,
         thunder: `${ansiColors.bgLightGray}${ansiColors.fgMagenta} thunder  ${ansiColors.reset}`,
         smoke: `${ansiColors.bgWhite}${ansiColors.fgLightRed} smoke ${ansiColors.reset}`,
+        mist: `${ansiColors.bgWhite}${ansiColors.fgLightBlue} mist ${ansiColors.reset}`,
         haze: `${ansiColors.bgLightWhite}${ansiColors.dim}${ansiColors.fgLightGray} haze ${ansiColors.reset}`,
         snow: `${ansiColors.bgLightGray} snow ${ansiColors.reset}`,
         fog: `${ansiColors.bgLightWhite}${ansiColors.dim}${ansiColors.fgLightGray} fog ${ansiColors.reset}`,
@@ -71,6 +72,10 @@ module.exports = exports = weatherToColorMap = {
             night: '🌫'
         },
         haze: {
+            day: '🌫',
+            night: '🌫'
+        },
+        mist: {
             day: '🌫',
             night: '🌫'
         },

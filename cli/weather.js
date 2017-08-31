@@ -34,9 +34,10 @@ function main({outputInterface}) {
 }
 
 function getLocation(results) {
+
     return new Promise((resolve, reject) => {
 
-        let body = '';
+        let body = ''; 
         const req = http.get({
             hostname: 'ip-api.com',
             path: '/json',
@@ -212,11 +213,6 @@ function buildDisplayFromFormatString(formatString, weatherData) {
 
 }
 
-function parseWeatherString(c) {
-
-
-}
-
 function getTempColor(temp, units) {
 
     let ranges = {
@@ -271,5 +267,10 @@ function cacheWeatherData(weatherString) {
 }
 
 module.exports = exports = {
-    main
+    main,
+    getLocation,
+    getWeather,
+    getTempColor,
+    cacheWeatherData,
+    buildDisplayFromFormatString
 };
