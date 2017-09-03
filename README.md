@@ -102,6 +102,10 @@ If you want to include terminal-weather in your bash prompt, there are a couple 
         PROMPT_COMMAND="set_bash_prompt; $PROMPT_COMMAND"
 
 
+### Known Issues
+
+Terminal weather's responsiveness seems to degrade if you source your ~/.bashrc multiple times from within a shell. 
+
 ### Removing `terminal-weather` 
 
 + Remove terminal weather call from the bash prompt in your `~/.bashrc` file 
