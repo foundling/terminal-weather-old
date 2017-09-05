@@ -1,0 +1,4 @@
+remove global
+check each command path, including combos
+write tests, adjust code so its testable
+extract api related stuff into separate service
