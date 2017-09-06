@@ -1,21 +1,19 @@
-const display = require('../data/display');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
-const config = require(global.configPath);
 const querystring = require('querystring');
 const readline = require('readline');
-const makePrinter = (printer) => (s) => {
-    printer(s);
-}; 
-const configTempToLabel = {
-    fahrenheit: 'F',
-    celcius: 'C',
-    kelvin: 'K'
+
+const config = require(global.configPath);
+const display = require('../data/display');
+
+const makePrinter = (printer) => (s) => printer(s);
+const makeReject = (msg) => (err) => {
+    console.log(msg);
+    throw err;
 };
 
-
-function main({outputInterface}) {
+function main({ outputInterface }) {
 
     const results = {
         location: null,
@@ -23,10 +21,10 @@ function main({outputInterface}) {
     };
 
     getLocation(results)
-        .then(getWeather)
-        .then(toWeatherString)
-        .then(cacheWeatherData)
-        .then(makePrinter(outputInterface))
+        .then(getWeather, makeReject('getWeather failed.'))
+        .then(toWeatherString, makeReject('toWeatherString failed.'))
+        .then(cacheWeatherData, makeReject('cacheWeatherData failed.'))
+        .then(makePrinter(outputInterface));
         .catch(e => { 
             throw e; 
         });
@@ -177,13 +175,19 @@ function toWeatherString(results) {
 
 function buildDisplayFromFormatString(formatString, weatherData) {
 
-    // 'T D'
+    const metricToLabel = {
+        fahrenheit: 'F',
+        celcius: 'C',
+        kelvin: 'K'
+    };
+
+    // map symbol placeholder ('T', 'D', etc.) to output, eg. ('clear', ☀️ )
     const formatFuncs = {
 
         // temperature text, e.g. 43° F 
         T: function buildTempString({ temp, units }) {
             let tempColor = getTempColor(temp, units);
-            return `${ tempColor }${ temp }° ${ configTempToLabel[ units ] }${ display.ansiColors.reset }`;
+            return `${ tempColor }${ temp }° ${ metricToLabel[ units ] }${ display.ansiColors.reset }`;
         },
   
         // display text/icon, e.g.  'clear' or ☀️  
