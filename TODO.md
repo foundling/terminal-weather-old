@@ -14,3 +14,7 @@
 + bugs:
     + combining --nocache and --prompt flags do not work
     + post uninstall hook hangs the terminal. is this exit code related?
+
+check each command path, including combos
+write tests, adjust code so its testable
+extract api related stuff into separate service

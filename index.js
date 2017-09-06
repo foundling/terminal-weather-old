@@ -1,6 +1,6 @@
-const homedir = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
+const HOMEDIR = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
 const configFilename = '.terminal-weather.json';
-const configPath = `${homedir}/${configFilename}`;
+const configPath = `${HOMEDIR}/${configFilename}`;
 const args = process.argv.slice(2);
 
 global.configPath = configPath;
@@ -10,10 +10,15 @@ module.exports = function() {
     let config;
 
     try {
+
         config = require(configPath);
+
     } catch(err) {
+
+        // catch any errors other than missing config file
         if (err.code !== 'MODULE_NOT_FOUND') 
             throw err;
+
     }
 
     if (config) {
