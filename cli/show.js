@@ -14,7 +14,7 @@ module.exports = {
         } = ansiColors;
 
         console.log();
-        console.log(`${ underscore }Your current Terminal Weather Configuration: ${ reset }`);
+        console.log(`${ underscore }Your Current Terminal Weather Configuration: ${ reset }`);
         console.log();
         console.log(`${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${global.configPath}`); 
         console.log(`${ underscore } ${ fgBlue }API KEY: ${reset} ${config.API_KEY}`);

@@ -1,11 +1,11 @@
+const config = require(global.configPath);
+const display = require('../data/display');
+
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-
-const config = require(global.configPath);
-const display = require('../data/display');
 
 const makePrinter = (printer) => (s) => printer(s);
 const makeReject = (msg) => (err) => {
@@ -21,10 +21,10 @@ function main({ outputInterface }) {
     };
 
     getLocation(results)
-        .then(getWeather, makeReject('getWeather failed.'))
-        .then(toWeatherString, makeReject('toWeatherString failed.'))
-        .then(cacheWeatherData, makeReject('cacheWeatherData failed.'))
-        .then(makePrinter(outputInterface));
+        .then(getWeather, makeReject('getLocation failed.'))
+        .then(toWeatherString, makeReject('getWeather failed.'))
+        .then(cacheWeatherData, makeReject('toWeatherString failed.'))
+        .then(makePrinter(outputInterface))
         .catch(e => { 
             throw e; 
         });
@@ -36,11 +36,13 @@ function getLocation(results) {
     return new Promise((resolve, reject) => {
 
         let body = ''; 
-        const req = http.get({
+        let target = {
             hostname: 'ip-api.com',
             path: '/json',
             port: 80,
-        }, response => {
+        };
+
+        const req = http.get(target, response => {
 
             response.on('data', function(chunk) {
                 body += chunk;
@@ -102,12 +104,14 @@ function getWeather(results) {
         const qs = querystring.stringify(data);
 
         let body = '';
-        const req = http.get({
+        let target = {
 
             hostname: 'api.openweathermap.org',
             path: `/data/2.5/weather?q=${qs}`
 
-        }, function responseHandler(res) {
+        };
+
+        const req = http.get(target, function responseHandler(res) {
 
             res.on('data', function(chunk) {
                 body += chunk;

@@ -18,7 +18,7 @@ cli
 
 cli
     .command('configure')
-    .description(`Create a configuration file at ${global.configPath}. Required to use terminal-weather.`)
+    .description(`Configure terminal-weather for use by creating a config file at '$HOME/.terminal-weather.json'.`)
     .action(installConfig);
 
 cli
