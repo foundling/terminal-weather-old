@@ -1,33 +1,34 @@
-const { ansiColors } = require('../data/display');
+const path = require('path');
+const configPath = path.join(__dirname, '../config.json');
+const config = require(configPath);
+const { ansiColors } = require(path.join(__dirname, '../data/display'));
 
-module.exports = {
-    main({ configPath }) {
+function main() {
 
-        const config = require(configPath);
-        const { 
+    const { bgLightWhite, fgBlue, underscore, reset } = ansiColors;
+    const { lastCached, weather } = config.cache;
+    const lastCachedTime = new Date(lastCached).toLocaleTimeString(); 
+    const lastCachedDate = new Date(lastCached).toDateString();
 
-            bgLightWhite, 
-            fgBlue, 
-            underscore,
-            reset 
+    let output = `
 
-        } = ansiColors;
+${ underscore }Your Current Terminal Weather Configuration: ${ reset }
+${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${configPath}
+${ underscore } ${ fgBlue }API KEY: ${reset} ${config.API_KEY}
+${ underscore } ${ fgBlue }UNITS: ${reset} ${config.units}
+${ underscore } ${ fgBlue }NETWORK TIMEOUT THRESHOLD: ${reset} ${config.NETWORK_TIMEOUT_MS/1000.0} seconds 
+${ underscore } ${ fgBlue }DISPLAY MODE: ${reset} ${ config.displayMode }
+`;
 
-        console.log();
-        console.log(`${ underscore }Your Current Terminal Weather Configuration: ${ reset }`);
-        console.log();
-        console.log(`${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${configPath}`); 
-        console.log(`${ underscore } ${ fgBlue }API KEY: ${reset} ${config.API_KEY}`);
-        console.log(`${ underscore } ${ fgBlue }UNITS: ${reset} ${config.units} `);
-        console.log(`${ underscore } ${ fgBlue }NETWORK TIMEOUT THRESHOLD: ${reset} ${config.NETWORK_TIMEOUT_MS/1000.0} seconds` ); 
-        console.log(`${ underscore } ${ fgBlue }DISPLAY MODE: ${reset} ${ config.displayMode }`);
-
-        if (!config.cache) return;
-
-        console.log(`${ underscore } ${ fgBlue }LAST CACHED WEATHER STRING: ${ reset } ${config.cache.weather} `);
-        console.log(`${ underscore } ${ fgBlue }DATE LAST CACHED: ${ reset } ${new Date(config.cache.lastCached).toLocaleTimeString()}, ${new Date(config.cache.lastCached).toDateString()}`);
-
-        console.log();
+    if (config.cache) { 
+        output += `
+${ underscore } ${ fgBlue }LAST CACHED WEATHER STRING: ${ reset } ${ weather }
+${ underscore } ${ fgBlue }DATE LAST CACHED: ${ reset } ${ lastCachedTime }, ${ lastCachedDate };
+`;
     }
 
+    console.log(output);
+
 };
+
+module.exports = main;
