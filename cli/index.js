@@ -1,8 +1,7 @@
-const cli = require('commander');
+const cli = require('neodoc');
 const delayedRequire = path => (...args) => require(path).main(...args);
-
-const uninstall = delayedRequire('./uninstall');
 const installConfig = delayedRequire('./install');
+const uninstall = delayedRequire('./uninstall');
 const listWeatherCodes = delayedRequire('./list');
 const getWeather = delayedRequire('./weather');
 const updateConfig = delayedRequire('./update');
@@ -10,58 +9,33 @@ const setUnits = delayedRequire('./units');
 const setDisplay = delayedRequire('./display');
 const showConfig = delayedRequire('./show');
 const setFormatString = delayedRequire('./format');
-const showHelp = delayedRequire('./help');
 
-cli
-    .option('-p, --prompt','Print output without a newline.')
-    .option('-n, --nocache','Invalidate cached weather string, make a new request for the weather.');
+const spec = `
+    terminal-weather
 
-cli
-    .command('configure')
-    .description(`Configure terminal-weather for use by creating a config file at '$HOME/.terminal-weather.json'.`)
-    .action(installConfig);
+    Usage: terminal-weather
+       or: terminal-weather [options] 
+       or: terminal-weather configure
+       or: terminal-weather show (display|config)
+       or: terminal-weather uninstall
 
-cli
-    .command('uninstall')
-    .description('Uninstall terminal weather. Equivalent to "npm uninstall -g terminal-weather".')
-    .action(uninstall);
+    Options:
+        -h, --help      print this usage page
+        -n, --no-cache  invalidate cache before printing weather string  
+        -p, --prompt    print weather string with no trailing new line. Useful for embedding in your terminal prompt.
+        -d,--display=DISPLAY_MODE   get or set display mode.
+        -f, --format=FORMAT_STRING  get or set the format string determining the weather string output.
+        -u, --units=UNIT_TYPE       get or set temp unit type.
 
-cli
-    .command('list')
-    .description('Print the weather codes for icon and text.')
-    .action(listWeatherCodes);
+`;
 
-cli
-    .command('display <display-mode>')
-    .description('Set display mode to "icon" or "text".')
-    .action(setDisplay);
-
-cli
-    .command('units <unit-type>')
-    .description('Set unit type in config to <fahrenheit | celcius | kelvin>. Shorthand is supported, e.g. "f" for fahrenheit.')
-    .action(setUnits);
-
-cli
-    .command('show')
-    .description('Show your configuration file')
-    .action(showConfig);
-
-cli
-    .command('format <format-string>')
-    .description('Set the format string used to configure the display of the terminal-weather output.')
-    .action(setFormatString);
-
-// add extra space after help output
-cli.on('--help', console.log);
-
-module.exports = function(args) {
-
-    cli.parse(process.argv);
-
-    if (args.includes('-h') || args.includes('--help'))
-        return cli.outputHelp(text => 'a\n' + text + '\nb');
-
-    if (!args.length || cli.nocache ) 
-        return getWeather({ outputInterface: console.log, city: cli.city }); 
-
+const options = {
+    smartOptions: false
 };
+
+function route(parsed) {
+    console.log(parsed);
+};
+
+const parsed = cli.run(spec, options);
+route(parsed);
