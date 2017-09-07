@@ -37,5 +37,9 @@ function route(parsed) {
     console.log(parsed);
 };
 
-const parsed = cli.run(spec, options);
-route(parsed);
+function main() {
+    const parsed = cli.run(spec, options);
+    route(parsed);
+};
+
+module.exports = main;
