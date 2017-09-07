@@ -31,4 +31,4 @@ ${ underscore } ${ fgBlue }DATE LAST CACHED: ${ reset } ${ lastCachedTime }, ${ 
 
 };
 
-module.exports = main;
+module.exports = { main };

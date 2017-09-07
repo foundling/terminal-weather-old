@@ -26,49 +26,59 @@ const spec = `
         -u, --units=UNIT_TYPE   get or set temp unit type.
 
 `;
-const options = {
-    smartOptions: false
-};
+const parseOptions = { smartOptions: false };
 
-function route(parsedInput, configPath) {
-    console.log(parsedInput);
+function route(parsedInput) {
+
+    // handle commands
 
     if (!Object.keys(parsedInput).length)
-        getWeather({ configPath });
+        return getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
 
     if (parsedInput.configure)
-        installConfig({ configPath })
+        return installConfig()
 
     if (parsedInput.show) {
 
         if (parsedInput.config) 
-            showConfig({ configPath })
+            return showConfig()
 
         if (parsedInput.display)
-            listWeatherCodes()
+            return listWeatherCodes()
 
     }
 
     if (parsedInput.uninstall)
-        uninstall({ configPath });
+        return uninstall();
 
-    if (parsedInput['-p'] || parsedInput['--prompt'])
-        getWeather({ configPath, outputInterface: process.sdtout });
 
-    if (parsedInput['-f'] || parsedInput['--format']) 
-        setFormatString({ configPath });
+    // handle options ... more complicated
+   
+    // update config
+    if (parsedInput['-d'] || parsedInput['-f'] || parsedInput['-u']) {
+        if (parsedInput['-d'])
+            setDisplay({ displayMode: parsedInput['-d'] });
 
-    if (parsedInput['-u'] || parsedInput['--units']) 
-        setUnits({ configPath });
+        if (parsedInput['-f'] || parsedInput['--format']) 
+            setFormatString({ formatString: parsedInput['-f'] });
 
-    if (parsedInput['-d'] || parsedInput['--display']) 
-        setDisplay({ configPath });
+        if (parsedInput['-u'] || parsedInput['--units']) 
+            setUnits({ unitType: parsedInput['-u'] });
+    }
+
+
+    if (parsedInput['-n'] && !parsedInput['-p'])
+        getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
+
+    if (parsedInput['-p']) 
+        getWeather().then(weatherString => process.stdout.write(weatherString));
+
 
 };
 
-function main({ args, configPath }) {
-    const parsedInput = cli.run(spec, options);
-    route(parsedInput, configPath);
+function main() {
+    const parsedInput = cli.run(spec, parseOptions);
+    route(parsedInput);
 };
 
 module.exports = main;

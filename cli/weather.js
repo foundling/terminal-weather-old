@@ -1,34 +1,29 @@
-const display = require('../data/display');
-
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-
-const makePrinter = (printer) => (s) => printer(s);
+const configPath = path.join(__dirname, '../config.json');
+const config = require(configPath);
+const display = require(path.join(__dirname,'../data/display'));
 const makeReject = (msg) => (err) => {
     console.log(msg);
     throw err;
 };
 
-function main({ outputInterface, configPath }) {
+function main() {
 
-    const config = require(configPath);
     const results = {
-        config,
         location: null,
         weather: null,
     };
 
-    getLocation(results)
+    return getLocation(results)
         .then(getWeather, makeReject('getLocation failed.'))
         .then(toWeatherString, makeReject('getWeather failed.'))
         .then(cacheWeatherData, makeReject('toWeatherString failed.'))
-        .then(makePrinter(outputInterface))
-        .catch(e => { 
-            throw e; 
-        });
+        .catch(e => { throw e; });
+        //.then(weatherString => process.stdout.write(weatherString + (newline ? '\n' : '')), makeReject('cacheWeatherData failed'))
 
 }
 
@@ -63,7 +58,7 @@ function getLocation(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(results.config.NETWORK_TIMEOUT_MS);
+            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -73,6 +68,7 @@ function getLocation(results) {
         req.on('error', (err) => {
             if (err.code === 'ECONNRESET') {
                 process.exit(1);
+                req.end();
             }
         });
 
@@ -95,11 +91,11 @@ function getWeather(results) {
         const data = {
             city, 
             countryCode, 
-            units: toAPIUnits[results.config.units],
-            APPID: results.config.API_KEY
+            units: toAPIUnits[config.units],
+            APPID: config.API_KEY
         };
 
-        if (!results.config.units)
+        if (!config.units)
             delete(data.units);
 
         const qs = querystring.stringify(data);
@@ -132,7 +128,7 @@ function getWeather(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(results.config.NETWORK_TIMEOUT_MS);
+            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -158,23 +154,23 @@ function toWeatherString(results) {
     const { temp, temp_min, temp_max } = results.weather.main;
     const tempInt = parseInt(temp); 
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
-    let matchingDescriptions = Object.keys(display[results.config.displayMode]).filter(key => descriptionKey.includes(key));
+    let matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
     let symbol;
     let formatData;
     let outputString;
 
-    if (results.config.displayMode === 'text') 
-        symbol = display[results.config.displayMode][ matchingDescriptions[0] ];
+    if (config.displayMode === 'text') 
+        symbol = display[config.displayMode][ matchingDescriptions[0] ];
     else 
-        symbol = display[results.config.displayMode][ matchingDescriptions[0] ][dayOrNight];
+        symbol = display[config.displayMode][ matchingDescriptions[0] ][dayOrNight];
 
     formatData = {
-        units: results.config.units,
+        units: config.units,
         temp: tempInt,
         symbol
     };
 
-    results.weatherString = buildDisplayFromFormatString(results.config.format, formatData);
+    results.weatherString = buildDisplayFromFormatString(config.format, formatData);
     return results;
 }
 
@@ -262,20 +258,20 @@ function getTempColor(temp, units) {
 
 function cacheWeatherData(results) {
 
-    results.config.cache = {
+    config.cache = {
         weather: results.weatherString,
         lastCached: new Date().getTime()
     };
 
-    fs.writeFile(results.config.configPath, JSON.stringify(config, null, 4), function(err) {
+    fs.writeFile(configPath, JSON.stringify(config, null, 4), function(err) {
         if (err) throw err; 
     });
 
-    return weatherString;
+    return results.weatherString;
 
 }
 
-module.exports = exports = {
+module.exports = {
     main,
     getLocation,
     getWeather,

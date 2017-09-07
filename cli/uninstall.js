@@ -1,10 +1,6 @@
 const exec = require('child_process').exec;
 const fs = require('fs');
 
-module.exports = {
-    main
-};
-
 function main() {
 
     exec('npm uninstall -g terminal-weather', function(err, stdout, stderr) {
@@ -14,3 +10,5 @@ function main() {
     });
     
 }
+
+module.exports = { main };

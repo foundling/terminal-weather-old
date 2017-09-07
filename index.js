@@ -1,7 +1,12 @@
-const HOMEDIR = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME;
-const configFilename = '.terminal-weather.json';
-const configPath = `${HOMEDIR}/${configFilename}`;
+const path = require('path');
+const configPath = path.join(__dirname,'config.json');
 const args = process.argv.slice(2);
+const passThroughArgs = [
+    '-h',
+    '--help',
+    'configure',
+    'list'
+]; 
 
 module.exports = function() {
 
@@ -23,11 +28,10 @@ module.exports = function() {
 
         const currentTimeMS = (new Date()).getTime();
         const promptFlagThrown = (args.includes('-p') || args.includes('--prompt'));
-        const helpFlagThrown = (args.includes('-h') || args.includes('--help'));
 
         // cache not initialized yet or cache out of date 
         if (!config.cache || currentTimeMS - config.cache.lastCached > config.CACHE_INTERVAL_MS)
-            return require('./cli')({ args, configPath });
+            return require('./cli')();
 
         // print cached string with no newline  
         if (promptFlagThrown)
@@ -37,13 +41,13 @@ module.exports = function() {
         if (!args.length)
             return console.log(config.cache.weather);
 
-        return require('./cli')({ args, configPath });
+        return require('./cli')();
 
     } 
 
     // let these commands through regardless of whether terminal-weather config is installed or not.
-    if ( ['-h','--help','configure','list'].some(arg => args.includes(arg)) ) 
-       return require('./cli')({ args, configPath });
+    else if ( passThroughArgs.some(arg => args.includes(arg)) ) 
+       return require('./cli')(); 
 
     // request installation first.
     return console.log('No configuration file exists. Run "terminal-weather configure" to set one up.'); 

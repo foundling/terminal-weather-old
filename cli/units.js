@@ -1,4 +1,7 @@
 const fs = require('fs');
+const path = require('path');
+const configPath = path.join(__dirname, '../config.json');
+const config = require(configPath);
 const normalizedUnits = {
     k: 'kelvin',
     c: 'celcius',
@@ -13,9 +16,8 @@ function setUnits(config, unitType) {
     return config;
 }
 
-function main({ unitType, configPath }) {   
+function main({ unitType }) {   
     
-    const config = require(configPath);
     const normalizedUnitType = unitType.toLowerCase();
     if (!normalizedUnits[normalizedUnitType]) {
         console.log('Invalid unit type:', unitType);
@@ -23,12 +25,9 @@ function main({ unitType, configPath }) {
     }
     setUnits(config, normalizedUnits[normalizedUnitType]);
     const outputConfig = JSON.stringify(config, null, 2);
-    fs.writeFile(configPath, outputConfig, err => {
+    fs.writeFile(configPath, outputConfig, 'utf8', err => {
         if (err) throw err;
     })
 }
 
-module.exports = { 
-    main,
-    setUnits
-};
+module.exports = { main, setUnits };

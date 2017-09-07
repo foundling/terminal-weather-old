@@ -1,8 +1,5 @@
-const { text, icon } = require('../data/display');
-
-module.exports = {
-    main
-};
+const path = require('path');
+const { text, icon } = require(path.join(__dirname,'../data/display'));
 
 function main() {
 
@@ -16,3 +13,5 @@ function main() {
     });
 
 };
+
+module.exports = { main };

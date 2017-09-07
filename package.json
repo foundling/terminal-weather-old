@@ -7,8 +7,7 @@
     "terminal-weather": "./bin/terminal-weather"
   },
   "scripts": {
-    "test": "tape */**/*.spec.js | tap-dot",
-    "postuninstall": "rm ~/.terminal-weather.json"
+    "test": "tape */**/*.spec.js | tap-dot"
   },
   "repository": {
     "type": "git",

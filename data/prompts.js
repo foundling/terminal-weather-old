@@ -19,7 +19,7 @@ module.exports = exports = [
         text: 'Temperature units [ (c) for Celcius, (f) for Fahrenheit, (k) for Kelvin ]: ',
         configKey: 'units',
         isValid: input => Object.keys(unitMap).includes(input.toLowerCase().trim()),
-        process: (input) => unitMap[input],
+        process: (input) => unitMap[input.trim().toLowerCase()],
         invalidMsg: 'not a valid temperature unit'
     }
 ];

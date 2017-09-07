@@ -49,6 +49,13 @@ Terminal weather is a cli that conveys succinct weather information in text or e
 
 ````
 
+## Notes
+
+If you update your display, units or format string, the update will not be visible until the cache expires. To make the effects immediately visible, pass the `-n` flag to explicitly invalidate the cache. E.g.: 
+
+    terminal-weather -n --display=icon
+    terminal-weather -nd=icon 
+
 ## Controlling the output
 
 To configure the order of terminal-weather's information, pass a string of characters from the list below to the `format` command. 
@@ -72,7 +79,7 @@ The following are forthcoming:
 ## Configuration File
 
 + On the first run, terminal-weather prompts you for the values it needs to continually query the api.
-+ Then it writes a JSON configuration file called '.terminal-weather.json' to your $HOME directory.
++ Then it writes a JSON configuration file called '.terminal-weather.json' the application's root directory (run `terminal-weather show config` to see the location of this file).
 
 ````
     {
