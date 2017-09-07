@@ -13,9 +13,9 @@ function setUnits(config, unitType) {
     return config;
 }
 
-function main(unitType) {   
+function main({ unitType, configPath }) {   
     
-    const config = require(global.configPath);
+    const config = require(configPath);
     const normalizedUnitType = unitType.toLowerCase();
     if (!normalizedUnits[normalizedUnitType]) {
         console.log('Invalid unit type:', unitType);
@@ -23,7 +23,7 @@ function main(unitType) {
     }
     setUnits(config, normalizedUnits[normalizedUnitType]);
     const outputConfig = JSON.stringify(config, null, 2);
-    fs.writeFile(global.configPath, outputConfig, err => {
+    fs.writeFile(configPath, outputConfig, err => {
         if (err) throw err;
     })
 }

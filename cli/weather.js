@@ -1,4 +1,3 @@
-const config = require(global.configPath);
 const display = require('../data/display');
 
 const fs = require('fs');
@@ -13,9 +12,11 @@ const makeReject = (msg) => (err) => {
     throw err;
 };
 
-function main({ outputInterface }) {
+function main({ outputInterface, configPath }) {
 
+    const config = require(configPath);
     const results = {
+        config,
         location: null,
         weather: null,
     };
@@ -62,7 +63,7 @@ function getLocation(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
+            socket.setTimeout(results.config.NETWORK_TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -94,11 +95,11 @@ function getWeather(results) {
         const data = {
             city, 
             countryCode, 
-            units: toAPIUnits[config.units],
-            APPID: config.API_KEY
+            units: toAPIUnits[results.config.units],
+            APPID: results.config.API_KEY
         };
 
-        if (!config.units)
+        if (!results.config.units)
             delete(data.units);
 
         const qs = querystring.stringify(data);
@@ -131,7 +132,7 @@ function getWeather(results) {
         });
 
         req.on('socket', (socket) => {
-            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
+            socket.setTimeout(results.config.NETWORK_TIMEOUT_MS);
             socket.on('timeout', () => {
                 writeToConsole('timeout :{');
                 req.abort();
@@ -157,24 +158,24 @@ function toWeatherString(results) {
     const { temp, temp_min, temp_max } = results.weather.main;
     const tempInt = parseInt(temp); 
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
-    let matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
+    let matchingDescriptions = Object.keys(display[results.config.displayMode]).filter(key => descriptionKey.includes(key));
     let symbol;
     let formatData;
     let outputString;
 
-    if (config.displayMode === 'text') 
-        symbol = display[config.displayMode][ matchingDescriptions[0] ];
+    if (results.config.displayMode === 'text') 
+        symbol = display[results.config.displayMode][ matchingDescriptions[0] ];
     else 
-        symbol = display[config.displayMode][ matchingDescriptions[0] ][dayOrNight];
+        symbol = display[results.config.displayMode][ matchingDescriptions[0] ][dayOrNight];
 
     formatData = {
-        units: config.units,
+        units: results.config.units,
         temp: tempInt,
         symbol
     };
 
-    return buildDisplayFromFormatString(config.format, formatData);
-
+    results.weatherString = buildDisplayFromFormatString(results.config.format, formatData);
+    return results;
 }
 
 function buildDisplayFromFormatString(formatString, weatherData) {
@@ -259,14 +260,14 @@ function getTempColor(temp, units) {
 
 }
 
-function cacheWeatherData(weatherString) {
+function cacheWeatherData(results) {
 
-    config.cache = {
-        weather: weatherString,
+    results.config.cache = {
+        weather: results.weatherString,
         lastCached: new Date().getTime()
     };
 
-    fs.writeFile(configPath, JSON.stringify(config, null, 4), function(err) {
+    fs.writeFile(results.config.configPath, JSON.stringify(config, null, 4), function(err) {
         if (err) throw err; 
     });
 

@@ -5,10 +5,10 @@ function setFormatString(config, formatString) {
     return config;
 }
 
-function main(formatString) {   
-    const config = require(global.configPath);
+function main({ formatString, configPath }) {   
+    const config = require(configPath);
     const outputConfig = JSON.stringify(setFormatString(config, formatString), null, 2);
-    fs.writeFile(global.configPath, outputConfig, err => {
+    fs.writeFile(configPath, outputConfig, err => {
         if (err) throw err;
     })
 }

@@ -3,8 +3,6 @@ const configFilename = '.terminal-weather.json';
 const configPath = `${HOMEDIR}/${configFilename}`;
 const args = process.argv.slice(2);
 
-global.configPath = configPath;
-
 module.exports = function() {
 
     let config;
@@ -29,7 +27,7 @@ module.exports = function() {
 
         // cache not initialized yet or cache out of date 
         if (!config.cache || currentTimeMS - config.cache.lastCached > config.CACHE_INTERVAL_MS)
-            return require('./cli')(args);
+            return require('./cli')({ args, configPath });
 
         // print cached string with no newline  
         if (promptFlagThrown)
@@ -39,13 +37,13 @@ module.exports = function() {
         if (!args.length)
             return console.log(config.cache.weather);
 
-        return require('./cli')(args);
+        return require('./cli')({ args, configPath });
 
     } 
 
     // let these commands through regardless of whether terminal-weather config is installed or not.
     if ( ['-h','--help','configure','list'].some(arg => args.includes(arg)) ) 
-       return require('./cli')(args);
+       return require('./cli')({ args, configPath });
 
     // request installation first.
     return console.log('No configuration file exists. Run "terminal-weather configure" to set one up.'); 

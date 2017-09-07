@@ -4,8 +4,8 @@ const prompts = require('../data/prompts');
 const defaultConfig = require('../data/config');
 
 // put config path back
-function main() {
-    takeUserConfigData( configWriter(global.configPath) );
+function main({ configPath }) {
+    takeUserConfigData( configWriter(configPath) );
 }
 
 function takeUserConfigData(cb) { 
@@ -53,6 +53,7 @@ function configWriter(path) {
 
     return function(config) {
 
+        config.configPath = path;
         fs.writeFile(path, JSON.stringify(config, null, 4), 'utf8', function(err) {
             if (err) throw err;
             console.log('installation complete 😎 ');

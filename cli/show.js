@@ -1,9 +1,9 @@
 const { ansiColors } = require('../data/display');
 
 module.exports = {
-    main() {
+    main({ configPath }) {
 
-        const config = require(global.configPath);
+        const config = require(configPath);
         const { 
 
             bgLightWhite, 
@@ -16,7 +16,7 @@ module.exports = {
         console.log();
         console.log(`${ underscore }Your Current Terminal Weather Configuration: ${ reset }`);
         console.log();
-        console.log(`${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${global.configPath}`); 
+        console.log(`${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${configPath}`); 
         console.log(`${ underscore } ${ fgBlue }API KEY: ${reset} ${config.API_KEY}`);
         console.log(`${ underscore } ${ fgBlue }UNITS: ${reset} ${config.units} `);
         console.log(`${ underscore } ${ fgBlue }NETWORK TIMEOUT THRESHOLD: ${reset} ${config.NETWORK_TIMEOUT_MS/1000.0} seconds` ); 
