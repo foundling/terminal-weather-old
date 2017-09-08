@@ -4,7 +4,8 @@ const args = process.argv.slice(2);
 const passThroughArgs = [
     '-h',
     '--help',
-    'configure'
+    'configure',
+    'uninstall'
 ]; 
 
 module.exports = function() {
@@ -20,7 +21,6 @@ module.exports = function() {
         // catch any errors other than missing config file
         if (err.code !== 'MODULE_NOT_FOUND')
             throw err;
-
 
     }
 
