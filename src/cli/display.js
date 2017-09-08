@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const configPath = path.join(__dirname, '../config.json');
+const configPath = path.join(__dirname, '../../config.json');
 const config = require(configPath);
 const validate = (displayMode) => ['text','icon'].includes(displayMode);
 const errorMsg = (displayMode) => console.log(`Error: display argument must be either text or icon. ${ displayMode } is not a valid display mode.`);

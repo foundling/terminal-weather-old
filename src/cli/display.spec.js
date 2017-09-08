@@ -1,6 +1,7 @@
 const test = require('tape');
-const { setDisplay } = require('./display');
-const config = require('../data/config');
+const path = require('path');
+const { setDisplay } = require(path.join(__dirname,'./display'));
+const config = require('../data/defaultConfig');
 
 test('display mode test', function(t) {
 

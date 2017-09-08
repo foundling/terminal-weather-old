@@ -3,7 +3,7 @@ const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-const configPath = path.join(__dirname, '../config.json');
+const configPath = path.join(__dirname, '../../config.json');
 const config = require(configPath);
 const display = require(path.join(__dirname,'../data/display'));
 const makeReject = (msg) => (err) => {

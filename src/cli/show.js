@@ -1,5 +1,5 @@
 const path = require('path');
-const configPath = path.join(__dirname, '../config.json');
+const configPath = path.join(__dirname, '../../config.json');
 const config = require(configPath);
 const { ansiColors } = require(path.join(__dirname, '../data/display'));
 

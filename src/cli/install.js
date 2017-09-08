@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const configPath = path.join(__dirname, '../config.json');
-const defaultConfig = require('../data/defaultConfig');
-const prompts = require('../data/prompts');
+const configPath = path.join(__dirname, '../../config.json');
+const defaultConfig = require(path.join(__dirname,'../data/defaultConfig'));
+const prompts = require(path.join(__dirname,'../data/prompts'));
 
 function main() {
     takeUserConfigData( writeConfigTo(configPath) );

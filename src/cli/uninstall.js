@@ -4,9 +4,12 @@ const fs = require('fs');
 function main() {
 
     exec('npm uninstall -g terminal-weather', function(err, stdout, stderr) {
-        console.log(err);
-        console.log(stdout);
-        console.log(stderr);
+        if(err) {
+            console.log(stderr);
+            throw err;
+        } else {
+            console.log(stdout);
+        }
     });
     
 }
