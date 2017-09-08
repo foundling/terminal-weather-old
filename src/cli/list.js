@@ -8,8 +8,7 @@ function main() {
     });
 
     Object.keys(icon).forEach(key => {
-        console.log(`${ key } (am)\t| ${ icon[key].day }`);
-        console.log(`${ key } (pm)\t| ${ icon[key].night }`);
+        console.log(`${ key } (am)\t| ${ icon[key].day }\n${ key } (pm)\t| ${ icon[key].night }`);
     });
 
 };
