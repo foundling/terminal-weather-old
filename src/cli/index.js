@@ -1,6 +1,8 @@
 const cli = require('neodoc');
 const delayedRequire = path => (...args) => require(path).main(...args);
 
+const logToConsole = process.stdout.write.bind(process.stdout);
+
 const installConfig = delayedRequire('./install');
 const uninstall = delayedRequire('./uninstall');
 const getWeather = delayedRequire('./weather');
@@ -10,6 +12,7 @@ const setFormatString = delayedRequire('./format');
 const showConfig = delayedRequire('./show');
 const listWeatherCodes = delayedRequire('./list');
 
+const parseOptions = { smartOptions: true };
 const spec = `
 
     terminal-weather
@@ -31,8 +34,6 @@ const spec = `
 
 `;
 
-const parseOptions = { smartOptions: true };
-
 function main() {
     const parsedInput = cli.run(spec, parseOptions);
     route(parsedInput);
@@ -53,7 +54,7 @@ function route(parsedInput) {
     } = parsedInput;
 
     if (!Object.keys(parsedInput).length)
-        return getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
+        return getWeather().then(weatherString => logToConsole(weatherString + '\n'));
 
     if (configure)
         return installConfig()
@@ -88,9 +89,9 @@ function route(parsedInput) {
             setUnitType({ unitType: parsedInput['--units'] });
 
         if (parsedInput['--no-cache'])
-            return getWeather().then(console.log(weatherString  + '\n'));
+            return getWeather().then(logToConsole(weatherString  + '\n'));
 
-        getWeather().then(weatherString => process.stdout.write(parsedInput['--prompt']) ? '' : '\n');
+        getWeather().then(logToConsole);
 
     };
 }
