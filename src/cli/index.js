@@ -1,32 +1,36 @@
 const cli = require('neodoc');
 const delayedRequire = path => (...args) => require(path).main(...args);
+
 const installConfig = delayedRequire('./install');
 const uninstall = delayedRequire('./uninstall');
 const getWeather = delayedRequire('./weather');
-const setUnits = delayedRequire('./units');
-const setDisplay = delayedRequire('./display');
+const setUnitType = delayedRequire('./units');
+const setDisplayMode = delayedRequire('./display');
 const setFormatString = delayedRequire('./format');
 const showConfig = delayedRequire('./show');
 const listWeatherCodes = delayedRequire('./list');
+
 const spec = `
 
     terminal-weather
 
     Usage: terminal-weather
-       or: terminal-weather [options] 
-       or: terminal-weather configure
-       or: terminal-weather show (display | config)
-       or: terminal-weather uninstall
+       or: terminal-weather         [options] 
+       or: terminal-weather         info 
+       or: terminal-weather         configure 
+       or: terminal-weather         show (display | config) 
+       or: terminal-weather         uninstall
 
     Options:
-        -h, --help      print this usage page
-        -n, --no-cache  invalidate cache before printing weather string  
-        -p, --prompt    print weather string with no trailing new line. Useful for embedding in your terminal prompt.
+        -h, --help                  print this usage page
+        -n, --no-cache invalidate   cache before printing weather string  
+        -p, --prompt  print weather string with no trailing new line. Useful for embedding in your terminal prompt.
         -d, --display=DISPLAY_MODE  get or set display mode.
         -f, --format=FORMAT_STRING  get or set the format string determining the weather string output.
-        -u, --units=UNIT_TYPE   get or set temp unit type.
+        -u, --units=UNIT_TYPE       get or set temp unit type.
 
 `;
+
 const parseOptions = { smartOptions: true };
 
 function main() {
@@ -36,29 +40,38 @@ function main() {
 
 function route(parsedInput) {
 
-    // COMMANDS 
+    // MUTUALLY EXCLUSIVE COMMANDS 
+
+    const {
+
+        configure,
+        uninstall,
+        show,
+        config,
+        display
+
+    } = parsedInput;
 
     if (!Object.keys(parsedInput).length)
         return getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
 
-    if (parsedInput.configure)
+    if (configure)
         return installConfig()
 
-    if (parsedInput.uninstall)
+    if (uninstall)
         return uninstall();
 
-    if (parsedInput.show) {
+    if (show) {
 
-        if (parsedInput.config) 
+        if (config) 
             return showConfig()
 
-        if (parsedInput.display)
+        if (display)
             return listWeatherCodes()
 
     }
 
-    // OPTIONS
-
+    // THESE ARE OPTIONS, AND ARE NOT MUTUALLY EXCLUSIVE
     if (parsedInput['--format'] || parsedInput['--display'] || parsedInput['--units']) {
 
         // update formatString in config.json
@@ -67,23 +80,19 @@ function route(parsedInput) {
         
         // update displayMode in config.json
         if (parsedInput['--display']) {
-            setDisplay({ displayMode: parsedInput['--display'] });
+            setDisplayMode({ displayMode: parsedInput['--display'] });
         }
 
         // update unitType in config.json
         if (parsedInput['--units']) 
-            setUnits({ unitType: parsedInput['--units'] });
+            setUnitType({ unitType: parsedInput['--units'] });
 
         if (parsedInput['--no-cache'])
-            return getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
-    }
+            return getWeather().then(console.log(weatherString  + '\n'));
 
-    // decide whether a newline should be printed 
-    if (parsedInput['--prompt'])
-        getWeather().then(weatherString => process.stdout.write(weatherString));
-    else 
-        getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
+        getWeather().then(weatherString => process.stdout.write(parsedInput['--prompt']) ? '' : '\n');
 
-};
+    };
+}
 
 module.exports = main;
