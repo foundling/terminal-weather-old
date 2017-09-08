@@ -2,6 +2,7 @@
 
 + ensure all openweathermap codes are accounted for.
 + explicitly for and check for lack of internet connection. Currently, no output is printed, but behavior might vary on different machines / os.
++ allow change of display without requiring -n flag. requires a refactor of the weather cli path.
 + check for node version on bin/terminal-weather invocation with '/usr/bin/env node --version'.  If it's less than acceptible version, notify user and exit.
 + extract any code that deals with a particular api into its own api file, e.g. owmAPI.js so different APIs can be used.
 + make a list of potential contributions that would be obviously useful to terminal-weather
