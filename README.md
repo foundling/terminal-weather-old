@@ -1,4 +1,4 @@
-# terminal-weather ⛈
+# terminal-weather 
 
 Terminal weather is a minimal command-line tool for displaying the current weather in your location, optimized for rapid re-rendering in your terminal prompt.
 
