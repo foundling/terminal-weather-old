@@ -36,7 +36,6 @@ Terminal weather is a minimal command-line tool for displaying the current weath
 
     Usage: terminal-weather
        or: terminal-weather [options],                  ex: terminal-weather -p 
-       or: terminal-weather info,                       ex: terminal-weather info
        or: terminal-weather configure,                  ex: terminal-weather configure
        or: terminal-weather show (display | config),    ex: terminal-weather show display
        or: terminal-weather uninstall,                  ex: terminal-weather uninstall 

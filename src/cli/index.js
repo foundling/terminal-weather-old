@@ -19,7 +19,6 @@ const spec = `
 
     Usage: terminal-weather
        or: terminal-weather         [options] 
-       or: terminal-weather         info 
        or: terminal-weather         configure 
        or: terminal-weather         show (display | config) 
        or: terminal-weather         uninstall
