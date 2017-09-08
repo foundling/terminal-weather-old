@@ -4,7 +4,7 @@ const delayedRequire = path => (...args) => require(path).main(...args);
 const logToConsole = process.stdout.write.bind(process.stdout);
 
 const installConfig = delayedRequire('./install');
-const uninstall = delayedRequire('./uninstall');
+const uninstallTW = delayedRequire('./uninstall');
 const getWeather = delayedRequire('./weather');
 const setUnitType = delayedRequire('./units');
 const setDisplayMode = delayedRequire('./display');
@@ -60,7 +60,7 @@ function route(parsedInput) {
         return installConfig()
 
     if (uninstall)
-        return uninstall();
+        return uninstallTW();
 
     if (show) {
 
