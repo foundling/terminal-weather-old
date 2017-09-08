@@ -93,7 +93,7 @@ If you want to include terminal-weather in your bash prompt, there are a couple 
 
         # a function to insert the terminal-weather bash fn inside the PS1 variable
         set_bash_prompt() {
-            PS1="$(terminal-weather)\u@[\h]$ $(history -n)"
+            PS1="$(terminal-weather -p)\u@[\h]$ $(history -n)"
         }
 
         # include above fn in prompt command variable so the prompt is reset each time it is rendered
