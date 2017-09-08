@@ -11,23 +11,28 @@ const normalizedUnits = {
     fahrenheit: 'fahrenheit'
 }; 
 
-function setUnits(config, unitType) {
-    config.units = unitType;
-    return config;
-}
-
 function main({ unitType }) {   
     
-    const normalizedUnitType = unitType.toLowerCase();
+    const normalizedUnitType = unitType.trim().toLowerCase();
     if (!normalizedUnits[normalizedUnitType]) {
         console.log('Invalid unit type:', unitType);
         process.exit(1);
     }
-    setUnits(config, normalizedUnits[normalizedUnitType]);
-    const outputConfig = JSON.stringify(config, null, 2);
-    fs.writeFile(configPath, outputConfig, 'utf8', err => {
-        if (err) throw err;
-    })
+
+    const newConfig = setUnits(config, normalizedUnits[normalizedUnitType]);
+    const outputConfig = JSON.stringify(newConfig, null, 4);
+
+    try {
+        fs.writeFileSync(configPath, outputConfig, 'utf8');
+    } catch(e) {
+        throw e;
+    }
+
 }
+
+function setUnits(config, unitType) {
+    config.units = unitType;
+    return config;
+};
 
 module.exports = { main, setUnits };

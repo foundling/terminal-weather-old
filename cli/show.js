@@ -11,7 +11,6 @@ function main() {
     const lastCachedDate = new Date(lastCached).toDateString();
 
     let output = `
-
 ${ underscore }Your Current Terminal Weather Configuration: ${ reset }
 ${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${configPath}
 ${ underscore } ${ fgBlue }API KEY: ${reset} ${config.API_KEY}

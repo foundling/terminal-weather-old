@@ -2,13 +2,14 @@ const cli = require('neodoc');
 const delayedRequire = path => (...args) => require(path).main(...args);
 const installConfig = delayedRequire('./install');
 const uninstall = delayedRequire('./uninstall');
+const getWeather = delayedRequire('./weather');
 const setUnits = delayedRequire('./units');
 const setDisplay = delayedRequire('./display');
-const showConfig = delayedRequire('./show');
 const setFormatString = delayedRequire('./format');
+const showConfig = delayedRequire('./show');
 const listWeatherCodes = delayedRequire('./list');
-const getWeather = delayedRequire('./weather');
 const spec = `
+
     terminal-weather
 
     Usage: terminal-weather
@@ -26,17 +27,25 @@ const spec = `
         -u, --units=UNIT_TYPE   get or set temp unit type.
 
 `;
-const parseOptions = { smartOptions: false };
+const parseOptions = { smartOptions: true };
+
+function main() {
+    const parsedInput = cli.run(spec, parseOptions);
+    route(parsedInput);
+};
 
 function route(parsedInput) {
 
-    // handle commands
+    // COMMANDS 
 
     if (!Object.keys(parsedInput).length)
         return getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
 
     if (parsedInput.configure)
         return installConfig()
+
+    if (parsedInput.uninstall)
+        return uninstall();
 
     if (parsedInput.show) {
 
@@ -48,37 +57,34 @@ function route(parsedInput) {
 
     }
 
-    if (parsedInput.uninstall)
-        return uninstall();
+    // OPTIONS
 
+    if (parsedInput['--format'] || parsedInput['--display'] || parsedInput['--units']) {
 
-    // handle options ... more complicated
-   
-    // update config
-    if (parsedInput['-d'] || parsedInput['-f'] || parsedInput['-u']) {
-        if (parsedInput['-d'])
-            setDisplay({ displayMode: parsedInput['-d'] });
+        // update formatString in config.json
+        if (parsedInput['--format']) 
+            setFormatString({ formatString: parsedInput['--format'] });
+        
+        // update displayMode in config.json
+        if (parsedInput['--display']) {
+            console.log(parsedInput['--display']);
+            setDisplay({ displayMode: parsedInput['--display'] });
+        }
 
-        if (parsedInput['-f'] || parsedInput['--format']) 
-            setFormatString({ formatString: parsedInput['-f'] });
+        // update unitType in config.json
+        if (parsedInput['--units']) 
+            setUnits({ unitType: parsedInput['--units'] });
 
-        if (parsedInput['-u'] || parsedInput['--units']) 
-            setUnits({ unitType: parsedInput['-u'] });
+        if (parsedInput['--no-cache'])
+            return getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
     }
 
-
-    if (parsedInput['-n'] && !parsedInput['-p'])
+    // decide whether a newline should be printed 
+    if (parsedInput['--prompt'])
+        getWeather().then(weatherString => process.stdout.write(weatherString));
+    else 
         getWeather().then(weatherString => process.stdout.write(weatherString + '\n'));
 
-    if (parsedInput['-p']) 
-        getWeather().then(weatherString => process.stdout.write(weatherString));
-
-
-};
-
-function main() {
-    const parsedInput = cli.run(spec, parseOptions);
-    route(parsedInput);
 };
 
 module.exports = main;

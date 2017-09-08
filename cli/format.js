@@ -9,10 +9,14 @@ function setFormatString(config, formatString) {
 }
 
 function main({ formatString }) {   
+
     const outputConfig = JSON.stringify(setFormatString(config, formatString), null, 4);
-    fs.writeFile(configPath, outputConfig, 'utf8', err => {
-        if (err) throw err;
-    })
+
+    try {
+        fs.writeFileSync(configPath, outputConfig, 'utf8');
+    } catch(e) {
+        throw e;
+    }
 }
 
 module.exports = { main, setFormatString };
