@@ -52,7 +52,7 @@ module.exports = function() {
     if ( passThroughArgs.some(arg => args.includes(arg)) ) 
        return require('./src/cli')(); 
 
-    return console.log('No configuration file exists. Run "terminal-weather configure" to set one up.'); 
+    console.log('terminal-weather: no configuration file exists. Run "terminal-weather configure" to set one up.'); 
     process.exit(1);
 
 };
