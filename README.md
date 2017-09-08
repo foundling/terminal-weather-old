@@ -1,6 +1,6 @@
 # terminal-weather ⛈
 
-Terminal weather is a cli that conveys succinct weather information in text or emoji form, optimized for your terminal prompt.
+Terminal weather is a minimal command-line tool for displaying the current weather in your location, optimized for rapid re-rendering in your terminal prompt.
 
 ## Requirements
 
@@ -35,18 +35,19 @@ Terminal weather is a cli that conveys succinct weather information in text or e
     terminal-weather
 
     Usage: terminal-weather
-       or: terminal-weather [options] 
-       or: terminal-weather configure
-       or: terminal-weather show (display | config)
-       or: terminal-weather uninstall
+       or: terminal-weather [options],                  ex: terminal-weather -p 
+       or: terminal-weather info,                       ex: terminal-weather info
+       or: terminal-weather configure,                  ex: terminal-weather configure
+       or: terminal-weather show (display | config),    ex: terminal-weather show display
+       or: terminal-weather uninstall,                  ex: terminal-weather uninstall 
 
     Options:
-        -h, --help      print this usage page
-        -n, --no-cache  invalidate cache before printing weather string  
-        -p, --prompt    print weather string with no trailing new line. Useful for embedding in your terminal prompt.
-        -d, --display=DISPLAY_MODE  get or set display mode.
-        -f, --format=FORMAT_STRING  get or set the format string determining the weather string output.
-        -u, --units=UNIT_TYPE   get or set temp unit type.
+        -h, --help                                      print this usage page
+        -n, --no-cache                                  invalidate cache before printing weather string  
+        -p, --prompt                                    print weather string with no trailing new line. Useful for embedding in your terminal prompt.
+        -d, --display=DISPLAY_MODE                      get or set display mode.
+        -f, --format=FORMAT_STRING                      get or set the format string determining the weather string output.
+        -u, --units=UNIT_TYPE                           get or set temp unit type.
 
 ````
 
