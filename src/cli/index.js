@@ -88,12 +88,16 @@ function route(parsedInput) {
         if (parsedInput['--units']) 
             setUnitType({ unitType: parsedInput['--units'] });
 
-        if (parsedInput['--no-cache'])
-            return getWeather().then(logToConsole(weatherString  + '\n'));
+    }
 
-        getWeather().then(logToConsole);
+    if (parsedInput['--no-cache'] && parsedInput['--prompt'])
+        getWeather().then(weatherString => logToConsole(weatherString));
 
-    };
+    else if (parsedInput['--no-cache'])
+        getWeather().then(weatherString => logToConsole(weatherString  + '\n'));
+
+    else if (parsedInput['--prompt'])
+        getWeather().then(weatherString => logToConsole(weatherString));
 }
 
 module.exports = main;
