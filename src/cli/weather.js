@@ -23,7 +23,6 @@ function main() {
         .then(toWeatherString, makeReject('getWeather failed.'))
         .then(cacheWeatherData, makeReject('toWeatherString failed.'))
         .catch(e => { throw e; });
-        //.then(weatherString => process.stdout.write(weatherString + (newline ? '\n' : '')), makeReject('cacheWeatherData failed'))
 
 }
 
@@ -154,6 +153,7 @@ function toWeatherString(results) {
     const { temp, temp_min, temp_max } = results.weather.main;
     const tempInt = parseInt(temp); 
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
+
     let matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
     let symbol;
     let formatData;
@@ -188,7 +188,7 @@ function buildDisplayFromFormatString(formatString, weatherData) {
         // temperature text, e.g. 43° F 
         T: function buildTempString({ temp, units }) {
             let tempColor = getTempColor(temp, units);
-            return `${ tempColor }${ temp }° ${ metricToLabel[ units ] }${ display.ansiColors.reset }`;
+            return `${ tempColor }${ temp }°${ metricToLabel[ units ] }${ display.ansiColors.reset }`;
         },
   
         // display text/icon, e.g.  'clear' or ☀️  
