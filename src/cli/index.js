@@ -67,7 +67,6 @@ function route(parsedInput) {
         
         // update displayMode in config.json
         if (parsedInput['--display']) {
-            console.log(parsedInput['--display']);
             setDisplay({ displayMode: parsedInput['--display'] });
         }
 
