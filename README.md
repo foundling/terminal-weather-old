@@ -1,4 +1,4 @@
-# terminal-weather
+# terminal-weather ⛈
 
 Terminal weather is a cli that conveys succinct weather information in text or emoji form, optimized for your terminal prompt.
 
