@@ -6,7 +6,7 @@ const { ansiColors } = require(path.join(__dirname, '../data/display'));
 function main() {
 
     const { bgLightWhite, fgBlue, underscore, reset } = ansiColors;
-    const { lastCached, weather } = config.cache;
+    const { lastCached, weatherString } = config.cache;
     const lastCachedTime = new Date(lastCached).toLocaleTimeString(); 
     const lastCachedDate = new Date(lastCached).toDateString();
 
@@ -21,7 +21,7 @@ ${ underscore } ${ fgBlue }DISPLAY MODE: ${reset} ${ config.displayMode }
 
     if (config.cache) { 
         output += `
-${ underscore } ${ fgBlue }LAST CACHED WEATHER STRING: ${ reset } ${ weather }
+${ underscore } ${ fgBlue }LAST CACHED WEATHER STRING: ${ reset } ${ weatherString }
 ${ underscore } ${ fgBlue }DATE LAST CACHED: ${ reset } ${ lastCachedTime }, ${ lastCachedDate };
 `;
     }

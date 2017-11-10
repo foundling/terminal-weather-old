@@ -11,7 +11,7 @@ const normalizedUnits = {
     fahrenheit: 'fahrenheit'
 }; 
 
-function main({ unitType }) {   
+function main(unitType) {   
     
     const normalizedUnitType = unitType.trim().toLowerCase();
     if (!normalizedUnits[normalizedUnitType]) {

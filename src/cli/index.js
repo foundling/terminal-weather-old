@@ -1,8 +1,6 @@
 const cli = require('neodoc');
 const delayedRequire = path => (...args) => require(path).main(...args);
-
 const logToConsole = process.stdout.write.bind(process.stdout);
-
 const installConfig = delayedRequire('./install');
 const uninstallTW = delayedRequire('./uninstall');
 const getWeather = delayedRequire('./weather');
@@ -11,7 +9,6 @@ const setDisplayMode = delayedRequire('./display');
 const setFormatString = delayedRequire('./format');
 const showConfig = delayedRequire('./show');
 const listWeatherCodes = delayedRequire('./list');
-
 const parseOptions = { smartOptions: true };
 const spec = `
 
@@ -72,23 +69,20 @@ function route(parsedInput) {
     }
 
     // THESE ARE OPTIONS, AND ARE NOT MUTUALLY EXCLUSIVE
-    if (parsedInput['--format'] || parsedInput['--display'] || parsedInput['--units']) {
 
-        // update formatString in config.json
-        if (parsedInput['--format']) 
-            setFormatString({ formatString: parsedInput['--format'] });
-        
-        // update displayMode in config.json
-        if (parsedInput['--display']) {
-            setDisplayMode({ displayMode: parsedInput['--display'] });
-        }
+    // update formatString in config.json
+    if (parsedInput['--format'])
+        setFormatString(parsedInput['--format']);
+    
+    // update displayMode in config.json
+    if (parsedInput['--display'])
+        setDisplayMode(parsedInput['--display']);
 
-        // update unitType in config.json
-        if (parsedInput['--units']) 
-            setUnitType({ unitType: parsedInput['--units'] });
+    // update unitType in config.json
+    if (parsedInput['--units'])
+        setUnitType(parsedInput['--units']);
 
-    }
-
+    // handle -np, -n and -p options
     if (parsedInput['--no-cache'] && parsedInput['--prompt'])
         getWeather().then(weatherString => logToConsole(weatherString));
 

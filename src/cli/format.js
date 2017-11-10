@@ -1,22 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 const configPath = path.join(__dirname,'../../config.json'); 
-const config = require(configPath);
+
+// turn into util method /w error handling
+const config = JSON.parse(fs.readFileSync(configPath), 'utf8');
+const { toWeatherString } = require(path.join(__dirname, 'formatWeather'));
 
 function setFormatString(config, formatString) {
     config.format = formatString;
     return config;
 }
 
-function main({ formatString }) {   
+function main(formatString) {   
 
-    const outputConfig = JSON.stringify(setFormatString(config, formatString), null, 4);
+    //setFormatString(config, formatString);
+    //const outputConfig = JSON.stringify(config, null, 4);
+    const results = config.cache.collectedData;
+    toWeatherString)
 
-    try {
-        fs.writeFileSync(configPath, outputConfig, 'utf8');
-    } catch(e) {
-        throw e;
-    }
 }
 
 module.exports = { main, setFormatString };

@@ -11,17 +11,12 @@ const passThroughArgs = [
 module.exports = function() {
 
     let config;
-
     try {
-
         config = require(configPath);
-
     } catch(err) {
-
         // catch any errors other than missing config file
         if (err.code !== 'MODULE_NOT_FOUND')
             throw err;
-
     }
 
     // if config exists, 
@@ -37,11 +32,11 @@ module.exports = function() {
 
         // print cached string with no newline, ideal for embedding in prompt  
         if (promptFlagThrown)
-            return process.stdout.write(config.cache.weather);
+            return process.stdout.write(config.cache.weatherString);
 
         // basic usage, prompt string with newline
         if (!args.length) {
-            return console.log(config.cache.weather);
+            return console.log(config.cache.weatherString);
         }
 
         return require('./src/cli')();
