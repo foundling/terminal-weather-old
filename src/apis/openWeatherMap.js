@@ -16,8 +16,6 @@ function getWeather(results) {
     return new Promise((resolve, reject) => {
 
         const data = {
-            city, 
-            countryCode, 
             units: unitToQueryParam[config.units],
             APPID: config.API_KEY
         };
@@ -27,15 +25,17 @@ function getWeather(results) {
         if (!config.units)
             delete(data.units);
 
-        const qs = querystring.stringify(data);
+        /* openWeatherMap api v2.5 doesn't follow key/value for query params if it's city */
+        const qs = `${city},${countryCode}&${querystring.stringify(data)`;
 
         let body = '';
         let target = {
             hostname: 'api.openweathermap.org',
-            path: `/data/2.5/weather?q=${qs}`
+            path: `/data/2.5/weather?q=${city},${countryCode}&${qs}`
         };
 
         const req = http.get(target, function responseHandler(res) {
+            console.log(req);
 
             res.on('data', function(chunk) {
                 body += chunk;

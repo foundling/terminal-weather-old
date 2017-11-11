@@ -5,7 +5,6 @@ const config = JSON.parse(fs.readFileSync(configPath));
 const display = require(path.join(__dirname,'../data/display'));
 const sunHasSet = (nowDT, sunsetDT) => nowDT > sunsetDT;
 
-// rename to main, top level functionality. aka, glue
 function toWeatherString(results) {
 
     const { 
@@ -15,8 +14,6 @@ function toWeatherString(results) {
         temp_max 
 
     } = results.weather.main;
-
-    //const weatherDescription = results.weather.weather[0].main;
 
     const descriptionKey = results.weather.weather[0].main.toLowerCase();
     const matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
@@ -36,6 +33,7 @@ function toWeatherString(results) {
 
     results.weatherString = buildDisplayFromFormatString(config.format, formatData);
     return results;
+
 }
 
 function buildDisplayFromFormatString(formatString, weatherData) {
@@ -137,7 +135,7 @@ function cacheWeatherData(results) {
 }
 
 module.exports = {
-    toWeatherString, // rename to main
+    toWeatherString,
     getTempColor,
     buildDisplayFromFormatString,
     cacheWeatherData
