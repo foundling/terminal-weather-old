@@ -12,12 +12,8 @@ function setFormatString(config, formatString) {
 }
 
 function main(formatString) {   
-
-    //setFormatString(config, formatString);
-    //const outputConfig = JSON.stringify(config, null, 4);
-    const results = config.cache.collectedData;
-    toWeatherString)
-
+    const newConfig = setFormatString(config, formatString);
+    fs.writeFileSync(configPath, JSON.stringify(newConfig, null, 4), 'utf8'); 
 }
 
 module.exports = { main, setFormatString };
