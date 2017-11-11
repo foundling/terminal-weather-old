@@ -1,6 +1,6 @@
 module.exports = {
 
-    API: 'openweathermap',
+    API: 'openWeatherMap',
     API_KEY: '',
     NETWORK_TIMEOUT_MS: 4000,
     CACHE_INTERVAL_MS: 1000 * 60 * 10,
