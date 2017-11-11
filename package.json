@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/foundling/terminal-weather",
   "dependencies": {
+    "inquirer": "^3.3.0",
     "neodoc": "^1.4.0"
   },
   "devDependencies": {
