@@ -26,21 +26,18 @@ function getWeather(results) {
             delete(data.units);
 
         /* openWeatherMap api v2.5 doesn't follow key/value for query params if it's city */
-        const qs = `${city},${countryCode}&${querystring.stringify(data)`;
+        const qs = `${city},${countryCode}&${querystring.stringify(data)}`;
 
         let body = '';
         let target = {
             hostname: 'api.openweathermap.org',
-            path: `/data/2.5/weather?q=${city},${countryCode}&${qs}`
-        };
+            path: `/data/2.5/weather?q=${qs}`
+        }
 
         const req = http.get(target, function responseHandler(res) {
-            console.log(req);
-
             res.on('data', function(chunk) {
                 body += chunk;
             });
-
             res.on('end', function() {
                 results.weather = JSON.parse(body);
                 resolve(results);
