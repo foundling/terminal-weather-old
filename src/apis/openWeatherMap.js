@@ -3,16 +3,8 @@ const path = require('path');
 const querystring = require('querystring');
 const configPath = path.join(__dirname, '../../config.json');
 const config = require(configPath);
-const unitToQueryParam = {
-    fahrenheit: 'imperial',
-    celcius: 'metric',
-    kelvin: ''
-};
 
 function getWeather(results) {
-
-    const { city, countryCode } = results.location;
-
     return new Promise((resolve, reject) => {
 
         const data = {
@@ -22,19 +14,18 @@ function getWeather(results) {
 
         // Kelvin is the default value for openweathermap
         // so no need to pass anything for it.
-        if (!config.units)
-            delete(data.units);
-
         /* openWeatherMap api v2.5 doesn't follow key/value for query params if it's city */
-        const qs = `${city},${countryCode}&${querystring.stringify(data)}`;
 
+        let targetURL = buildRequestURL({ 
+            hostname,
+            path,
+            zip: results.location.zip,
+            units: config.units,
+            apiKey: config.API_KEY
+        });
         let body = '';
-        let target = {
-            hostname: 'api.openweathermap.org',
-            path: `/data/2.5/weather?q=${qs}`
-        }
 
-        const req = http.get(target, function responseHandler(res) {
+        const req = http.get(targetURL, function responseHandler(res) {
             res.on('data', function(chunk) {
                 body += chunk;
             });

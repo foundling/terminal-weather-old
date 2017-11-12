@@ -3,12 +3,24 @@ const fs = require('fs');
 function loadJSONConfig(filepath) {
     let jsonData;
 
-    try 
-        jsonFile = fs.readFileSync(filepath);
-    catch(e)
+    try {
+        jsonData = fs.readFileSync(filepath);
+    }
+    catch(e) {
         throw e;
+    }
 
     return JSON.parse(jsonData);
 }
 
-module.exports = { loadJSONConfig };
+function makeReject(msg) {
+    return function(err) {
+        console.log(msg);
+        throw err;
+    };
+};
+
+module.exports = { 
+    loadJSONConfig, 
+    makeReject 
+};

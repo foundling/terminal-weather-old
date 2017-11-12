@@ -7,18 +7,14 @@ const configPath = path.join(__dirname, '../../config.json');
 const config = JSON.parse(fs.readFileSync(configPath));
 const weatherAPIs = require(path.join(__dirname, '../apis'));
 const display = require(path.join(__dirname,'../data/display'));
-const { getWeather } = weatherAPIs[config.API];
+const weatherAPI = weatherAPIs[config.API];
+const { makeReject } = require(path.join(__dirname, 'utils')); 
 const {
     toWeatherString,
     getTempColor,
     buildDisplayFromFormatString,
     cacheWeatherData
 } = require(path.join(__dirname,'formatWeather.js'));
-
-const makeReject = (msg) => (err) => {
-    console.log(msg);
-    throw err;
-};
 
 function main() {
 
@@ -84,4 +80,54 @@ function getLocation(results) {
 
 }
 
-module.exports = { main, getLocation };
+
+function getWeather(results) {
+
+    return new Promise((resolve, reject) => {
+
+        const targetURL = weatherApi.buildRequestURL({ 
+            hostname,
+            path,
+            zip: results.location.zip,
+            countryCode: results.location.countryCode,
+            units: config.units,
+            apiKey: config.API_KEY
+        });
+
+        const req = http.get(targetURL, function responseHandler(res) {
+            res.on('data', function(chunk) {
+                body += chunk;
+            });
+            res.on('end', function() {
+                results.weather = JSON.parse(body);
+                resolve(results);
+                req.end();
+            });
+
+            res.on('error', function(err) {
+                reject(err);
+                req.end();
+            });
+
+        });
+
+        req.on('socket', (socket) => {
+            socket.setTimeout(config.NETWORK_TIMEOUT_MS);
+            socket.on('timeout', () => {
+                console.log('timeout :{');
+                req.abort();
+            });
+        }); 
+
+        req.on('error', (err) => {
+            if (err.code === 'ECONNRESET') {
+                process.exit(1);
+                req.end();
+            }
+        });
+
+    });
+
+};
+
+module.exports = { main, getLocation, getWeather };
