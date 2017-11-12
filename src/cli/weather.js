@@ -92,7 +92,6 @@ function getWeather(results) {
             apiKey: config.API_KEY
         });
 
-        console.log(targetURL);
         let body = '';
         const req = http.get(targetURL, function responseHandler(res) {
             res.on('data', function(chunk) {
