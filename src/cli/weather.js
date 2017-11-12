@@ -85,15 +85,15 @@ function getWeather(results) {
 
     return new Promise((resolve, reject) => {
 
-        const targetURL = weatherApi.buildRequestURL({ 
-            hostname,
-            path,
+        const targetURL = weatherAPI.buildRequestURL({ 
             zip: results.location.zip,
             countryCode: results.location.countryCode,
-            units: config.units,
+            tempUnits: config.units,
             apiKey: config.API_KEY
         });
 
+        console.log(targetURL);
+        let body = '';
         const req = http.get(targetURL, function responseHandler(res) {
             res.on('data', function(chunk) {
                 body += chunk;

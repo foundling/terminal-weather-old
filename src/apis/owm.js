@@ -5,27 +5,27 @@ const path = '/data/2.5/weather?';
 const unitToQueryParam = {
     fahrenheit: 'imperial',
     celcius: 'metric',
-    kelvin: ''
+    kelvin: 'Standard'
 };
 
-function buildRequestURL({ zipCode, countryCode, tempUnits, apiKey }) {
+function buildRequestURL({ zip, countryCode, tempUnits, apiKey }) {
 
     const data = { 
+        zip: countryCode ? `${zip},${countryCode}` : zip,
+        units: unitToQueryParam[tempUnits],
         APPID: apiKey, 
-        zip: countryCode ? `${zipCode},${countryCode}` : zipCode,
-        units: tempUnits || 'Standard'
     };
+
     const qs = querystring.stringify(data);
 
     return {
         hostname,
-        path: `${proto}://${path}?${qs}`
+        path: `${proto}://${hostname}${path}${qs}`
     };
 
 }
 
 function handleResponsePayload() {
 }
-
 
 module.exports = { buildRequestURL, handleResponsePayload };
