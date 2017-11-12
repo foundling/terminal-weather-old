@@ -1,4 +1,5 @@
 const path = require('path');
+const { ansiColors } = require(path.join(__dirname,'src','data','display'));
 const configPath = path.join(__dirname,'config.json');
 const args = process.argv.slice(2);
 const passThroughArgs = [
@@ -11,6 +12,7 @@ const passThroughArgs = [
 module.exports = function() {
 
     let config;
+
     try {
         config = require(configPath);
     } catch(err) {
@@ -19,7 +21,6 @@ module.exports = function() {
             throw err;
     }
 
-    // if config exists, 
     if (config) {
 
         const currentTimeMS = (new Date()).getTime();
@@ -47,7 +48,7 @@ module.exports = function() {
     if ( passThroughArgs.some(arg => args.includes(arg)) ) 
        return require('./src/cli')(); 
 
-    console.log('terminal-weather: no configuration file exists. Run "terminal-weather configure" to set one up.'); 
+    console.log(`${ ansiColors.fgBlue }no terminal-weather configuration file exists. Run ${ansiColors.reset}${ansiColors.bgBlack}"terminal-weather configure"${ansiColors.reset}${ansiColors.fgBlue} to set one up.${ansiColors.reset}`); 
     process.exit(1);
 
 };
