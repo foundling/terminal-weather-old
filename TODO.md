@@ -1,5 +1,6 @@
 # TODO
 
++ on uninstall, prompt user to delete config file.
 + start dev branch and let master be stable.
 + ensure all openweathermap and wunderground codes are accounted for.
 + explicitly for and check for lack of internet connection. Currently, no output is printed, but behavior might vary on different machines / os.
