@@ -11,5 +11,6 @@
 
 const path = require('path');
 const openWeatherMap = require(path.join(__dirname,'owm'));
+const weatherUnderground = require(path.join(__dirname,'wu'));
 
-module.exports = { openWeatherMap };
+module.exports = { openWeatherMap, weatherUnderground };

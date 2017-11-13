@@ -3,7 +3,8 @@ const http = require('http');
 const path = require('path');
 const querystring = require('querystring');
 const readline = require('readline');
-const configPath = path.join(__dirname, '../../config.json');
+const homedir = require('homedir')();
+const configPath = path.join(homedir,'.terminal-weather.json');
 const config = JSON.parse(fs.readFileSync(configPath));
 const weatherAPIs = require(path.join(__dirname, '../api'));
 const display = require(path.join(__dirname,'../data/display'));
@@ -86,6 +87,8 @@ function getWeather(results) {
     return new Promise((resolve, reject) => {
 
         const targetURL = weatherAPI.buildRequestURL({ 
+            city: results.location.city,
+            region: results.location.region,
             zip: results.location.zip,
             countryCode: results.location.countryCode,
             tempUnits: config.units,

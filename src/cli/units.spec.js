@@ -1,7 +1,8 @@
 const test = require('tape');
 const path = require('path');
+
 const { setUnits } = require('./units');
-const config = require(path.join(__dirname,'../../data/config'));
+const config = require(path.join(__dirname,'../../data/defaultConfig'));
 
 test('updating units in config', (t) => {
 

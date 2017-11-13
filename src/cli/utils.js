@@ -20,7 +20,13 @@ function makeReject(msg) {
     };
 };
 
+const ftok = (f) => (f + 459.67)*(5/9);
+const ctok = (c) => c + 273.15;
+
 module.exports = { 
     loadJSONConfig, 
-    makeReject 
+    makeReject, 
+    ftok,
+    ctok
 };
+

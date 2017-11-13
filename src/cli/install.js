@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const configPath = path.join(__dirname, '../../config.json');
+const homedir = require('homedir')();
+const configPath = path.join(homedir, '.terminal-weather.json');
 const defaultConfig = require(path.join(__dirname,'../data/defaultConfig'));
 const prompts = require(path.join(__dirname,'../data/prompts'));
 
@@ -28,13 +29,13 @@ function takeUserConfigData(cb) {
     }
 
     function repeat(prompt) {
-        process.stdout.write(`invalid: ${prompt.invalidMsg}\n${prompt.text}`);
+        process.stdout.write(`${prompt.invalidMsg}\n${prompt.text}`);
     }
 
     function handleInput(response) {
 
         const answer = response.trim() || ' ';
-        const validResponse = currentPrompt.isValid(answer);
+        const validResponse = currentPrompt.isValid(answer, userConfigData);
 
         // check received response. Store if valid, or repeat until valid.
         if (!validResponse)
@@ -59,7 +60,7 @@ function writeConfigTo(configPath) {
         const outputConfig = JSON.stringify(config, null, 4);
         fs.writeFile(configPath, outputConfig, 'utf8', function(err) {
             if (err) throw err;
-            console.log('installation complete 😎 ');
+            console.log(`installation complete 😎 `);
             process.exit(0);
         }); 
     };

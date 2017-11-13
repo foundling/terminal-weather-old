@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const configPath = path.join(__dirname,'../../config.json'); 
+const homedir = require('homedir')();
+const configPath = path.join(homedir, '.terminal-weather.json');
 
 // turn into util method /w error handling
 const config = JSON.parse(fs.readFileSync(configPath), 'utf8');

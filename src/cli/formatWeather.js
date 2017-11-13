@@ -1,29 +1,23 @@
 const fs = require('fs');
 const path = require('path');
-const configPath = path.join(__dirname, '../../config.json');
+const homedir = require('homedir')();
+const configPath = path.join(homedir, '.terminal-weather.json');
 const config = JSON.parse(fs.readFileSync(configPath));
 const display = require(path.join(__dirname,'../data/display'));
-const sunHasSet = (nowDT, sunsetDT) => nowDT > sunsetDT;
+const weatherAPIs = require(path.join(__dirname, '../api'));
+const weatherAPI = weatherAPIs[config.API];
 
 function toWeatherString(results) {
 
-    const { 
+    const { temp, description, sunHasSet } = weatherAPI.handleWeatherPayload(results.weather);
+    const matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => description.includes(key));
 
-        temp, 
-        temp_min, 
-        temp_max 
-
-    } = results.weather.main;
-
-    const descriptionKey = results.weather.weather[0].main.toLowerCase();
-    const matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => descriptionKey.includes(key));
-    const isNightTime = sunHasSet(new Date(), results.weather.sys.sunset * 1000); 
     let symbol, formatData, outputString;
 
     if (config.displayMode === 'text') 
         symbol = display[config.displayMode][ matchingDescriptions[0] ];
     else 
-        symbol = display[config.displayMode][ matchingDescriptions[0] ][isNightTime ? 'night' : 'day'];
+        symbol = display[config.displayMode][ matchingDescriptions[0] ][sunHasSet ? 'night' : 'day'];
 
     formatData = {
         units: config.units,
