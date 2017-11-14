@@ -1,5 +1,6 @@
 # TODO
 
++ remove duplicate weather string from config
 + ensure all openweathermap and wunderground codes are accounted for.
 + allow unit change and format change without having to invalidate cache
 + on uninstall, prompt user to delete config file.

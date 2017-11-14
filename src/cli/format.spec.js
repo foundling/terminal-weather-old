@@ -1,6 +1,6 @@
 const test = require('tape');
 const { setFormatString } = require('./format');
-const config = require('../data/defaultConfig');
+const config = require('../config/default');
 
 test('changing format string', (t) => {
 

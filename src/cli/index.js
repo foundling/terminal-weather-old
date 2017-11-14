@@ -1,14 +1,12 @@
 const cli = require('neodoc');
-const delayedRequire = path => (...args) => require(path).main(...args);
-const logToConsole = process.stdout.write.bind(process.stdout);
-const installConfig = delayedRequire('./install');
-const uninstallTW = delayedRequire('./uninstall');
-const getWeather = delayedRequire('./weather');
-const setUnitType = delayedRequire('./units');
-const setDisplayMode = delayedRequire('./display');
-const setFormatString = delayedRequire('./format');
-const showConfig = delayedRequire('./show');
-const listWeatherCodes = delayedRequire('./list');
+const path = require('path');
+const { delayedRequire, logToConsole } = require(path.join(__dirname, '..','lib','utils'));
+const installConfig = delayedRequire(path.join(__dirname,'install'));
+const uninstallTW = delayedRequire(path.join(__dirname,'uninstall'));
+const getWeather = delayedRequire(path.join(__dirname,'weather'));
+const updateConfig = delayedRequire(path.join(__dirname,'update'));
+const showConfig = delayedRequire(path.join(__dirname,'show'));
+const listWeatherCodes = delayedRequire(path.join(__dirname,'list'));
 const parseOptions = { smartOptions: true };
 const spec = `
 
@@ -71,17 +69,14 @@ function route(parsedInput) {
     // THESE ARE OPTIONS, AND ARE NOT MUTUALLY EXCLUSIVE
 
     // update formatString in config.json
-    if (parsedInput['--format'])
-        setFormatString(parsedInput['--format']);
+    if (parsedInput['--format'] || parsedInput['--display'] || parsedInput['--units']) {
+        updateConfig({ 
+            format: parsedInput['--format'] 
+            display: parsedInput['--display'], 
+            units: parsedInput['--units']
+        });
+    }
     
-    // update displayMode in config.json
-    if (parsedInput['--display'])
-        setDisplayMode(parsedInput['--display']);
-
-    // update unitType in config.json
-    if (parsedInput['--units'])
-        setUnitType(parsedInput['--units']);
-
     // handle -np, -n and -p options
     if (parsedInput['--no-cache'] && parsedInput['--prompt'])
         getWeather().then(weatherString => logToConsole(weatherString));

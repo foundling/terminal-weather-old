@@ -1,6 +1,6 @@
 const path = require('path');
-const { ansiColors } = require(path.join(__dirname, 'display'));
-const { reset, fgGreen, fgBlue, fgRed, fgLightGray, bgWhite } = ansiColors;
+const { colors } = require(path.join(__dirname, 'display'));
+const { reset, fgGreen, fgBlue, fgRed, fgLightGray, bgWhite } = colors;
 const unitMap = {
     c: 'celcius',
     f: 'fahrenheit',

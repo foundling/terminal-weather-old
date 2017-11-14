@@ -2,13 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
-const config = JSON.parse(fs.readFileSync(configPath));
-const display = require(path.join(__dirname,'../data/display'));
-const weatherAPIs = require(path.join(__dirname, '../api'));
-const weatherAPI = weatherAPIs[config.API];
+const display = require(path.join(__dirname,'display'));
 
 function toWeatherString(results) {
 
+    const weatherAPIs = require(path.join(__dirname, 'api'));
+    const weatherAPI = weatherAPIs[config.API];
+    const config = JSON.parse(fs.readFileSync(configPath));
     const { temp, description, sunHasSet } = weatherAPI.handleWeatherPayload(results.weather);
     const matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => description.includes(key));
 
@@ -114,16 +114,14 @@ function getTempColor(temp, units) {
 
 function cacheWeatherData(results) {
 
+    const config = JSON.parse(fs.readFileSync(configPath));
     config.cache = {
         collectedData: results,
         weatherString: results.weatherString,
         lastCached: new Date().getTime()
     };
 
-    fs.writeFile(configPath, JSON.stringify(config, null, 4), function(err) {
-        if (err) throw err; 
-    });
-
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
     return results.weatherString;
 
 }

@@ -1,8 +1,8 @@
 const path = require('path');
-const { ansiColors } = require(path.join(__dirname,'src','data','display'));
 const homedir = require('homedir')();
-const configPath = path.join(homedir,'.terminal-weather.json');
 const args = process.argv.slice(2);
+const configPath = path.join(homedir,'.terminal-weather.json');
+const { reset, fgBlue, bgBlack } = require(path.join(__dirname,'src','lib','colors'));
 const passThroughArgs = [
     '-h',
     '--help',
@@ -49,7 +49,7 @@ module.exports = function() {
     if ( passThroughArgs.some(arg => args.includes(arg)) ) 
        return require('./src/cli')(); 
 
-    console.log(`${ansiColors.reset}${ ansiColors.fgBlue }No terminal-weather configuration file can be found.\nRun ${ansiColors.reset}${ansiColors.bgBlack}terminal-weather configure${ansiColors.reset}${ansiColors.fgBlue} to set one up.${ansiColors.reset}`); 
+    console.log(`${reset}${fgBlue}No terminal-weather configuration file can be found.\nRun ${reset}${bgBlack}terminal-weather configure${reset}${fgBlue} to set one up.${reset}`); 
     process.exit(1);
 
 };

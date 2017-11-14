@@ -1,5 +1,5 @@
 const path = require('path');
-const { text, icon } = require(path.join(__dirname,'../data/display'));
+const { text, icon } = require(path.join(__dirname,'../lib/display'));
 
 function main() {
 

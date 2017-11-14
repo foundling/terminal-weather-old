@@ -5,7 +5,6 @@ const configPath = path.join(homedir, '.terminal-weather.json');
 
 // turn into util method /w error handling
 const config = JSON.parse(fs.readFileSync(configPath), 'utf8');
-const { toWeatherString } = require(path.join(__dirname, 'formatWeather'));
 
 function setFormatString(config, formatString) {
     config.format = formatString;

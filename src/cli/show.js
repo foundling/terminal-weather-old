@@ -2,11 +2,11 @@ const path = require('path');
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
 const config = require(configPath);
-const { ansiColors } = require(path.join(__dirname, '../data/display'));
+const colors = require(path.join(__dirname, '../lib/colors'));
 
 function main() {
 
-    const { bgLightWhite, fgBlue, underscore, reset } = ansiColors;
+    const { bgLightWhite, fgBlue, underscore, reset } = colors;
     const { lastCached, weatherString } = config.cache;
     const lastCachedTime = new Date(lastCached).toLocaleTimeString(); 
     const lastCachedDate = new Date(lastCached).toDateString();

@@ -2,6 +2,7 @@ const path = require('path');
 const querystring = require('querystring');
 const fs = require('fs');
 const homedir = require('homedir')();
+const { ftok, ctok } = require(path.join(__dirname,'..','utils'));
 const configPath = path.join(homedir, '.terminal-weather.json');
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 const proto = 'http';
@@ -11,7 +12,6 @@ const unitToQueryParam = {
     celcius: 'metric',
     kelvin: 'Standard'
 };
-const { ftok, ctok } = require(path.join(__dirname,'..','cli','utils'));
 
 function buildRequestURL({ zip='', city='', region='', countryCode='', tempUnits='', apiKey='' }) {
 

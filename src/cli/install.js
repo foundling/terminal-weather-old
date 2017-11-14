@@ -4,8 +4,8 @@ const readline = require('readline');
 
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
-const defaultConfig = require(path.join(__dirname,'../data/defaultConfig'));
-const prompts = require(path.join(__dirname,'../data/prompts'));
+const defaultConfig = require(path.join(__dirname,'../config/default'));
+const prompts = require(path.join(__dirname,'../lib/prompts'));
 
 function main() {
     takeUserConfigData( writeConfigTo(configPath) );

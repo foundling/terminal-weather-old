@@ -1,10 +1,8 @@
-const fs = require('fs');
-
 function loadJSONConfig(filepath) {
     let jsonData;
 
     try {
-        jsonData = fs.readFileSync(filepath);
+        jsonData = require('fs').readFileSync(filepath);
     }
     catch(e) {
         throw e;
@@ -22,9 +20,13 @@ function makeReject(msg) {
 
 const ftok = (f) => (f + 459.67)*(5/9);
 const ctok = (c) => c + 273.15;
+const delayedRequire = path => (...args) => require(path).main(...args);
+const logToConsole = process.stdout.write.bind(process.stdout);
 
 module.exports = { 
+    delayedRequire,
     loadJSONConfig, 
+    logToConsole,
     makeReject, 
     ftok,
     ctok

@@ -6,16 +6,16 @@ const readline = require('readline');
 const homedir = require('homedir')();
 const configPath = path.join(homedir,'.terminal-weather.json');
 const config = JSON.parse(fs.readFileSync(configPath));
-const weatherAPIs = require(path.join(__dirname, '../api'));
-const display = require(path.join(__dirname,'../data/display'));
+const weatherAPIs = require(path.join(__dirname, '..','lib','api'));
+const display = require(path.join(__dirname,'..','lib','display'));
 const weatherAPI = weatherAPIs[config.API];
-const { makeReject } = require(path.join(__dirname, 'utils')); 
+const { makeReject } = require(path.join(__dirname, '..','lib','utils')); 
 const {
     toWeatherString,
     getTempColor,
     buildDisplayFromFormatString,
     cacheWeatherData
-} = require(path.join(__dirname,'formatWeather.js'));
+} = require(path.join(__dirname,'..','lib','formatWeather'));
 
 function main() {
 
@@ -24,7 +24,7 @@ function main() {
         weather: null,
     };
 
-    return getLocation(results)
+    return getLocation(results, makeReject('getLocation failed'))
         .then(getWeather, makeReject('getLocation failed.'))
         .then(toWeatherString, makeReject('getWeather failed.'))
         .then(cacheWeatherData, makeReject('toWeatherString failed.'))
@@ -71,6 +71,11 @@ function getLocation(results) {
         }); 
 
         req.on('error', err => {
+            if (err.code === 'ENOTFOUND') {
+                console.log(`Could not reach ip-api.com.  Check your internet connection.`);
+                process.exit(1);
+                req.end();
+            }
             if (err.code === 'ECONNRESET') {
                 process.exit(1);
                 req.end();
@@ -122,6 +127,12 @@ function getWeather(results) {
         }); 
 
         req.on('error', (err) => {
+            console.log(err);
+            if (err.code === 'ENOTFOUND') {
+                console.log(`Could not connect to the ${config.API} service.  Check your internet connection`);
+                process.exit(1);
+                req.end();
+            }
             if (err.code === 'ECONNRESET') {
                 process.exit(1);
                 req.end();
