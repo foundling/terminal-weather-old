@@ -1,12 +1,11 @@
 # TODO
 
-+ on uninstall, prompt user to delete config file.
-+ start dev branch and let master be stable.
 + ensure all openweathermap and wunderground codes are accounted for.
-+ explicitly for and check for lack of internet connection. Currently, no output is printed, but behavior might vary on different machines / os.
-+ allow change of display without requiring -n flag. requires a refactor of the weather cli path.
++ allow unit change and format change without having to invalidate cache
++ on uninstall, prompt user to delete config file.
++ start dev branch and leave master as stable.
++ create a proper release 
 + check for node version on bin/terminal-weather invocation with '/usr/bin/env node --version'.  If it's less than acceptible version, notify user and exit.
-+ extract any code that deals with a particular api into its own api file, e.g. owmAPI.js so different APIs can be used.
-+ revise directory structure. kind of odd right now. 
 + try to get all api services to be self contained, i.e. no duplication of stuff in install command 
 + Launch an invocation to cache weather asap on initialization once you have the api key and the temp unit.
+
