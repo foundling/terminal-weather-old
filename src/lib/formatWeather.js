@@ -3,48 +3,58 @@ const path = require('path');
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
 const display = require(path.join(__dirname,'display'));
+const colors = require(path.join(__dirname,'colors'));
+const weatherAPIs = require(path.join(__dirname, 'api'));
+const metricToLabel = {
+    fahrenheit: 'F',
+    celcius: 'C',
+    kelvin: 'K'
+};
 
 function toWeatherString(results) {
 
-    const weatherAPIs = require(path.join(__dirname, 'api'));
-    const weatherAPI = weatherAPIs[config.API];
     const config = JSON.parse(fs.readFileSync(configPath));
+    const weatherAPI = weatherAPIs[config.API];
     const { temp, description, sunHasSet } = weatherAPI.handleWeatherPayload(results.weather);
-    const matchingDescriptions = Object.keys(display[config.displayMode]).filter(key => description.includes(key));
-
-    let symbol, formatData, outputString;
-
-    if (config.displayMode === 'text') 
-        symbol = display[config.displayMode][ matchingDescriptions[0] ];
-    else 
-        symbol = display[config.displayMode][ matchingDescriptions[0] ][sunHasSet ? 'night' : 'day'];
+    const symbol = findSymbol(description, config.displayMode, display[config.displayMode], sunHasSet); 
 
     formatData = {
         units: config.units,
         temp: parseInt(temp),
-        symbol
+        symbol: symbol
     };
 
-    results.weatherString = buildDisplayFromFormatString(config.format, formatData);
+    results.weatherString = computeDisplay(config.format, formatData);
+    results.symbol = symbol;
+    results.temp = parseInt(temp);
     return results;
 
 }
 
-function buildDisplayFromFormatString(formatString, weatherData) {
+function findSymbol(description, mode, options, sunHasSet) {
 
-    const metricToLabel = {
-        fahrenheit: 'F',
-        celcius: 'C',
-        kelvin: 'K'
-    };
+    const descriptions = Object.keys(options);
+    const matches = descriptions.filter(key => description.includes(key));
+    const match = matches[0];
 
-    // map symbol placeholder ('T', 'D', etc.) to output, eg. ('clear', ☀️ )
+    if (!match)
+        throw new Error(`Formatting Error: No matching description for display mode '${mode}', description: '${description}'.`); 
+
+    return (mode === 'text') ? options[match] : options[match][sunHasSet ? 'night' : 'day'];
+
+}
+
+
+function computeDisplay(format, data) {
+
+    // map display token to display data.
+    // e.g. 'T D' -> '75° ☀️ ' 
     const formatFuncs = {
 
         // temperature text, e.g. 43° F 
         T: function buildTempString({ temp, units }) {
             let tempColor = getTempColor(temp, units);
-            return `${ tempColor }${ temp }°${ metricToLabel[ units ] }${ display.ansiColors.reset }`;
+            return `${ tempColor }${ temp }°${ metricToLabel[ units ] }${ colors.reset }`;
         },
   
         // display text/icon, e.g.  'clear' or ☀️  
@@ -65,12 +75,14 @@ function buildDisplayFromFormatString(formatString, weatherData) {
         // atmopsheric presure, e.g. 1020 hPa
         P: function buildPressureString() {
             return '';
-        },
-    };
-    const tokens = Object.keys(formatFuncs);
-    const parseOrKeep = c => (typeof formatFuncs[c] === 'function') ? formatFuncs[c](weatherData) : c;
+        }
 
-    return Array.prototype.map.call(formatString, parseOrKeep).join('');
+    };
+
+    function transform(char) {
+        return typeof formatFuncs[char] === 'function' ? formatFuncs[char](data) : char;
+    }
+    return Array.prototype.map.call(format, transform).join('');
 
 }
 
@@ -101,7 +113,7 @@ function getTempColor(temp, units) {
     };
 
     const { freezing, cold, cool, hot, reallyHot } = ranges[units];
-    const { fgWhite, fgLightGray, fgBlue, fgLightBlue, fgRed, fgLightRed, reset } = display.ansiColors;
+    const { fgWhite, fgLightGray, fgBlue, fgLightBlue, fgRed, fgLightRed, reset } = colors;
 
     if (temp >= reallyHot) return fgRed;
     if (temp >= hot && temp < reallyHot) return fgLightRed;
@@ -116,7 +128,8 @@ function cacheWeatherData(results) {
 
     const config = JSON.parse(fs.readFileSync(configPath));
     config.cache = {
-        collectedData: results,
+        symbol: results.symbol,
+        temp: results.temp,
         weatherString: results.weatherString,
         lastCached: new Date().getTime()
     };
@@ -129,6 +142,6 @@ function cacheWeatherData(results) {
 module.exports = {
     toWeatherString,
     getTempColor,
-    buildDisplayFromFormatString,
+    computeDisplay,
     cacheWeatherData
 };

@@ -35,7 +35,7 @@ function main() {
 
 function route(parsedInput) {
 
-    // MUTUALLY EXCLUSIVE COMMANDS 
+    // MUTUALLY EXCLUSIVE COMMANDS, THEY RETURN 
 
     const {
 
@@ -47,8 +47,15 @@ function route(parsedInput) {
 
     } = parsedInput;
 
-    if (!Object.keys(parsedInput).length)
-        return getWeather().then(weatherString => logToConsole(weatherString + '\n'));
+    const noSubCmds = Object.keys(parsedInput).length === 0; 
+    const updateFormat = parsedInput['--format'];
+    const updateDisplay = parsedInput['--display'];
+    const updateUnits = parsedInput['--units']; 
+    const invalidateCache = parsedInput['--no-cache'];
+    const skipNewline = parsedInput['--prompt'];
+
+    if (noSubCmds)
+        return getWeather().then(weatherString => console.log(weatherString));
 
     if (configure)
         return installConfig()
@@ -57,34 +64,30 @@ function route(parsedInput) {
         return uninstallTW();
 
     if (show) {
-
         if (config) 
             return showConfig()
-
         if (display)
             return listWeatherCodes()
-
     }
 
     // THESE ARE OPTIONS, AND ARE NOT MUTUALLY EXCLUSIVE
 
     // update formatString in config.json
-    if (parsedInput['--format'] || parsedInput['--display'] || parsedInput['--units']) {
+    if (updateFormat || updateDisplay || updateUnits)
         updateConfig({ 
-            format: parsedInput['--format'] 
-            display: parsedInput['--display'], 
-            units: parsedInput['--units']
+            format: updateFormat, 
+            units: updateUnits, 
+            display: updateDisplay 
         });
-    }
     
     // handle -np, -n and -p options
-    if (parsedInput['--no-cache'] && parsedInput['--prompt'])
+    if (invalidateCache && skipNewline)
         getWeather().then(weatherString => logToConsole(weatherString));
 
-    else if (parsedInput['--no-cache'])
+    else if (invalidateCache)
         getWeather().then(weatherString => logToConsole(weatherString  + '\n'));
 
-    else if (parsedInput['--prompt'])
+    else if (skipNewline)
         getWeather().then(weatherString => logToConsole(weatherString));
 }
 

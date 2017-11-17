@@ -1,6 +1,5 @@
 const path = require('path');
 const {
-
     reset,
     bright,
     dim,
@@ -12,7 +11,7 @@ const {
     fgLightGray,
     fgLightRed,
     fgRed,
-    fgGreen:
+    fgGreen,
     fgYellow,
     fgBlue,
     fgLightBlue,

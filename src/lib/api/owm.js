@@ -25,7 +25,7 @@ function buildRequestURL({ zip='', countryCode='', tempUnits='', apiKey='' }) {
 
 function handleWeatherPayload(weather) {
     return {
-        tempo: weather.main.temp,
+        temp: weather.main.temp,
         description: weather.weather[0].main.toLowerCase(),
         sunHasSet: new Date() > weather.sys.sunset * 1000 
     };

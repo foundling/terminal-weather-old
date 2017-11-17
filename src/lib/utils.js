@@ -13,10 +13,17 @@ function loadJSONConfig(filepath) {
 
 function makeReject(msg) {
     return function(err) {
-        console.log(msg);
-        throw err;
+        throw new Error(`${msg}. ${JSON.stringify(err, null, 4)}`);
     };
 };
+
+function updateConfig(configPath, updates) {
+    const config = fs.readFileSync(configPath);
+    for (let key in updates) {
+        config[key] = updates[key];
+    }
+    return config;
+}
 
 const ftok = (f) => (f + 459.67)*(5/9);
 const ctok = (c) => c + 273.15;

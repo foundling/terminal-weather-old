@@ -1,6 +1,6 @@
 const path = require('path');
-const { colors } = require(path.join(__dirname, 'display'));
-const { reset, fgGreen, fgBlue, fgRed, fgLightGray, bgWhite } = colors;
+const APIs = ['openWeatherMap','weatherUnderground'];
+const { reset, fgGreen, fgBlue, fgRed, fgLightGray, bgWhite } = require(path.join(__dirname, 'colors'));
 const unitMap = {
     c: 'celcius',
     f: 'fahrenheit',
@@ -9,7 +9,6 @@ const unitMap = {
     celcius: 'celcius',
     kelvin: 'kelvin'
 };
-const APIs = ['openWeatherMap','weatherUnderground'];
 const keyLengths = {
     openWeatherMap: 32,
     weatherUnderground: 16

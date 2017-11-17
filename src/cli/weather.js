@@ -19,10 +19,7 @@ const {
 
 function main() {
 
-    const results = {
-        location: null,
-        weather: null,
-    };
+    const results = { location: null, weather: null };
 
     return getLocation(results, makeReject('getLocation failed'))
         .then(getWeather, makeReject('getLocation failed.'))
