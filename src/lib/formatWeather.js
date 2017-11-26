@@ -3,6 +3,7 @@ const path = require('path');
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
 const display = require(path.join(__dirname,'display'));
+const { normalize } = require(path.join(__dirname,'utils'));
 const colors = require(path.join(__dirname,'colors'));
 const weatherAPIs = require(path.join(__dirname, 'api'));
 const metricToLabel = {
@@ -18,8 +19,8 @@ function toWeatherString(results) {
     const { temp, description, sunHasSet } = weatherAPI.handleWeatherPayload(results.weather);
     const symbol = findSymbol(description, config.displayMode, display[config.displayMode], sunHasSet); 
 
-    formatData = {
-        units: config.units,
+    const formatData = {
+        units: normalize.toConfig[config.units],
         temp: parseInt(temp),
         symbol: symbol
     };
@@ -43,7 +44,6 @@ function findSymbol(description, mode, options, sunHasSet) {
     return (mode === 'text') ? options[match] : options[match][sunHasSet ? 'night' : 'day'];
 
 }
-
 
 function computeDisplay(format, data) {
 
@@ -82,6 +82,7 @@ function computeDisplay(format, data) {
     function transform(char) {
         return typeof formatFuncs[char] === 'function' ? formatFuncs[char](data) : char;
     }
+
     return Array.prototype.map.call(format, transform).join('');
 
 }

@@ -1,8 +1,10 @@
+const fs = require('fs');
+
 function loadJSONConfig(filepath) {
     let jsonData;
 
     try {
-        jsonData = require('fs').readFileSync(filepath);
+        jsonData = fs.readFileSync(filepath, 'utf8');
     }
     catch(e) {
         throw e;
@@ -15,7 +17,7 @@ function makeReject(msg) {
     return function(err) {
         throw new Error(`${msg}. ${JSON.stringify(err, null, 4)}`);
     };
-};
+}
 
 function updateConfig(configPath, updates) {
     const config = fs.readFileSync(configPath);
@@ -23,10 +25,62 @@ function updateConfig(configPath, updates) {
         config[key] = updates[key];
     }
     return config;
+
 }
 
-const ftok = (f) => (f + 459.67)*(5/9);
-const ctok = (c) => c + 273.15;
+const normalize = {
+    toConfig: {
+        'c': 'celcius',
+        'C': 'celcius',
+        'Celcius': 'celcius',
+        'celcius': 'celcius',
+        'f': 'fahrenheit',
+        'F': 'fahrenheit',
+        'Fahrenheit': 'fahrenheit',
+        'fahrenheit': 'fahrenheit',
+        'k': 'kelvin',
+        'K': 'kelvin',
+        'Kelvin': 'kelvin',
+        'kelvin': 'kelvin',
+    },
+    toLabel: {
+        'kelvin': 'K',
+        'celcius': 'C',
+        'fahrenheit': 'F',
+    }
+};
+
+const ctof = (c) => c * (9/5) + 32;
+const ktof = (k) => (9/5)*(k - 273) + 32;
+const ftoc = (f) => (f - 32) * (5/9);
+const ctok = (c) => c + 273;
+const ktoc = (k) => k - 273;
+const ftok = (f) => (5/9)*(f - 32) + 273;
+
+const tempFuncs = { ctof, ktof, ftoc, ctok, ktoc, ftok };
+
+function convertTemp(temp) {
+
+    return {
+        from: function(src) {
+            return {
+                to: function(dest) {
+                    const prefix = src.toLowerCase()[0];
+                    const suffix = dest.toLowerCase()[0]
+                    const fn =  tempFuncs[`${ prefix }to${ suffix }`];
+
+                    console.log(prefix + 'to' + suffix);
+                    if (prefix === suffix) 
+                        return temp;
+
+                    return parseInt(fn(temp));
+                }
+            };
+        }
+    };
+
+}
+
 const delayedRequire = path => (...args) => require(path).main(...args);
 const logToConsole = process.stdout.write.bind(process.stdout);
 
@@ -35,7 +89,8 @@ module.exports = {
     loadJSONConfig, 
     logToConsole,
     makeReject, 
+    normalize,
+    convertTemp,
     ftok,
     ctok
 };
-
