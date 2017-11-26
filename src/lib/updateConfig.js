@@ -39,6 +39,7 @@ function updateConfig(updates) {
 
     // if we have changed the units, we need to update temperature reading.
     const newTemp = convertTemp(config.cache.temp).from(preupdateUnits).to(normalize.toConfig[config.units]); 
+    config.cache.temp = newTemp;
 
     const weatherData = {
         temp: newTemp,
@@ -47,6 +48,7 @@ function updateConfig(updates) {
     };
 
     const updatedDisplay = computeDisplay(config.format, weatherData);
+    console.log(updatedDisplay);
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4), 'utf8');
 }
 

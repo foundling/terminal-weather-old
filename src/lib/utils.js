@@ -51,11 +51,11 @@ const normalize = {
 };
 
 const ctof = (c) => c * (9/5) + 32;
-const ktof = (k) => (9/5)*(k - 273) + 32;
+const ktof = (k) => (9/5)*(k - 273.15) + 32;
 const ftoc = (f) => (f - 32) * (5/9);
-const ctok = (c) => c + 273;
-const ktoc = (k) => k - 273;
-const ftok = (f) => (5/9)*(f - 32) + 273;
+const ctok = (c) => c + 273.15;
+const ktoc = (k) => k - 273.15;
+const ftok = (f) => (5/9)*(f - 32) + 273.15;
 
 const tempFuncs = { ctof, ktof, ftoc, ctok, ktoc, ftok };
 
@@ -68,12 +68,9 @@ function convertTemp(temp) {
                     const prefix = src.toLowerCase()[0];
                     const suffix = dest.toLowerCase()[0]
                     const fn =  tempFuncs[`${ prefix }to${ suffix }`];
+                    console.log('fn called: ' + prefix + 'to' + suffix);
 
-                    console.log(prefix + 'to' + suffix);
-                    if (prefix === suffix) 
-                        return temp;
-
-                    return parseInt(fn(temp));
+                    return (prefix === suffix) ? temp : fn(temp); 
                 }
             };
         }

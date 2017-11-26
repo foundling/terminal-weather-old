@@ -1,6 +1,6 @@
 # terminal-weather 
 
-Terminal weather is a minimal command-line tool for displaying the current weather in your location, optimized for rapid re-rendering in your terminal prompt.
+Terminal weather is a minimal, flexible command-line tool for displaying the current weather in your location, optimized for rapid re-rendering in your terminal prompt.
 
 ## Requirements
 

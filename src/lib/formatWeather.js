@@ -54,7 +54,7 @@ function computeDisplay(format, data) {
         // temperature text, e.g. 43° F 
         T: function buildTempString({ temp, units }) {
             let tempColor = getTempColor(temp, units);
-            return `${ tempColor }${ temp }°${ metricToLabel[ units ] }${ colors.reset }`;
+            return `${ tempColor }${ parseInt(temp) }°${ metricToLabel[ units ] }${ colors.reset }`;
         },
   
         // display text/icon, e.g.  'clear' or ☀️  
