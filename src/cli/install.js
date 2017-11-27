@@ -34,14 +34,14 @@ function takeUserConfigData(cb) {
 
     function handleInput(response) {
 
-        const answer = response.trim() || ' ';
+        const answer = response.trim();
         const validResponse = currentPrompt.isValid(answer, userConfigData);
+        const defaultValue = currentPrompt.defaultValue;
 
-        // check received response. Store if valid, or repeat until valid.
-        if (!validResponse)
+        if (!validResponse && !defaultValue)
             return repeat(currentPrompt);
 
-        userConfigData[currentPrompt.configKey] = currentPrompt.process(answer);
+        userConfigData[currentPrompt.configKey] = currentPrompt.process(answer || defaultValue);
         currentPrompt = prompter.next().value; 
 
         //if more prompts, print and wait for next 'line' event 

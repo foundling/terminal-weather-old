@@ -5,6 +5,7 @@ const display = require(path.join(__dirname,'display'));
 const { computeDisplay, findSymbol } = require(path.join(__dirname,'formatWeather'));
 const { normalize, convertTemp } = require(path.join(__dirname,'utils'));
 const configPath = path.join(homedir, '.terminal-weather.json');
+const singular = (s) => s.slice(0,-1);
 
 function updateConfig(updates) {
 
@@ -16,7 +17,7 @@ function updateConfig(updates) {
     const preupdateUnits = config.units;
 
     const validators = {
-        units: unitType => ['f','c','k','fahrenheit','celcius','kelvin'].includes(unitType),
+        units: unitType => ['f','c','k','fahrenheit','celcius','kelvin'].includes(unitType.toLowerCase().trim()),
         display: displayType => ['text','icon'].includes(displayType),
         format: formatString => true
     };
@@ -30,7 +31,7 @@ function updateConfig(updates) {
             continue;
 
         if (!updateValid) {
-            console.log(`${update} is not a valid ${key}`);
+            console.log(`${update} is not a valid ${singular(key)}`);
             process.exit(1);
         }
 

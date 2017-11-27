@@ -61,14 +61,16 @@ const tempFuncs = { ctof, ktof, ftoc, ctok, ktoc, ftok };
 
 function convertTemp(temp) {
 
+    /* convertTemp(N).from(unitA).to(unitB) */
+
     return {
         from: function(src) {
             return {
                 to: function(dest) {
+
                     const prefix = src.toLowerCase()[0];
                     const suffix = dest.toLowerCase()[0]
                     const fn =  tempFuncs[`${ prefix }to${ suffix }`];
-                    console.log('fn called: ' + prefix + 'to' + suffix);
 
                     return (prefix === suffix) ? temp : fn(temp); 
                 }

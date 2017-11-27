@@ -7,7 +7,7 @@ const unitMap = {
     k: 'kelvin',
     fahrenheit: 'fahrenheit',
     celcius: 'celcius',
-    kelvin: 'kelvin'
+    kelvin: 'kelvin',
 };
 const keyLengths = {
     openWeatherMap: 32,
@@ -21,19 +21,22 @@ module.exports = exports = [
         isValid: (input, config) => Boolean(APIs[parseInt(input) - 1]),
         invalidMsg: `${fgRed}Sorry, that is not a valid API option.${reset}`, 
         process: input => APIs[parseInt(input) - 1], 
+        defaultValue: 1,
     },
     {
         text: `${reset}${bgWhite}${fgLightGray} Api Key ${reset}: ${fgGreen}`,
         configKey: 'API_KEY',
         isValid: (input, config) => input.length === keyLengths[config.API],
         invalidMsg: `${fgRed}Sorry, that is not a valid API key for this service.${reset}`,
-        process: input => input
+        process: input => input,
+        defaultValue: null
     },
     {
         text: `${reset}\n${fgBlue}'c'${reset} for Celcius\n${fgBlue}'f'${reset} for Fahrenheit\n${fgBlue}'k'${reset} for Kelvin\n${bgWhite}${fgLightGray} Temperature units [${fgBlue}f${fgLightGray}] ${reset}: ${fgGreen} `,
         configKey: 'units',
         isValid: (input, config) => Object.keys(unitMap).includes(input.toLowerCase()),
         invalidMsg: `${fgRed}Sorry, that is not a valid temperature unit. ${reset}`,
-        process: input => unitMap[input.toLowerCase()]
+        process: input => unitMap[input.toLowerCase()],
+        defaultValue: 'f'
     },
 ];
