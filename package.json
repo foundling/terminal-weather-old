@@ -5,7 +5,7 @@
   "main": "weather.js",
   "preferGlobal": true,
   "bin": {
-    "terminal-weather": "./bin/terminal-weather.js"
+    "terminal-weather": "./bin/terminal-weather"
   },
   "scripts": {
     "test": "tape */**/*.spec.js | tap-dot"
