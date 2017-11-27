@@ -7,13 +7,13 @@ test('display mode test', function(t) {
 
     t.plan(3);
 
-    t.equal(config.displayMode, 'text');
+    t.equal(config.display, 'text');
 
     setDisplay(config, 'text');
-    t.equal(config.displayMode, 'text');
+    t.equal(config.display, 'text');
 
     setDisplay(config, 'icon');
-    t.equal(config.displayMode, 'icon');
+    t.equal(config.display, 'icon');
 
     t.end();
 

@@ -3,17 +3,17 @@ const path = require('path');
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
 const config = require(configPath);
-const validate = (displayMode) => ['text','icon'].includes(displayMode);
-const errorMsg = (displayMode) => console.log(`Error: display argument must be either 'text' or 'icon'. ${ displayMode } is not a valid display mode.`);
+const validate = (display) => ['text','icon'].includes(display);
+const errorMsg = (display) => console.log(`Error: display argument must be either 'text' or 'icon'. ${ display } is not a valid display mode.`);
 
-function main(displayMode) {   
+function main(display) {   
 
-    if (!validate(displayMode)) { 
-        errorMsg(displayMode);
+    if (!validate(display)) { 
+        errorMsg(display);
         process.exit(1);
     }
 
-    setDisplay(config, displayMode);
+    setDisplay(config, display);
     const outputConfig = JSON.stringify(config, null, 4);
 
     try {
@@ -24,8 +24,8 @@ function main(displayMode) {
 
 }
 
-function setDisplay (config, displayMode) {
-    config.displayMode = displayMode;
+function setDisplay (config, display) {
+    config.display = display;
     return config;
 };
 

@@ -17,7 +17,7 @@ function toWeatherString(results) {
     const config = JSON.parse(fs.readFileSync(configPath));
     const weatherAPI = weatherAPIs[config.API];
     const { temp, description, sunHasSet } = weatherAPI.handleWeatherPayload(results.weather);
-    const symbol = findSymbol(description, config.displayMode, display[config.displayMode], sunHasSet); 
+    const symbol = findSymbol(description, config.display, display[config.display], sunHasSet); 
 
     const formatData = {
         units: normalize.toConfig[config.units],
@@ -28,6 +28,8 @@ function toWeatherString(results) {
     results.weatherString = computeDisplay(config.format, formatData);
     results.symbol = symbol;
     results.temp = parseInt(temp);
+    results.description = description;
+    results.sunHasSet = sunHasSet;
     return results;
 
 }
@@ -47,32 +49,25 @@ function findSymbol(description, mode, options, sunHasSet) {
 
 function computeDisplay(format, data) {
 
-    // map display token to display data.
-    // e.g. 'T D' -> '75° ☀️ ' 
     const formatFuncs = {
 
-        // temperature text, e.g. 43° F 
         T: function buildTempString({ temp, units }) {
             let tempColor = getTempColor(temp, units);
             return `${ tempColor }${ parseInt(temp) }°${ metricToLabel[ units ] }${ colors.reset }`;
         },
   
-        // display text/icon, e.g.  'clear' or ☀️  
         D: function buildDisplayString({ symbol }) {
             return `${ symbol } `;
         }, 
 
-        // range, eg, hi: 76, lo: 72
         R: function buildRangeString() {
             return '';
         }, 
 
-        // humidity, e.g 89%
         H: function buildHumidityString() {
             return '';
         }, 
 
-        // atmopsheric presure, e.g. 1020 hPa
         P: function buildPressureString() {
             return '';
         }
@@ -131,10 +126,11 @@ function cacheWeatherData(results) {
     config.cache = {
         symbol: results.symbol,
         temp: results.temp,
+        sunHasSet: results.sunHasSet,
+        description: results.description, 
         weatherString: results.weatherString,
         lastCached: new Date().getTime()
     };
-
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
     return results.weatherString;
 
@@ -144,5 +140,6 @@ module.exports = {
     toWeatherString,
     getTempColor,
     computeDisplay,
-    cacheWeatherData
+    cacheWeatherData,
+    findSymbol
 };

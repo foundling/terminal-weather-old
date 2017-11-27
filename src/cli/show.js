@@ -17,7 +17,7 @@ ${ underscore } ${ fgBlue }CONFIG LOCATION: ${reset} ${configPath}
 ${ underscore } ${ fgBlue }API KEY: ${reset} ${config.API_KEY}
 ${ underscore } ${ fgBlue }UNITS: ${reset} ${config.units}
 ${ underscore } ${ fgBlue }NETWORK TIMEOUT THRESHOLD: ${reset} ${config.NETWORK_TIMEOUT_MS/1000.0} seconds 
-${ underscore } ${ fgBlue }DISPLAY MODE: ${reset} ${ config.displayMode }
+${ underscore } ${ fgBlue }DISPLAY MODE: ${reset} ${ config.display }
 `;
 
     if (config.cache) { 
