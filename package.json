@@ -3,8 +3,9 @@
   "version": "1.1.0",
   "description": "A Location-based Terminal Weather utility using OpenWeatherMap's API",
   "main": "weather.js",
+  "preferGlobal": true,
   "bin": {
-    "terminal-weather": "./bin/terminal-weather"
+    "terminal-weather": "./bin/terminal-weather.js"
   },
   "scripts": {
     "test": "tape */**/*.spec.js | tap-dot"
@@ -19,7 +20,7 @@
     "weather",
     "node"
   ],
-  "author": "Alex Ramsdell",
+  "author": "Alex Ramsdell (https://alexramsdell.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/foundling/terminal-weather/issues"

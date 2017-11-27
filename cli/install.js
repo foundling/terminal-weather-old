@@ -4,7 +4,7 @@ const readline = require('readline');
 
 const homedir = require('homedir')();
 const configPath = path.join(homedir, '.terminal-weather.json');
-const defaultConfig = require(path.join(__dirname,'../config/default'));
+const defaultConfig = require(path.join(__dirname,'../lib/defaultConfig'));
 const prompts = require(path.join(__dirname,'../lib/prompts'));
 
 function main() {
@@ -40,11 +40,6 @@ function takeUserConfigData(cb) {
 
         if (!validResponse && !defaultValue)
             return repeat(currentPrompt);
-
-        console.log(answer, answer.length);
-        console.log(validResponse);
-        console.log(defaultValue);
-        console.log('actual passed value: ', answer || defaultValue);
 
         userConfigData[currentPrompt.configKey] = currentPrompt.process(answer || defaultValue);
         currentPrompt = prompter.next().value; 
