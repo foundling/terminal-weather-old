@@ -24,7 +24,7 @@ function updateConfig(updates) {
 
     for (let key in updates) {
 
-        let update = updates[key];
+        let update = updates[key] || '';
         let updateValid = validators[key](update);
 
         if (!update)

@@ -1,5 +1,5 @@
-node /data/apps/terminal-weather/bin/terminal-weather --help 
-node /data/apps/terminal-weather/bin/terminal-weather show config
+#node /data/apps/terminal-weather/bin/terminal-weather --help 
+#node /data/apps/terminal-weather/bin/terminal-weather show config
 node /data/apps/terminal-weather/bin/terminal-weather --format 'D T'
 node /data/apps/terminal-weather/bin/terminal-weather --no-cache
 node /data/apps/terminal-weather/bin/terminal-weather 

@@ -54,6 +54,7 @@ function route(parsedInput) {
     const invalidateCache = parsedInput['--no-cache'];
     const skipNewline = parsedInput['--prompt'];
 
+
     if (noSubCmds)
         return getWeather().then(weatherString => console.log(weatherString));
 
@@ -73,12 +74,13 @@ function route(parsedInput) {
     // THESE ARE OPTIONS, AND ARE NOT MUTUALLY EXCLUSIVE
 
     // update formatString in config.json
-    if (updateFormat || updateDisplay || updateUnits)
+    if (updateFormat || updateDisplay || updateUnits) {
         updateConfig({ 
             format: updateFormat, 
             units: updateUnits, 
             display: updateDisplay 
         });
+    }
     
     // handle -np, -n and -p options
     if (invalidateCache && skipNewline)

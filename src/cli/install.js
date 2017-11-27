@@ -41,6 +41,11 @@ function takeUserConfigData(cb) {
         if (!validResponse && !defaultValue)
             return repeat(currentPrompt);
 
+        console.log(answer, answer.length);
+        console.log(validResponse);
+        console.log(defaultValue);
+        console.log('actual passed value: ', answer || defaultValue);
+
         userConfigData[currentPrompt.configKey] = currentPrompt.process(answer || defaultValue);
         currentPrompt = prompter.next().value; 
 
