@@ -1,0 +1,2 @@
+1) -n flag is setting the temp back to kelvin
+2) -u flag immediately following install throws an error because it looks for stuff in the cache. make sure to get weather right after install, and show success message once weather data is retrieved  
